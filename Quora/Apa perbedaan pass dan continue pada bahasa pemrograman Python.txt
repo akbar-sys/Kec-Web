@@ -1,0 +1,56 @@
+Apa perbedaan pass dan continue pada bahasa pemrograman Python?
+2 Jawaban
+Foto profil untuk Peb Ruswono Aryan
+Peb Ruswono Aryan, tahu Bahasa Indonesia
+Dijawab 2 April 2019
+pass adalah pernyataan kosong yang tidak melakukan apa-apa (NOP/no operation) yang digunakan untuk memenuhi kebutuhan sintaksis (stub/placeholder) suatu pernyataan yang berupa blok misal prosedur atau kondisional/perulangan.
+
+dalam bahasa yang menggunakan simbol kurung seperti C/C++/JAVA/PHP dst., hal ini (pernyataan kosong) cukup mudah dilakukan dengan membuat kurung kurawal buka-tutup {} tanpa isi apapun diantaranya.
+
+void anu() {} 
+... 
+if (begini) {} else {anu();} 
+... 
+for(int i=0; i<N; ++i); 
+Hal ini berbeda dalam python yang menggunakan indentasi sebagai penanda blok karena baris kosong pada blok setelah simbol : akan menyebabkan syntax error. Dalam hal ini pass dapat digunakan.
+
+def anu(): 
+   pass # prosedur kosong, supaya bisa dipanggil walau belum apa-apa 
+... 
+if begini: 
+	pass # rinciannya diisi nanti yang penting strukturnya ada dulu 
+else: 
+	anu() 
+... 
+for f in files: 
+	pass # belum mau diapa-apakan 
+Biasanya pass digunakan ketika awal-awal program ditulis yaitu untuk memberikan gambaran umum algoritma yang nantinya akan diganti dengan kode yang sesuai.
+
+continue digunakan dalam perulangan, kadang digunakan berpasangan dengan break. Jika break digunakan untuk menghentikan keseluruhan perulangan, maka continue digunakan untuk menghentikan perulangan hanya di saat itu saja dan kembali ke awal blok untuk pengulangan berikutnya (perulangan tetap berjalan).
+
+salah satu contohnya ketika pengolahan berkas teks per baris, jika ada baris yang kosong maka tidak perlu diproses dan langsung ke baris selanjutnya:
+
+for line in txt: 
+	# tidak usah proses baris kosong 
+	if len(line.strip())==0: continue 
+	# tidak usah proses baris berisi komentar (diawali '#') 
+	if line.strip()[0]=='#': continue 
+	# proses secara normal 
+	... 
+1,6 rb tayanganLihat 5 dukungan naik · Jawaban diminta oleh Faruq Sandi
+Foto profil untuk Andhika Aditya
+
+Foto profil untuk Ferdina Kusumah
+Ferdina Kusumah, belajar Rekayasa Perangkat Lunak & Teknik Informatika di Universitas pamulang (2016)
+Dijawab 1 April 2019
+Terimakasih untuk permintaan jawabannya,
+
+Secara sederhana keduanya adalah instruksi untuk melewati kode atau melongkap sekuen barisan kode, perbedaan nya adalah
+
+Pass adalah instruksi kepada python bahwa tidak ada kode yang di eksekusi, sehingga python melanjutkan mengeksekusi program di bawahnya.
+
+Sedangkan continue adalah instruksi kepada python untuk menskip atau menlongkap barisan kode dan memulai dari awal lagi.
+
+Jadi perbedaan nya adalah jika pass python akan melewati kode in namun tetap melanjutkan eksekusi kode selanjutnya, namun continue python akan melewati semua barisan kode di bawahnya dan memulai dari ulang lagi
+
+Semoga menjawab

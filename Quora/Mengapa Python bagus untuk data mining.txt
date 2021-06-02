@@ -1,0 +1,14 @@
+Mengapa Python bagus untuk data mining?
+2 Jawaban
+Foto profil untuk Jaimy Azle
+Jaimy Azle, belajar Ekonomi di Universitas Gadjah Mada
+Dijawab 23 September 2019
+Sesungguhnya bukan Python yang melakukan operasi Data Mining tersebut karena Python tidak cukup efisien ataupun cukup cepat untuk mengerjakan tipikal operasi yang membutuhkan tingkat komputasi yang intensif. Operasi Data Mining yang sesungguhnya dikerjakan oleh modul modul yang ditulis dengan bahasa aras bawah seperti C/C++.
+
+Python menjadi unggul karena digunakan pada tingkatan yang lebih tinggi, yaitu pada level aplikasi dimana pada tingkatan ini fungsi Python Lebih ditujukan untuk menghubungkan antara input data yang diperlukan oleh satu proses tertentu, dan menghubungkan antara satu proses d … (lanjut)
+Foto profil untuk Andhika Aditya
+
+Foto profil untuk Rahman
+Rahman, Software Developer PUYUP
+Dijawab 16 September 2019
+Modulnya banyak dan sudah matang. Python interpreted jadi tidak perlu compile lagi, katakanlah merubah variabel data untuk menghasilkan data yang berbeda bisa dilakukan saat program berjalan.

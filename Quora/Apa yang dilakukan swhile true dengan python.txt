@@ -1,0 +1,69 @@
+Apa yang dilakukan "sementara benar" dengan python?
+14
+Jawaban
+Foto profil untuk Jim Dennis
+Jim Dennis, Python dari perspektif Ops
+Diperbarui 11 bulan yang lalu · Penulis memiliki 2,3 ribu jawaban dan 6,5 juta tampilan jawaban
+Semula Dijawab: apa yang dilakukan "sementara benar" dengan python?
+sementara Benar: 
+    kemajuan = lakukan_sesuatu() 
+    jika kemajuan dilakukan: 
+        istirahat 
+sementara true akan salah ketik ... dalam Python itu dieja Benar ... dikapitalisasi. Anda juga memerlukan trailing : (titik dua) untuk memperkenalkan serangkaian pernyataan ("blok" untuk menggunakan terminologi yang umum untuk bahasa pemrograman lain).
+
+Dalam contoh saya, saya mendalilkan beberapa fungsi bernama do_something dan mengembalikan semacam indikator kemajuan. Saya juga mengandaikan bahwa kita memiliki beberapa objek bernama done ... itu bisa berupa objek apa saja. Jika do_something() pernah mengembalikan referensi ke objek " done " ini maka kondisi penghentian loop saya akan benar dan saya akan keluar dari loop ini.
+
+Ini menunjukkan struktur loop tak berujung di Python. Ini paling sering digunakan dalam game atau aplikasi di mana Anda memasukkan semacam loop acara utama yang berlanjut hingga pengguna memilih semacam opsi yang memicu jeda dari loop. Ini paling umum dalam kasus di mana ada sejumlah cara berbeda yang mungkin terjadi pada loop (acara berbeda, pilihan menu, dll). Memanggil break dari mana saja dalam suite ini (pada tingkat nesting yang sama) akan menghentikan loop.
+
+Anda selalu dapat menulis ulang loop seperti:
+
+selesai = Salah 
+sementara tidak dilakukan: 
+    selesai = lakukan_sesuatu() 
+    # barang lainnya... 
+Yang lebih pendek dalam hal ini dan sama mudah dibaca. Seperti yang saya katakan, lebih umum untuk menggunakan while True: ketika ada banyak tempat dalam kode di mana seseorang mungkin ingin keluar ... dan di mana Anda tidak ingin sisa kode dalam loop dieksekusi di bawah itu kondisi.
+
+Agar lebih persis sama dengan contoh pertama saya, saya harus melakukan sesuatu seperti:
+
+selesai = Salah 
+sementara tidak dilakukan: 
+    selesai = lakukan_sesuatu() 
+    jika dilakukan: 
+        terus 
+    # barang lainnya... 
+... dan saya harus menambahkan bahwa jika selesai: ... lanjutkan kode ke setiap tempat di mana saya ingin mempercepat kembalinya ke puncak loop.
+
+Secara umum saya menemukan while not done: form menjadi sedikit lebih mudah dibaca ... dan terlebih lagi ketika generik done diganti dengan nama deskriptif yang sesuai. Misalnya: saat mengedit: atau saat bermain: atau saat parsing_code: ... dll.
+
+Tapi itu benar-benar nitpick pada saat itu.
+
+Ryan Knightly, Menulis beberapa program python
+Dijawab 3 tahun yang lalu · Penulis memiliki 69 jawaban dan 285.2 ribu tampilan jawaban
+Semula Dijawab: apa yang dilakukan "sementara benar" dengan python?
+"sementara benar" menciptakan loop tak terbatas. Whoop-dee-doo!
+
+Katakanlah Anda memiliki permainan atau sesuatu yang berjalan dalam lingkaran yang tidak pernah ingin Anda akhiri.
+
+sementara Benar: 
+	# Lingkaran tak terbatas 
+	hal_pertama() 
+	barang_kedua() 
+Tentu saja selalu ada cara, jadi jika Anda ingin keluar dari loop, Anda dapat mengatakan sesuatu seperti:
+
+sementara Benar: 
+	# Lingkaran tak terbatas 
+	hal_pertama() 
+	barang_kedua() 
+ 
+	jika harus_end(): 
+		istirahat 
+Namun, saya akan menyebut ini praktik buruk dan saya menyarankan untuk tidak melakukannya. Alih-alih melakukan ini, Anda harus membuat variabel, seperti ini:
+
+should_continue = Benar 
+sementara should_continue: 
+	# Lingkaran tak terbatas 
+	hal_pertama() 
+	barang_kedua() 
+ 
+	jika harus_end(): 
+		should_continue = Salah

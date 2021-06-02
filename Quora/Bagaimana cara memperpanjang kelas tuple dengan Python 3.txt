@@ -1,0 +1,10 @@
+Bagaimana cara memperpanjang kelas tuple dengan Python 3?
+Terjemahkan jawaban dari bahasa Inggris
+Pertanyaan ini memiliki jawaban dalam bahasa Inggris! Terjemahkan jawaban Dave.
+1 Jawaban
+Foto profil untuk Andra Antariksa
+Andra Antariksa, S1 Teknik Informatika
+Dijawab 10 Juli 2018
+Saya kurang mengerti apa maksud anda “memperpanjang kelas tupe”, saya disini mengasumsikan “cara menambah kelas tuple”.
+
+Tuple merupakan data berkelompok khusus yang nilai elemennya bersifat immutable (Tidak dapat diubah) dan jumlah elemennya tidak dapat dirubah. Anda tidak bisa menambah elemen apapun kecuali anda merubah tipe data tuple menjadi tipe data yang dapat dirubah.

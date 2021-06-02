@@ -1,0 +1,66 @@
+Kenapa di python 0.1 + 0.2 = 0.30000000000000004?
+1 Jawaban
+Foto profil untuk Krishna Rowter
+Krishna Rowter, Software Developer
+Dijawab 22 Januari 2020
+Semula Dijawab: Kenapa di python 0.1 + 0.2 = 3.000000000004?
+Bukan cuma Python. Ini masalah komputer pada umumnya. Hal ini juga menimpa Javascript.
+
+Jawaban singkat
+
+Komputer bekerja dalam sistem bilangan basis dua (atau biner). Sebagian bilangan tidak bisa diwakili secara tepat dengan sistem ini.
+
+Sama seperti sistem desimal (basis 10) kita tidak bisa menampilkan 1/3 secara tepat. Yang ada adalah pembulatan 0.3333333333.
+
+Jawaban agak panjang
+
+Coba ubah bilangan 0.125 desimal ke dalam biner:
+
+0.125 x 2 = 0.25. Ambil bagian bulatnya 0
+
+(0.25 - 0) x 2 = 0.5 Ambil bagian bulatnya 0
+
+(0.5 - 0) x 2 = 1.0 Ambil bagian bulatnya 1
+
+Pas 0.001, tidak ada pembulatan
+
+.
+
+Coba ubah bilangan 0.1 desimal ke biner
+
+0.1 x 2 = 0.2. Ambil bagian bulatnya 0
+
+(0.2 - 0) x 2 = 0.4. Ambil bagian bulatnya 0
+
+(0.4 - 0) x 2 = 0.8. Ambil bagian bulatnya 0
+
+(0.8 - 0) x 2 = 1.6. Ambil bagian bulatnya 1
+
+(1.6 - 1) x 2 = 1.2. Ambil bagian bulatnya 1
+
+(1.2 - 1) x 2 = 0.4. Ambil bagian bulatnya 0
+
+(0.4 - 0) x 2 = 0.8. Ambil bagian bulatnya 0
+
+(0.8 - 0) x 2 = 1.6. Ambil bagian bulatnya 1
+
+Sudah kelihatan polanya?
+
+0.1 desimal = 0.0001100110011….dst. biner
+
+Jadi kita bulatkan ke 0.0001100110011
+
+Kalau kita ubah kembali ke desimal:
+
+
+Tidak bisa tepat 0.1
+
+Python dan Javascript menggunakan standar IEEE-754 double-precision floating-point-format. Mungkin lebih akurat dari perhitungan saya di atas, tapi sebagian bilangan tetap tidak bisa pas nilainya.
+
+Coba dengan website ini Double (IEEE754 Double precision 64-bit). 0.1 akan disimpan sebagai 1.00000000000000005551115123126E-1.
+
+.
+
+.
+
+Semoga jawaban saya bermanfaat ^^

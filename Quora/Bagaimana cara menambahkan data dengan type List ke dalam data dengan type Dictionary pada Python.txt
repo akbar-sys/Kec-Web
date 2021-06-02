@@ -1,0 +1,25 @@
+Bagaimana cara menambahkan data dengan type List ke dalam data dengan type Dictionary pada Python?
+https://docs.python.org/2/library/datatypes.html
+1 Jawaban
+Foto profil untuk Fauzi Tsani Zharfan
+Fauzi Tsani Zharfan, Software Engineer Pencari Sesuap Berlian
+Dijawab 18 Maret 2019
+a = [1,2,3]
+
+Asumsikan variable a diinisialisasi dengan tipe data list dengan isi 1,2,dan 3
+
+b= {}
+
+Lalu variable b diinisialisasi dengan tipe data dictionary atau disingkat dict.
+
+b[0] = a
+
+Tipe data dictionary terdiri dari key dan value.
+
+Key saya artikan sebagai indeks
+
+Value saya artikan sebagai nilai/isi dari indeks
+
+Sehingga
+
+Variable b dengan indeks 0 diisikan dengan nilai a, yg dimana variable a memiliki type data list

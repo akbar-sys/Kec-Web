@@ -1,0 +1,37 @@
+Apa itu % dalam Python?
+1 Jawaban
+Foto profil untuk Krishna Rowter
+Krishna Rowter, Software Developer
+Dijawab 28 Januari 2020
+Ada contoh barisan kodenya tidak? Biar ada konteksnya
+
+Setahu saya ada dua penggunaan tanda persen itu di Python:
+
+Formatted Output
+
+Sebelum adanya f-string di Python 3, untuk mem-format output itu ada dua cara:
+
+string.format()
+>>> nama = "Quora" 
+>>> warna = "Merah" 
+>>> bahasa = "Indonesia" 
+>>> print("{} itu berwarna {} dan ada bahasa {}nya".format(nama, warna, bahasa)) 
+# Outputnya = Quora itu berwarna Merah dan ada bahasa Indonesianya 
+Jadi tiap {} itu mewakili argumen di fungsi format()
+
+formatting gaya lama
+Mirip-mirip dengan di bahasa C/C++. Tanda persennya itu diikuti sebuah huruf tergantung tipe data argumen yang diwakilinya: misal "s" untuk string dan "d" untuk integer.
+
+Untuk contoh di atas
+
+>>> print("%s itu berwana %s dan ada bahasa %s nya"%(nama, warna, bahasa)) 
+# Outputnya = Quora itu berwana Merah dan ada bahasa Indonesia nya 
+Modulus operator
+
+Sama seperti bahasa pemrograman lain. Tanda persen % itu adalah operator aritmatika yang mengembalikan sisa hasil pembagian.
+
+Kalau 9%2 ya outputnya 1
+
+10%5 outputnya 0
+
+100%5 outputnya 0

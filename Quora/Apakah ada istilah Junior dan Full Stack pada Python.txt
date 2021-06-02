@@ -1,0 +1,6 @@
+Apakah ada istilah Junior dan Full Stack pada Python?
+1 Jawaban
+Foto profil untuk Andri Desmana Putra Wijaya
+Andri Desmana Putra Wijaya, Web Developer (2017-sekarang)
+Dijawab 22 Desember
+Tentu saja ada, python juga bahasa pemograman yg sama seperti bahasa pemograman yang lain. Junior berati seorang programmer yg masih awal atau belum terlalu banyak mempunyai pengalaman. Sedangkan untuk fullstack, python sendiri bisa digunakan untuk frontend dan backend, walaupun lebih disarankan untuk lebih ke bagian backend.

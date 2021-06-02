@@ -1,0 +1,18 @@
+Apakah perbedaan Array dan Object?
+2 Jawaban
+Foto profil untuk Wisnu Sanusi
+Wisnu Sanusi, Perbedaan objek dan array
+Dijawab 25 September 2020
+Array adalah jenis variabel khusus yang dapat berubah dan dapat digunakan untuk menyimpan daftar nilai. Array biasanya digunakan setiap kali ingin membuat dan menyimpan daftar beberapa item dalam satu variabel. Array sangat berguna saat membuat koleksi terurut di mana item dalam koleksi dapat diakses berdasarkan posisi numeriknya dalam daftar.
+
+Objek mewakili tipe data khusus yang juga bisa berubah dan dapat digunakan untuk menyimpan kumpulan data (bukan hanya satu nilai). Objek digunakan untuk sesuatu, bisa seseorang, meja, gedung, buku, dll dan pada dasarnya apa pun yang dibuat atau dapat ditentukan oleh serangkaian karakteristik. Dalam objek, karakteristik ini disebut properti yang terdiri dari key dan nilai.
+
+3,2 rb tayanganLihat 10 dukungan naik
+Foto profil untuk Andhika Aditya
+
+Foto profil untuk Putri
+Putri, Fullstack Developer
+Dijawab 1 September 2020
+Dalam asosiasi dunia nyata array adalah penampung atau kumpulan data. Misal: lemari isinya jaket, celana, baju, underwear. Sedangkan object ya object kayak didunia nyata. Misal: jaket, celana, baju dll
+Dilihat dari cara aksesnya, array diakses menggunakan indeks atau urutan letak data di penampung. Sedangkan object diakses dengan menyebutkan nama propertynya
+Cara penuliaannya juga berbeda. Tergantung bahasa pemrogramannya sih

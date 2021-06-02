@@ -1,0 +1,37 @@
+Apa fungsi dari count() di Python?
+1 Jawaban
+Foto profil untuk Dedeh Ramdan Mestapa Futasoik
+Dedeh Ramdan Mestapa Futasoik, Nama saya Ramdan (2005-sekarang)
+Dijawab 9 April
+Count () adalah fungsi bawaan dengan Python. Ini akan mengembalikan jumlah total elemen yang diberikan dalam sebuah string. Penghitungan dimulai dari awal string sampai akhir. Dimungkinkan juga untuk menentukan indeks awal dan akhir dari tempat Anda ingin memulai pencarian.
+
+Sintaks untuk PythonString Count ()
+
+string.count(char or substring, start, end) 
+Parameter Sintaksis Python
+
+Karakter atau substring: Anda dapat menentukan satu karakter atau substring yang ingin Anda cari dalam string yang diberikan. Ini akan mengembalikan Anda hitungan karakter atau substring dalam string yang diberikan.
+start : (opsional) Ini menunjukkan indeks awal dari mana pencarian akan dimulai. Jika tidak diberikan, maka akan dimulai dari 0. Misalnya, Anda ingin mencari karakter dari tengah string. Anda dapat memberikan nilai awal ke fungsi hitungan Anda.
+end : (opsional) Ini menunjukkan indeks akhir tempat pencarian berakhir. Jika tidak diberikan, itu akan mencari sampai akhir daftar atau string yang diberikan. Misalnya, Anda tidak ingin memindai seluruh string dan membatasi pencarian hingga titik tertentu, Anda dapat memberikan nilai untuk diakhiri dalam fungsi hitungan, dan hitungan akan menangani pencarian hingga titik tersebut.
+ReturnValue
+
+Metode count () akan mengembalikan nilai integer, yaitu jumlah elemen yang diberikan dari string yang diberikan. Ini mengembalikan 0 jika nilainya tidak ditemukan dalam string yang diberikan.
+
+Contoh Metode Hitung pada String
+Contoh berikut menunjukkan cara kerja fungsi count () pada sebuah string:
+
+str1 = "Hello World" 
+str_count1 = str1.count('o')  # counting the character “o” in the givenstring  
+print("The count of 'o'is", str_count1) 
+ 
+str_count2 = str1.count('o', 0,5) 
+print("The count of 'o' usingstart/end is", str_count2) 
+Output:
+
+The count of 'o' is 2 
+The count of 'o' usingstart/end is 1 
+Ringkasan:
+
+Count () adalah fungsi bawaan dengan Python. Ini akan mengembalikan Anda hitungan elemen tertentu dalam daftar atau string.
+Dalam kasus string, penghitungan dimulai dari awal string hingga akhir. Dimungkinkan juga untuk menentukan indeks awal dan akhir dari tempat Anda.
+Metode count () mengembalikan nilai integer.

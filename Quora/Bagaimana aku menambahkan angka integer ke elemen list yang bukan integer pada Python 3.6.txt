@@ -1,0 +1,43 @@
+Bagaimana aku menambahkan angka integer ke elemen list yang bukan integer pada Python 3.6?
+1 Jawaban
+Foto profil untuk Ridho Arji
+Ridho Arji, S1 Teknik Informatika, Universitas Amikom Yogyakarta (2014)
+Penerjemah · Diterjemahkan 28 November 2019
+Foto profil untuk Håkon Hapnes Strand
+Håkon Hapnes Strand
+Data Scientist
+Jawaban ini mungkin bukan terjemahan yang tepat untuk jawaban Håkon Hapnes Strand pada Quora dalam bahasa Inggris:
+How should I add an integer number to the elements of a list that are not integers in Python 3.6?
+Pertama, kamu hanya bisa menambahkan int ke int, bukan ke string atau None.
+
+Katakanlah kamu punya 2 list:
+
+numbers = [1, 2.2, 3.3] 
+things = ["not an int", 3.14, True, None] 
+Kamu bisa menambahkan int ke elemen single seperti ini:
+
+numbers[0] += 1 
+things[1] += 1 
+Tetapi yang dibawah ini akan menghasilkan TypeError
+
+things[0] += 1 
+karene things[0] adalah string.
+
+jika kamu ingin menambahkan int ke semua elemen di list, kamu bisa menggunakan list comprehension. Ingatlah ini hanya satu dari banyak cara melakukan hal ini, tetapi cara ini yang secara umum paling cepat.
+
+numbers = [num + 1 for num in numbers] 
+kode diatas bekerja dengan baik ketika list angka hanya terdiri dari int dan float, tetapi ini…
+
+things = [thing + 1 for thing in things] 
+akan menghasilkan TypeError lagi.
+
+Untuk coba-coba, sebagai contoh kamu bisa memilih hanya menambahkan int jika elemen list memiliki tipe data yang cocok:
+
+things = [t + 1 if type(t) in [int, float, bool] else t for t in things] 
+Sekarang lihatlah list kita:
+
+>>> numbers 
+[3, 3.2, 4.3] 
+>>> things 
+['not an int', 5.140000000000001, 2, None] 
+Kesalahan pembulatan itu normal.

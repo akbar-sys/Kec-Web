@@ -1,0 +1,11 @@
+Bagaimana cara untuk melihat dokumentasi sebuah modul Python?
+1 Jawaban
+Foto profil untuk Greg Sebastian
+Greg Sebastian, S. Kom. Teknik Informatika & Pemelajaran mesin, Universitas Brawijaya
+Dijawab 5 Oktober 2020
+Bisa menggunakan sintaks berikut di Python Shell:
+
+import modulX 
+help(modulX) 
+Nanti hasilnya akan begini:
+

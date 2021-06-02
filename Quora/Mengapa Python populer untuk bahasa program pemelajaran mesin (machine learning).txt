@@ -1,0 +1,26 @@
+Mengapa Python populer untuk bahasa program pemelajaran mesin (machine learning)?
+Terjemahkan jawaban dari bahasa Inggris
+Pertanyaan ini memiliki jawaban dalam bahasa Inggris! Terjemahkan jawaban Thia.
+2 Jawaban
+Foto profil untuk Petrus Damianus Sammy Wiyadi
+Petrus Damianus Sammy Wiyadi, Pelajar Seumur Hidup
+Dijawab 27 Maret 2019
+Semula Dijawab: Jika hampir semua bahasa pemrograman dapat melakukan pembelajaran mesin (Machine Learning), mengapa hanya ada beberapa bahasa yang sangat populer untuk melakukannya?
+Saya mengasumsikan penulis berpendapat bahwa bahasa yang sangat populer dalam hal ini adalah Python dan R.
+
+Saya saat ini sedang bekerja sebagai Insiyur Perangkat Lunak, namun dulu sempat mengerjakan riset tentang Pembelajaran Dalam (Deep Learning), jadi saya bisa menyebutkan beberapa hal yang menyebabkan poin yang anda sebutkan terjadi (khususnya spesifik bahasa Python).
+
+Python mudah sekali dipahami untuk pemula, sintaks yang digunakan sangat sederhana untuk memulai mengimplementasikan sesuatu dengan Python, sehingga orang-orang, mulai dari yang iseng mengimplementasikan algoritma (tidak memilik
+… (lanjut)
+Foto profil untuk Andhika Aditya
+
+Foto profil untuk Nabih Bawazir
+Nabih Bawazir, Head of Data Science di Datanest (2018-sekarang)
+Diperbarui 9 Agustus 2018
+Semula Dijawab: Kenapa Python populer untuk bahasa program pemelajaran mesin (machine learning)?
+Machine Learning berbeda dengan statistika, dimana pada machine learning ada banyak implementasi automasi, berikut alasan mengapa python popular untuk machine learning:
+
+Dokumentasi flask(Python) jauh lebih lengkap Plumbr(R), sehingga lebih mudah dipelajari
+Pandas sangat kuat untuk melakukan manipulasi data yang sangat biasa maupun tidak biasa, dan dokumentasinya luar biasa, serta komunitas di stackoverflow juga sangat membantu
+Dokumentasi scikit-learn lebih seragam antar model dibandingkan dengan caret
+Umumya python didukung oleh komunitas yang sangat kuat, khususnya di GitHub dan stackoverflow,

@@ -1,0 +1,37 @@
+Saya ingin menganti statement "if" pada Python menjadi "bird". Bagaimana saya bisa melakukannya?
+2 Jawaban
+Foto profil untuk Kristian Ruben
+Kristian Ruben, Kerja dengan Unity 3D, pribadi dengan Godot Engine
+Dijawab 14 November 2019
+Ambil source code interpreter Python.
+
+Cari file ast terus ganti syntax "if" di dalamnya dengan "bird".
+
+Kemudian compile ulang setelah file tersebut disimpan.
+
+Selamat anda sudah bisa membuat sebuah kondisi dengan "bird"
+
+264 tayanganLihat 2 dukungan naik
+Foto profil untuk Andhika Aditya
+
+Foto profil untuk Oris Ardiansyah
+Oris Ardiansyah, web developer (2016-sekarang)
+Penerjemah · Diterjemahkan 14 November 2019
+Foto profil untuk Tony Flury
+Tony Flury
+Python s/w developer since 2011 - published since 2015
+Jawaban ini mungkin bukan terjemahan yang tepat untuk jawaban Tony Flury pada Quora dalam bahasa Inggris:
+I want to change the "if" statement name in Python to "bird". How can I do it?
+Jadi kamu ingin:
+
+if a == 5: 
+	print(‘a=5’) 
+Menjadi
+
+bird a== 5: 
+	print(‘a=5’) 
+Terlepas dari kenapa kamu ingin melakukan hal yang gila ini ada beberapa masalah:
+
+Kamu hanya bisa melakukan ini dengan interpreter baru - kamu harus mengedit file definisi bahasa, dan kemudian membuat kembali versi Python milikmu sendiri (sebut itu PythonBird)
+Kode yang kamu tulis untuk PythonBird hanya akan bekerja pada PythonBird dan terpenting Python tidak akan menjalankan sebagian besar kode dari orang lain (dan itu termaksud sebagian besar dari pustaka standar)
+Jadi ya itu memungkinkan tapi kita harus bertanya kenapa.

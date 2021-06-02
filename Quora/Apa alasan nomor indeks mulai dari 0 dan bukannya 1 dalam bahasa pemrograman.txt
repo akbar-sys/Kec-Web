@@ -1,0 +1,34 @@
+Apa alasan nomor indeks mulai dari 0 dan bukannya 1 dalam bahasa pemrograman?
+Terjemahkan jawaban dari bahasa Inggris
+Pertanyaan ini memiliki jawaban dalam bahasa Inggris! Terjemahkan jawaban Mark.
+6 Jawaban
+Foto profil untuk Ary Himawan
+Ary Himawan, Head of Infrastructure & Engineering
+Dijawab 1 Agustus 2018
+Tidak ada alasan tertentu kenapa indeks mulai dari 0. Semuanya hanya masalah konvensi dan notasi. Pembuat bahasa pemograman mempunyai hak prerogratif mau mengadopsi yang mana dan jika mereka ditanya kenapa menggunakan basis 0, tidak ada jawaban definitif kenapa.
+
+Fortran, Basic sebagai bahasa pemograman tingkat tinggi menggunakan indeks 1 untuk pengalamatan anggota pertama dari suatu kumpulan (List, Array).
+
+Pada bahasa BCPL, C, LISP, maka indeks mengunakan dasar bilangan 0.
+
+Dari segi pemogram, kita semua tahu, lebih natural jika digunakan indeks berbasis 1. Sama seperti aritmatika atau hitungan se … (lanjut)
+Foto profil untuk Andhika Aditya
+
+Foto profil untuk Jaimy Azle
+Jaimy Azle, belajar Ekonomi di Universitas Gadjah Mada
+Dijawab 18 Juli 2018
+Tidak semua bahasa pemrograman menggunakan 0 sebagai awal dari index, BASIC umumnya menggunakan index mulai dari 1.
+
+Namun, 0 sebagai awalan dari index atas sebuah larik pada dasarnya lebih logis dibanding angka 1. Hal ini disebabkan karena mekanisme pengalamatan memori komputer menunjuk langsung pada data, sehingga data pada indeks selanjutnya secara lebih sederhana oleh kompiler dikalkulasi sebagai:
+
+data_kedua = (alamat_memori_larik_data + (ukuran_data_per_indeks * 1)) 
+atas;
+
+data_kedua = larik_data[1] 
+Secara implementasi penulisan kompiler, jauh lebih praktis dibandingkan menggunakan angka 1 yang … (lanjut)
+Foto profil untuk Andhika Aditya
+
+Foto profil untuk Peb Ruswono Aryan
+Peb Ruswono Aryan, tahu Bahasa Indonesia
+Dijawab 14 Agustus 2018 · Didukung Naik oleh Veni Johanna, eks-Software Engineer, Engineering Manager
+karena alamat memori biasanya berupa “lokasi+indeks” (terlepas dari alignment) sehingga elemen pertama ditunjukkan sebagai indeks 0. Hal ini kemudian menjadi konvensi.

@@ -1,0 +1,37 @@
+Apa itu CircleCI?
+1 Jawaban
+Foto profil untuk Baharzah Dhani
+Baharzah Dhani, Pengguna Bitbucket Git Code Management
+Dijawab 28 Desember 2019
+CircleCI[1] merupakan salah satu platform yang menyediakan fasilitas Continuous Integration.
+
+Apa itu Continuous Integration?
+
+Continuous Integration[2] adalah praktek software development dimana para pengembang dengan regular melakukan perubahan kode dan melakukan merge pada sebuah repository, dan ketika terdapat push commit baru, automated build & test dijalankan, dan hasil akan segera diterima. Jika terjadi kesalahan/bug dalan build/test, tim pengembang dapat dengan cepat melakukan update code sehingga kualitas produk bisa ditingkatkan, dan mengurangi waktu untuk melakukan validasi sebuah update.
+
+
+Proses Continuous Integration
+
+Circle CI
+
+
+CircleCI merupakan salah satu continuous integration tools yang bersifat cloud based. Namun tidak menutup kemungkinan CircleCI juga bisa di install di private server.
+
+Apa saja fitur dan kelebihan dari CircleCI?
+
+CircleCI memiliki fitur-fitur yang membedakannya dengan continuous integration tools yang lainnya.
+
+CircleCI dapat dipakai secara gratis dan berbayar.
+CircleCI adalah CI tools yang bersifat cloud-based.
+CircleCI mengotomasi proses build, test, dan deploy.
+Dapat menggunakan SSH mode untuk mengakses container.
+Rest API. Kita dapat mengakses project, build, dan artifact.
+CircleCI menyimpan requirements installation.
+Support pada bahasa pemrograman Ruby, Python, Node, Java, PHP, RoR, DJ, JavaScript.
+Support pada database MySQL, MongoDB, PostgreSQL, Cassandra, Riak, Redis, SQLite, Solr, CouchDB, ElasticSearch, Neo4j, Couchbase, Lucene, Sphinx, ThriftDB, Memcache.
+CircleCI juga mudah dan cepat untuk di setup dan configure. Karena CircleCI bersifat cloud-based, maka tidak memerlukan server khusus untuk menjalankannya. Namun, hal tersebut selain menjadi kelebihan, juga dapat menimbulkan masalah jika terjadi issue pada cloud CircleCI itu sendiri.
+
+
+Proses Deployment CircleCI
+
+CMIIW.

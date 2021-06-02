@@ -1,0 +1,9 @@
+Apakah perbedaan dari "library" dan "module" di Python?
+1 Jawaban
+Foto profil untuk Solehudin Baharsah
+Solehudin Baharsah, S.Kom Teknik Informatika, Universitas pamulang
+Dijawab 16 Mei 2020
+Semula Dijawab: Apakah perbedaan dari library dan module di python?
+Bedanya sih gampang banget,
+
+Kalau library bisa didapatkan melalui PIP,sedangkan module didasarkan oleh penggunaan si python tersebut dan sudah bawaan

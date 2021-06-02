@@ -1,0 +1,6 @@
+Apa itu API? Apa kegunaannya di Python 3?
+1 Jawaban
+Foto profil untuk Budi Saptono
+Budi Saptono, Staf TI
+Dijawab 1 Agustus 2018
+API (Application Programming Interface): himpunan subroutine, protokol komunikasi, dan berbagai macam alat untuk membuat perangkat lunak. Kegunaannya di python 3 untuk memperluas Python Interpreter, mendefinisikan obyek dan methods baru.

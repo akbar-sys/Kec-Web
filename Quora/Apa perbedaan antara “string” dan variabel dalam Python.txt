@@ -1,0 +1,34 @@
+Apa perbedaan antara “string” dan variabel dalam Python? Saya baru mengenal Python.
+Terjemahkan jawaban dari bahasa Inggris
+Pertanyaan ini memiliki jawaban dalam bahasa Inggris! Terjemahkan jawaban Vinod.
+1 Jawaban
+Foto profil untuk Aan Kurniawan
+Aan Kurniawan
+Dijawab 16 Agustus 2018
+Variabel adalah lokasi penyimpanan data di memory. Lokasi ini memiliki ukuran (rentang) yang batasannya sudah ditentukan sebelumnya berdasarkan jenis data yang akan disimpan.
+
+Analoginya, string adalah box (kotak barang) yang ukurannya akan dibuat sesuai dengan jenis barang yang akan ditampungnya.
+
+String, integer, float, list, dictionary dan seterusnya adalah jenis data atau tipe data. Tipe data string dimulai dengan tanda petik.
+
+Contoh:
+
+nama = “Son Goku” 
+power = 300000 
+nama ini adalah variabel. “Son Goku” adalah data berjenis string.
+
+power ini adalah variabel. 300000 adalah data berjenis integer.
+
+Di dalam bahasa pemrograman Python, semua adalah objek. Jenis data yg dimaksud disini adalah jenis data primitive. Di Python kita bisa melihat jenis data menggunakan type
+
+Contoh:
+
+nama = “Son Goku” 
+power = 300000 
+team = ["Bejita", "Picolo", "Gohan"] 
+info = {"nama": "Son Goku", "nama_asli": "Kakarot", "ras": "Suku Seiya"} 
+ 
+type(nama) 
+type(power) 
+type(team) 
+type(info) 

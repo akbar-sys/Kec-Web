@@ -1,0 +1,57 @@
+Apa kegunaan ".format()" dalam bahasa Python?
+3 Jawaban
+Foto profil untuk Reza
+Reza, Format() dalam bahasa pemrograman python
+Dijawab 7 Juli 2020
+Fungsi format()
+
+Fungsi format() berfungsi untuk melakukan pengaturan format string yang akan dicetak atau ditampilkan ke monitor.
+
+Contoh syntax :
+
+format(value[, format_spec]) 
+Fungsi format() memiliki dua parameter yaitu:
+
+value – objek yang akan diformat
+format_spec – Spesifikasi atau bagaimana objek tadi akan diformat
+format_spec bersifat opsional, dan bisa terdiri dari komponen-komponen berikut:
+
+[[fill]align][sign][#][0][width][,][.precision][type] 
+dimana, pilihannya adalah: 
+fill        ::=  bisa sembarang karakter 
+align       ::=  "<" | ">" | "=" | "^" 
+sign        ::=  "+" | "-" | " " 
+width       ::=  in 
+… (lanjut)
+2 komentar dari Roger Marcel dan lainnya
+Foto profil untuk Ego Dafma Dasa
+Ego Dafma Dasa, Programmer itu banyak mikir, bukan banyak ngetik!
+Dijawab 7 Juli 2020
+Jangan tanya pertanyaan seperti ini!
+
+Tanya google terlebih dahulu!
+
+Programmer itu harus cerdik!
+
+Termasuk cerdik dalam mencari informasi diinternet!
+
+Jika Anda tidak paham dengan penjelasan yang diinternet, baru tanya disini dan jelaskan bagian mana yang tidak paham!
+
+169 tayanganLihat 1 dukungan naik · Jawaban diminta oleh Roger Marcel
+3 komentar dari Chandra Destiawan dan lainnya
+Foto profil untuk P Dimas Eriyanto
+P Dimas Eriyanto, Freelance property sales (2018-sekarang)
+Dijawab 9 Juli 2020
+.format digunakan untuk menyimpan parameter dan meletakkannya pada posisi di dalam string
+
+misalnya:
+
+nama = "Andi"
+
+makanan = "roti"
+
+print('{} makan {}') .format(nama, makanan) #atau
+
+print('{0} makan {1}') .format(nama, makanan)
+
+=> Andi makan roti

@@ -1,0 +1,35 @@
+Mengapa indentasi begitu penting dalam Python?
+2 Jawaban
+Foto profil untuk Muhammad Alifian Aqshol
+Muhammad Alifian Aqshol, Penjelajah Makna Dalam Kesinambungan
+Dijawab 23 November 2019
+Karena itu adalah syarat penulisan dalam Bahasa Python.
+
+Mungkin dalam bahasa pemrograman lain, indentasi hanya digunakan untuk membuat kode enak dilihat. Tetapi itu berbeda dalam python.
+
+Didalam Python, Indentasi digunakan untuk menunjukan blok kode yang dimiliki oleh statement.
+
+Jika bahasa pemrograman lain, dalam mengenali blok kode suatu statement, mereka menggunakan kurung kurawal ( {} ) atau begin dan end. Python hanya menggunakan Indentasi untuk mengenalinya.
+
+Berikut , contoh penulisan if pada python :
+
+if (10 < 9) : 
+	print("Angka lebih besar") 
+	print("Selesai") 
+Didalam kode tersebut, terdapat statement if (10 > 9) , dan memiliki blok kode yang berisi print("Angka lebih besar"). dan print("Selesai").
+
+Jika kita hapus salah satu baris indentasi pada blok kode didalam statement if seperti ini :
+
+if (10 < 9) : 
+	print("Angka lebih besar") 
+print("Selesai") 
+Secara otomatis baris tersebut tidak termasuk dalam blok kode if, dan statement if tidak akan mengenali baris tersebut sebagai anggotanya.
+
+Indentasi diperlukan dalam pembuatan statement for , if , while dan membuat suatu class dan function (def) dalam python.
+
+308 tayanganLihat 7 dukungan naik
+1 komentar dari M Bagus Satria
+Foto profil untuk Artur Sibayang
+Artur Sibayang, Bekerja di bidang IT
+Dijawab 29 Januari
+yap penting sekali dalam struktur penulisannya supaya tidak terjadi kesalah pahaman mana bagian induknya dan mana anggotanya.

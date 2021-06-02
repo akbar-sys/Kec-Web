@@ -1,0 +1,29 @@
+Di mana saya bisa menulis kode Python?
+7 Jawaban
+Foto profil untuk Aliif Arief
+Aliif Arief, saya suka belajar dan membuat website
+Dijawab 4 Juli 2020
+Buka situs Web Home - glot.io disana anda bisa buat akun dan menulis kode python secara online dan mengcompilenya tanpa aplikasi dan tentunya bisa di save baik secara cloud maupun internal namun bukan hanya python di Home - glot.io juga sudah mensupport banyak bahasa pemrograman seperti Javascript, golang, rust dll.
+
+77 tayanganLihat 2 dukungan naik · Jawaban diminta oleh Jolan Sinaga
+Foto profil untuk Andhika Aditya
+
+Foto profil untuk Josua Fernando Simanjuntak
+Josua Fernando Simanjuntak, Belajar pemrograman secara otodidak sejak awal 2017
+Dijawab 5 Juli 2020
+Di mana saya bisa menulis kode Python?
+
+Di kode editor, seperti notepad bisa
+Di document editor, seperti MS word bisa
+Di selembar kertas/buku bisa
+Di papan tulis bisa
+Di dinding rumah tetangga/orang lain juga bisa*
+*Yang terakhir jangan diikuti, nanti yang punya rumah marah.
+
+245 tayanganLihat 2 dukungan naik · Jawaban diminta oleh Jolan Sinaga
+1 komentar dari Joni Iskandar
+Foto profil untuk Mas Cham
+Mas Cham, make valuable data
+Dijawab 5 Juli 2020
+Ada banyak cara yang bisa digunakan untuk menulis Python script, salah satu tools yang populer yaitu menggunakan Jupyter notebook. Jupyter notebook akan terinstall otomatis apabila kita menginstall Python menggunakan Anaconda. Jika kita menginstall Python tidak melalui Anaconda, kita bisa menginstall Jupyter notebook terlebih dahulu menggunakan pip atau conda. (Script : pip install jupyter)
+Salah satu keunggulan Jupyter notebook adalah kita bisa melihat integrasi antara input dan output dari script yang kita tulis, di dalam satu tampilan dokumen yang interaktif

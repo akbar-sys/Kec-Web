@@ -1,0 +1,15 @@
+Apa itu UTF-8?
+1 Jawaban
+Foto profil untuk Faran Aiki
+Faran Aiki, Siswa Matematika, SMP Negeri 3 Depok
+Dijawab 3 September 2020
+Semula Dijawab: Apa itu utf 8?
+"UTF-8" adalah semacam encoding. Kode - Wikipedia bahasa Indonesia, ensiklopedia bebas
+
+Ada banyak jenis encoding, contohnya:
+
+ANSI
+UTF-8
+UTF-8-BOM
+UCS-2 BE BOM
+UCS-2 LE BOM

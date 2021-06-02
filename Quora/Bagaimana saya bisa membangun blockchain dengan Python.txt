@@ -1,0 +1,47 @@
+Bagaimana saya bisa membangun blockchain dengan Python?
+8
+Jawaban
+Foto profil untuk Artour Aman
+Artour Aman, Teknisi di Intel (2018-sekarang)
+Dijawab 3 tahun yang lalu
+Pastikan Python 3.6+ dipasang.
+Instal pipenv.
+$ pip instal pipenv  
+Buat lingkungan virtual dan tentukan versi Python yang akan digunakan.
+$ pipenv --python=python3.6 
+Menginstal persyaratan.
+$ pemasangan pipenv  
+Jalankan servernya:$ pipenv run python blockchain.py$ pipenv run python blockchain.py -p 5001$ pipenv run python blockchain.py --port 5002
+Buruh pelabuhan
+
+Pilihan lain untuk menjalankan program blockchain ini adalah dengan menggunakan Docker. Ikuti petunjuk di bawah ini untuk membuat wadah Docker lokal:
+
+Kloning repositori ini
+Bangun wadah buruh pelabuhan
+$ docker build -t blockchain . 
+Jalankan wadah
+$ docker run --rm -p 80:5000  
+Pertanyaan-pertanyaan Terkait
+Lebih Banyak Jawaban Di Bawah
+Mengapa Python digunakan di Blockchain?
+Apa yang terbaik dalam membangun aplikasi blockchain, Solidity atau Python?
+Apakah Django cara terbaik untuk mengkodekan blockchain dengan Python?
+Haruskah saya mengetahui JavaScript untuk Blockchain, atau dapatkah saya menggunakan Python untuk Blockchain?
+Bagaimana Anda membangun blockchain?
+Foto profil untuk Al-Amin Nowshad
+Al-Amin Nowsyad, Telah menulis kode dalam berbagai bahasa selama beberapa tahun
+Dijawab 3 tahun lalu · Dipilih olehLucas Lopes, MS Kecerdasan Buatan & Teknologi Blockchain, Universitas Federal Rio De Janeiro (2019) · Penulis memiliki 229 jawabandan 1 juta tampilan jawaban
+Semula Dijawab: Bagaimana saya bisa membangun Blockchain dengan Python?
+
+Seri di Medium ini Menjelaskan dengan sangat baik untuk membangun blockchain sederhana dengan Python.
+
+Mari Bangun Blockchain Terkecil – Crypto Saat Ini – Sedang
+
+Ini mencakup dasar-dasar rantai blok - seperti blok, rantai, buku besar, Penambangan, dll dengan contoh termudah.
+Ini mem-porting kode ke server dan menyertakan modul pengujian kecil.
+
+Jadi, secara keseluruhan sumber yang bagus untuk mulai memahami blockchain dengan beberapa pengkodean.
+
+Repo Github untuk blockchain ini - schedutron/SnakeCoin
+
+Semoga berhasil :)

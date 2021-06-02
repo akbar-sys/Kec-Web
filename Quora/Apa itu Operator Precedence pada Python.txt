@@ -1,0 +1,24 @@
+Apa itu Operator Precedence pada Python?
+1 Jawaban
+Foto profil untuk Adi Primanda Ginting
+Adi Primanda Ginting, Bercita-cita menjadi ilmuan komputer.
+Dijawab 22 Desember
+Operator precedence (terjemahan langsung: operator yang didahulukan) di python menyatakan prioritas eksekusi yang dimiliki oleh operator pada sebuah ekspresi dengan bahasa python. Bahasa sederhananya, operator mana yang lebih dulu dijalankan pada sebuah baris program perhitungan, misalnya.
+
+Daftar lengkapnya dapat Anda lihat di Python Operator Precedence. Dari daftar itu, kita ambil, sebagai contoh, tiga buah operator. Yaitu (), *, dan + pada sebuah ekspresi. Berdasarkan urutan precedence-nya, makan () lebih dulu dijalankan kemudian * lalu + (coba di sini).
+
+a = 1  + 1 * 4 + (2*2) 
+print(a) 
+Urutan eksekusi pada ekspresi di atas adalah sebagai berikut.
+
+a=1+1∗4+(2∗2) 
+
+a=1+1∗4+4 
+
+a=1+4+4 
+
+a=9 
+
+Kelihatan bahwa tidak peduli urutan/posisi operator di ekspresi, operator dengan precedence yang lebih lebih tinggi dijalankan lebih dahulu. Konsep ini merupakan konsep matematika juga.
+
+Semoga membantu.

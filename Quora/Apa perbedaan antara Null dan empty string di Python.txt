@@ -1,0 +1,25 @@
+Apa perbedaan antara Null dan empty string di Python?
+Terjemahkan jawaban dari bahasa Inggris
+Pertanyaan ini memiliki jawaban dalam bahasa Inggris! Terjemahkan jawaban Tony.
+2 Jawaban
+Foto profil untuk Rama Patria Himawan
+Rama Patria Himawan, minimal sehari koding sebaris.
+Dijawab 20 September 2019
+Semula Dijawab: Apa perbedaan antara Null dan empty string di phyton?
+Null adalah kondisi tidak ada gelas.
+
+Empty string adalah kondisi ketika ada gelasnya, tapi tidak ada isinya.
+
+155 tayanganLihat 5 dukungan naik
+Foto profil untuk Andhika Aditya
+
+Foto profil untuk Yosef Andreas
+Yosef Andreas, Pengalih Bahasa EN>ID
+Penerjemah · Diterjemahkan 11 Oktober 2019
+Foto profil untuk David Armendáriz
+David Armendáriz
+B.S. di Mathematics, Universidad San Francisco De Quito (Lulus 2019)
+Jawaban ini mungkin bukan terjemahan yang tepat untuk jawaban David Armendáriz pada Quora dalam bahasa Inggris:
+What is the difference between Null and empty string in Python?
+
+Saya rasa cukup jelas dengan gambar di atas.

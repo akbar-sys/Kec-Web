@@ -1,0 +1,43 @@
+Apa arti '%s' dalam python?
+20 Jawaban
+Foto profil untuk Joshua Shannon
+Joshua Shannon, belajar di SMA
+Dijawab 1 tahun yang lalu · Penulis punya 90 jawaban dan 43,7 ribu tampilan jawaban
+Semula Dijawab: Apa gunanya % di Python?
+Jawaban lain menunjukkan bahwa % mewakili operator modulo. % sebenarnya dapat digunakan untuk hal lain juga!
+
+Saya ingin mengatakan bahwa modulo tidak selalu mewakili sisa. Saat melakukan pembagian, sisa sebenarnya bisa berupa bilangan negatif. Saya suka memikirkan sisa modulo, tetapi jika negatif, tambahkan saja apa yang Anda bagi.
+
+Dalam str, Anda dapat melakukan ini:“my name is %s” % “bob” = “my name is bob”
+
+Anda juga dapat melakukan ini: “my name is %s and I’m %s” % (“bob”, 20) = “my name is bob and I’m 20”
+
+Alasan Anda dapat melakukan ini adalah dengan kelebihan operator menggunakan __rmod__metode ini. Anda dapat membuat kelas Anda sendiri yang mendefinisikan metode ini dan membuat % melakukan apa pun yang Anda inginkan! Meskipun Anda mungkin harus memiliki alasan yang baik untuk melakukannya ...
+
+Dalam Python '%s' hanyalah sebuah string literal yang terdiri dari dua karakter tanda baca. Dengan sendirinya tanda persen (%) yang diapit dalam bentuk tanda kutip apa pun, dengan Python, hanyalah karakter lain. Tidak ada yang istimewa tentang itu.
+
+Namun, '%s' paling sering digunakan bersama dengan operator % untuk string. Operator ini ditunggangi untuk string dengan cara yang hampir sama seperti + dan *. Jika saya memiliki ekspresi 'foo' + 'bar', itu akan dievaluasi menjadi hasil 'foobar' (gabungan dari dua literal string). Ekspresi seperti '-' * 10 akan dievaluasi menjadi '----------' (sepuluh tanda hubung). Perhatikan bagaimana penggabungan dan pengulangan string analog dengan operasi aritmatika untuk penambahan dan perkalian.
+
+Operator % biasanya digunakan dalam bahasa pemrograman untuk menghitung "modulus" aritmatika (juga dikenal sebagai "sisa"). Jadi 3%2 dan 10%3 keduanya mengevaluasi ke 1 (sisa pembagian satu dengan yang lain).
+
+Dalam bahasa Inggris ada penggunaan teknis istilah “ modulo” — yaitu: (“kecuali untuk perbedaan yang diperhitungkan.”) Sebagai contoh, saya dapat mengatakan bahwa saya telah menyelesaikan sebuah proyek modulo daftar perintah perubahan. Ini, kira-kira analog dengan ekspresi seperti: 'Proyek %s selesai kecuali untuk %s' % (nama_proyek, daftar_perubahan) … di mana '%s' “ekspresi parameter yang dapat diganti” (atau “token”) adalah titik dalam string itu yang akan digantikan oleh representasi string dari nilai yang terkait dengan dua variabel tersebut project_name dan change_list .
+
+Ada sejumlah token yang dapat diganti yang dapat muncul di "string pemformatan" di sebelah kanan operator %. Ini didokumentasikan di sini: 5. Tipe Bawaan: Pemformatan string. Untuk sebagian besar ini kompatibel dengan fitur pemformatan dari keluarga fungsi printf() dalam pustaka standar bahasa pemrograman C … meskipun mereka lebih mirip sprintf() atau snprintf() daripada printf() per se. Mereka mengevaluasi menjadi string baru terlepas dari apakah kode Anda mencetaknya atau tidak.
+
+Seperti yang akan Anda lihat, ada beberapa nuansa untuk pemformatan string ... mereka memungkinkan Anda untuk menentukan presisi dan pemformatan numerik, tanda depan dan nol di depan, representasi heksadesimal dengan awalan 0x atau 0X (huruf besar untuk huruf kecil), dan notasi ilmiah dengan e atau E (huruf kecil atau besar) untuk anotasi eksponensial, dan seterusnya.
+
+Ada juga token pemformatan khusus Python: %r yang dievaluasi menjadi "representasi" objek Python. Ini adalah cara yang sama seperti objek Python direpresentasikan dalam interpreter interaktif dan dalam keluaran diagnostik tertentu (seperti dalam jejak tumpukan yang dicetak oleh pengecualian yang tidak tertangkap). Ini sebagian besar digunakan untuk logging kustom dan output diagnostik Anda sendiri. Ideal % r dari objek Python bisa eval () -uated menjadi objek Instansiasi identik; tapi itu sering tidak layak.
+
+Pemformatan string bergaya C bisa sangat rumit dan terkadang membuat frustrasi. Terkadang perlu untuk membangun string terakhir Anda melalui rantai ekspresi pemformatan ganda untuk mendapatkan bentuk keluaran yang lebih rumit.
+
+Versi modern Python (dari 2.6 dan yang lebih baru dan dalam 3.x) mendukung bentuk pemformatan string yang lebih baru dan jauh lebih ekspresif yang diakses melalui metode .format() yang dinamai secara logis pada objek string.
+
+Contoh saya sebelumnya dapat dirender sebagai: 'Project %s selesai kecuali untuk %s'.format('Spam Cooker', 'the off switch') (di mana saya baru saja mengganti project_name dan change_list dengan beberapa string literal konyol ... variabel akan bekerja dengan baik).
+
+Gaya baru pemformatan string dibahas cukup luas dalam dokumentasi, Operasi string umum: pemformatan string - Python 3.4.8dan di situs yang didedikasikan untuk tujuan: pyformat.info: Menggunakan % dan .format() untuk kebaikan yang luar biasa!
+
+Sintaks pemformatan gaya baru dimaksudkan agar lebih mirip dengan mesin rendering template modern. Python juga mendukung fitur rendering template sederhana yang diperkenalkan di versi 2.4 seperti yang didokumentasikan dalam string Template.
+
+Ada juga beberapa sistem rendering dan manajemen template kelas dunia untuk Python termasuk Jinja2, Cheetah3, Genshi, dan spitfire berperforma sangat tinggi, di antara banyak, banyak lainnya. Sebagian besar digunakan secara ekstensif dalam kerangka aplikasi web untuk menghasilkan HTML (dan mungkin CSS) secara dinamis.
+
+Jadi, kesimpulannya, '%s' hanyalah sebuah string. Tapi itu adalah string yang sering digunakan dengan operator pemformatan string lama (terinspirasi bahasa C) Python. Ada banyak token pemformatan string lainnya (parameter yang dapat diganti) dan ada beberapa opsi lain, termasuk dalam pustaka standar Python dan tersedia sebagai modul ekstensi, untuk melakukan pemformatan string dan rendering templat yang lebih canggih.

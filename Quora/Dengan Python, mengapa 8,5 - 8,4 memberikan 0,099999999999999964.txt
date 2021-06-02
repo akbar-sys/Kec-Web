@@ -1,0 +1,108 @@
+Dengan Python, mengapa 8.5 - 8.4 memberikan 0.099999999999999964?
+22
+Jawaban
+Foto profil untuk Saer Gardum
+Saer Gardum, penggemar Python
+Diperbarui 2 tahun yang lalu · Dipilih olehIan Hoffman, Insinyur Perangkat Lunak di Slack (2018-sekarang) dan Andre Faubert, Memulai pemrograman dengan Python; telah melakukannya selama 9 tahun. · Penulis memiliki 256 jawabandan 1,8 juta tampilan jawaban
+Oh ya, Anda baru saja mengalami salah satu sakit kepala tertua dalam pemrograman komputer, namun kadang masih mengganggu kita.
+
+Tidak hanya di Python, tetapi di hampir semua bahasa. Anda mungkin kadang-kadang mendengarnya disebut "kesalahan presisi titik mengambang".
+
+Dan hasil yang diharapkan, 0,1, adalah salah satu contoh terbaik yang terjadi.
+
+Alasan untuk ini sangat mirip dengan alasan bahwa kita tidak dapat mewakili nilai pasti 1/3 dengan bilangan desimal dari jumlah digit yang terbatas. Kita bisa menulis 0,333333… yang berarti jumlah digit * nilai:
+
+3 * 1/10 + 3 * 1/100 + 3 * 1/1000 + 3 * 1/10000 + …
+
+tapi, tidak peduli berapa banyak 3s yang kita gunakan, tidak peduli seberapa dekat kita, kita akan tetap kehilangan sesuatu.
+
+Sekarang, seperti yang mungkin sudah Anda ketahui, angka di komputer disimpan dalam representasi biner dari sejumlah digit terbatas. Artinya, antara lain, saat kita melanjutkan dari kiri ke kanan, nilai setiap digit dibagi 2 (sedangkan dalam desimal nilainya dibagi 10, seperti yang terlihat pada contoh 1/3).
+
+Oleh karena itu, digit pertama setelah "titik" memiliki nilai 1/2; yang kedua, 1/4; ketiga, 1/8, dan seterusnya. Suatu bilangan dapat, sekali lagi, dinyatakan sebagai jumlah dari produk nilai * digit ini. Tapi kali ini, nilai setiap digit hanya dapat dikalikan dengan 1 atau 0, yang membuatnya lebih mudah bagi kita.
+
+Mengingat ini, mari kita coba membuat 0,1 sebagai jumlah dari jenis ini. Kita bisa melakukannya dengan mengurangkan dari 0,1 pangkat 1/2 ini, dengan harapan kita mencapai nol (namun, mendapatkan di bawah nol tidak diperbolehkan). Itu akan menjadi:
+
+0*1/2 + 0*1/4 + 0*1/8 + 1*1/16 + 1*1/32 + 0*1/64 + 0*1/128 + 1*1/256 + 1* 1/512…
+
+yang, seperti yang mungkin sudah Anda duga, sesuai dengan bilangan biner: 0,000110011…
+
+Jika Anda melanjutkan dengan pembagian, Anda akan melihat pola berulang (0011), yang tidak pernah berakhir. Itu sebabnya angka-angka ini sering disebut periodik.
+
+EDIT:
+
+Oke, sejauh ini kita telah melihat bahwa desimal 0,1 tidak akan pernah secara akurat digambarkan dalam format biner. Dan itu hanya sebagian dari masalahnya. Sebenarnya, ini adalah bagian yang telah diselesaikan, karena ketika kami mencoba untuk mencetak 0,1 'apa adanya' kami tidak mendapatkan kejutan. Konversi floating point ke desimal berfungsi dengan baik, membulatkan angka, sehingga memberi kita hasil yang diharapkan: 0,1.
+
+Jadi, apa bedanya ketika kita melakukan pengurangan, 8,6 – 8,5, dibandingkan dengan ketika kita langsung memberikan 0,1?
+
+Untuk memahami hal ini, kita perlu menyelam lebih dalam dan memahami beberapa hal tentang internal.
+
+Dalam Python, seperti dalam banyak bahasa lain, standar, disebut presisi ganda, angka floating pointsecara default 64 bit. Ini dibagi menjadi tanda 1-bit (nilai = 1 berarti negatif); eksponen 11-bit (bias ke 2^(11–1) -1 = 1023); dan 52 bit sisanya, yang disebut mantissa, mewakili 53 bit angka floating point, dimulai dengan 1 tersirat. Ini adalah konvensi untuk mempertimbangkan awal angka sebagai bit bukan nol pertama, sehingga kita dapat menghilangkannya dan menyimpannya sedikit, secara harfiah. Dan eksponen menangani ini, dengan menggeser secara tepat. Nilai bilangan lengkap terjadi dengan menggeser mantissa ke kiri dengan nilai eksponen (yang seperti mengalikan dua kali).
+
+Python juga menyediakan perpustakaan yang sangat bagus untuk melihat representasi asli dari beberapa jenisnya, yang disebut struct . Jadi, mari kita gabungkan ini dalam skrip python kecil, untuk mengetahui bagaimana representasi mesin berbeda antara 0,1 dan 8,6 – 8,5:
+
+struktur impor 
+ 
+def float_bin_repr(num, fmt = 'd'): 
+    """ Mengonversi float menjadi string bitnya """ 
+     
+    # panjang bit eksponen adalah 8 jika presisi tunggal, 11 jika ganda 
+    expolen = { 'd':11, 'f':8 }.get(fmt, 0) 
+    # ubah angka menjadi string byte mentahnya 
+	# 'd' untuk double, 'f' untuk single 
+    # '>' untuk MSB, sehingga kita tidak perlu membalik byte 
+    ftos = struct.pack(">%c" % fmt, num) 
+ 
+    # konversi ke bit, lalu gabungkan menjadi satu string     
+    tobits = "".join("{:08b}".format(ord(ch)) untuk ch dalam ftos) 
+ 
+    # pisahkan untuk ditandatangani, eksponen, dan manitssa 
+    tanda, expo, mantissa = tobit[:1], tobit[1:expolen+1], tobit[expolen+1:] 
+     
+    # bias eksponen adalah 2^(len-1) -1 
+    kembali " | ".join((tanda, "%s(=%2d)" % (expo, int(expo, 2) - 2**(expolen-1) + 1), mantissa)) 
+ 
+ 
+test_nums = ("0.1", "8.6", "8.5", "8.6-8.5") 
+untuk n di test_nums: 
+	# bermain sedikit dengan eval, sehingga kita melihat angka sebelumnya 
+    # operasi. Di aplikasi nyata, ast.literal_eval direkomendasikan. 
+    print("%7s: %s" % (n, float_bin_repr(eval(n))))) 
+ 
+### Hasil: ### 
+# 0.1: 0 | 01111111011(=-4) | 1001100110011001100110011001100110011001100110011010 
+# 8.6: 0 | 10000000010(= 3) | 0001001100110011001100110011001100110011001100110011 
+# 8.5: 0 | 10000000010(= 3) | 0001000000000000000000000000000000000000000000000000000000 
+#8.6-8.5: 0 | 01111111011(=-4) | 1001100110011001100110011001100110011001100110000000 
+Jadi, saat mengurangkan 8.5 – 8.4, karena kedua bilangan memiliki eksponen yang sama, hasilnya, sebelum penyesuaian eksponen, adalah pengurangan mantissa (dalam tanda kurung adalah bit tersirat):
+
+  (1.)0001001100110011001100110011001100110011001100110011 
+- (1.)000100000000000000000000000000000000000000000000000000 
+= (0.)0000001100110011001100110011001100110011001100110011 
+Titik mengambang kemudian dipindahkan 7 tempat ke kanan (dengan demikian eksponen berubah dari 3 ke –4) untuk mencapai bit bukan nol pertamanya, menghasilkan mantissa:
+
+(1.)1001100110011001100110011001100110011001100110000000 
+Apakah Anda melihat perbedaan antara 0,1 asli, dan ini? Ya, 7 trailing zero, hasil dari pergeseran kiri untuk penyesuaian eksponen!
+
+Masih sangat dekat dengan 0,1, hanya sekarang, baik Python maupun bahasa apa pun yang saya tahu tidak mengerti bahwa itu harus dibulatkan.
+
+Jadi, ketika 64 bit representasi floating point standar ini, dikembalikan ke desimal, sehingga kita manusia dapat memahami apa yang kita lihat (setidaknya sebagian), hasilnya persis seperti yang Anda lihat: 0.099999999999999964
+
+Bagaimana kita, setidaknya sebagian, menghindari ketidaknyamanan ini saat mencetak angka?
+
+Menggunakan pemformatan, yaitu, untuk 3 digit desimal:
+
+baik “%.3f” % 0.1
+
+atau “{:.3f}”.format(0.1)
+
+atau pembulatan, yaitu untuk 3 angka desimal:
+
+putaran(8.5 - 8.4, 3)
+
+yang juga akan menampilkan hasil yang diinginkan: 0.1. (dan mungkin bahkan lebih baik dari .3f, membuat kita tidak ketinggalan nol)
+
+OTOH, saat menggunakan angka dalam perhitungan (bahkan tanpa membulatkannya), presisinya biasanya cukup untuk sebagian besar aplikasi.
+
+EDIT: seperti yang telah dicatat oleh komentar, dan seperti dalam jawaban Jarred Allen, ada banyak cara lain untuk mengatasi masalah ini menggunakan beberapa pustaka Python yang bagus untuk aritmatika.
+
+Terima kasih banyak atas komentar dan upvote Anda!

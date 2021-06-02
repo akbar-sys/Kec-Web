@@ -1,0 +1,51 @@
+Mengapa “5/2 = 2” dan bukan 2.5 di Python?
+521
+Jawaban
+Foto profil Sohan Basak
+Sohan Basak, Penulis. Programmer. Pemikir. Penulis Teratas 2018.
+Dijawab 4 tahun yang lalu · Penulis memiliki 318 jawaban dan 597,9 ribu tampilan jawaban
+Semula Dijawab: Mengapa “5/2 = 2” di Python?
+Karena Python adalah bahasa yang buruk: Tidak! Quora ditulis dengan python jadi jelas itu bukan bahasa yang buruk. Tapi aku hanya ingin perhatianmu. Sekarang saya memilikinya.
+
+Seperti yang telah disebutkan orang lain, itu muncul karena fakta bahwa 5/2 diperlakukan sebagai pembagian integral dan bukan pembagian mengambang.
+
+Sekarang, selamat datang di Python 101, satu-satunya kelas yang Anda perlukan. (Anda dapat melewati jika Anda tahu jenisnya)
+
+Yah, Python ditulis dalam C (yang standar) yang bukan bahasa yang diketik secara dinamis. Tapi python memang bahasa yang diketik secara dinamis. Artinya, python mencoba “menebak” tipe data dengan melihat nilainya dan menyetel tipenya. Misalnya, ketika menemukan token 5, ia mengira itu adalah bilangan bulat dan menetapkannya ke tipe data "int". dan sama dengan 2.
+
+Sekarang, mari kita ke aritmatika biner 8 bit, 5 adalah 00000101 dan 2 adalah 00000010. Sekarang, ketika komputer membaginya, itu dikembalikan sebagai 10 dan sisanya 1. Komputer kita kemudian membuang 1 dan melanjutkan dengan 10 yang biner untuk 2. Dan komputer kita menampilkannya sebagai 2.
+
+Ada jenis lain yang merupakan aritmatika floating point, yang tidak akan mengabaikan 1 (sebenarnya tidak akan mendapatkan sisa) dan akan mengembalikan 10,1 yaitu 2,5. Tapi itu cukup kompleks dan, bila memungkinkan, menggunakan tipe data int lebih sederhana dan efisien, pembagian sudah menjadi proses yang kompleks.
+
+Tetapi jika Anda akan mengubah salah satunya menjadi angka floating point seperti 5.0 atau 2.0 atau float(5), itu akan memperlakukannya sebagai float dan akan mengubah int lainnya menjadi float dan kemudian akan melakukan operasi floating point.
+
+Ini diselesaikan dengan Python 3 dan di Python 2, Anda dapat mengimpor "dari __future__ divisi impor" dan itu akan memperbaikinya. Itu penting kedepannya, hal itu dilakukan agar tidak merusak kompatibilitas dengan aplikasi yang sudah ada
+
+11.5K tampilanLihat upvotes
+
+Paul Pacheco, Konsultan DevOps di American Airlines
+Diperbarui 3 tahun yang lalu · Penulis memiliki 1,1 ribu jawaban dan 3,5 juta tampilan jawaban
+Semula Dijawab: Dengan Python, mengapa saya mendapatkan hasil seperti itu?
+Anda menggunakan python 2. Di python 3 Anda akan mendapatkan hasil yang diharapkan.
+
+Pertimbangkan ini di python 2:
+
+cetak 5 / 2 
+-> 2 
+cetak 5 / 2.0 
+-> 2.5 
+Itu mungkin mengejutkan Anda. Perbedaannya adalah pada contoh pertama, kedua operan adalah bilangan bulat. Ketika kedua operan adalah bilangan bulat, python 2 melakukan pembagian bilangan bulat, dan hasilnya adalah bilangan bulat. Hasilnya selalu dibulatkan ke bawah ke bilangan bulat terdekat.
+
+Ketika salah satu atau kedua operan adalah floating point, maka python 2 melakukan pembagian floating point, dan hasilnya akan berupa angka floating point.
+
+Banyak bahasa memiliki perbedaan itu. Ini adalah sesuatu yang mungkin dibawa dari C. Dalam Python 3 mereka benar-benar mengubahnya sehingga pembagian floating point dalam kedua kasus dan ada operator terpisah untuk pembagian integer.
+
+Dalam bahasa yang diketik secara dinamis seperti python dapat menyebabkan hasil yang halus dan tidak terduga, itulah sebabnya mereka mengubahnya di python 3. Dalam bahasa yang diketik secara statis seperti C, ini bukan masalah karena programmer harus mengetahui jenis hasilnya untuk menetapkannya ke variabel atau meneruskannya ke fungsi.
+
+Hal-hal menjadi lebih membingungkan karena pembagian bilangan bulat di python 2 berbeda dari pembagian bilangan bulat di C. Python selalu menurunkan hasilnya, apakah C selalu dibulatkan ke arah nol. Ini membuat perbedaan ketika salah satu operan negatif. Misalnya di python (-5) / 2 menghasilkan -3 sedangkan di C (-5) / 2 menghasilkan -2.
+
+Anda mungkin bertanya-tanya mengapa kita membutuhkan pembagian bilangan bulat sama sekali. Memang benar Anda selalu dapat melakukan pembagian floating point dan kemudian menurunkan hasilnya. Namun itu jauh lebih lambat daripada melakukan pembagian bilangan bulat.
+
+Baca lebih lanjut tentang perubahan pembagian antara python 2 dan 3.
+
+28,4K dilihatLihat upvotes

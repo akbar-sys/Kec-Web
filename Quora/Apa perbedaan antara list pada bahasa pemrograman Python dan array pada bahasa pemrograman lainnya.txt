@@ -1,0 +1,120 @@
+Apa perbedaan antara list pada bahasa pemrograman Python dan array pada bahasa pemrograman lainnya?
+8 Jawaban
+Foto profil untuk Andra Antariksa
+Andra Antariksa, S1 Teknik Informatika
+Diperbarui 27 September 2018
+
+Saya pernah membahas hal ini dalam blog saya, saya disini hanya menyalin ulang artikel saya - Mengapa Python “Tidak Memiliki” Array? (Harap cantumkan sumber blog saya bila anda ingin menyalin artikel saya).
+
+Mengapa Python “Tidak Memiliki” Array?
+
+Alasannya karena Python merupakan bahasa pemrograman yang dinamis. Array pada hakikatnya hanya bisa digunakan untuk menampung satu tipe data saja (Misalnya array untuk integer, array untuk float dan lain sebagainya).
+
+Walaupun Python “tidak memiliki” array, namun Python memiliki list. List ini bisa menampung lebih dari satu tipe data (heterogeneous)
+
+>>> lst = [1, 2, 3.0, 'empat'] 
+>>> lst 
+[1, 2, 3.0, 'four'] 
+Yah, walau list sering dipakai untuk menyimpan satu tipe data saja sih.. . Walaupun bentuknya fleksibel, tipe data list ini memerlukan penyimpanan yang lebih besar dari array biasa, soal kecepatan juga lebih lambat. Python Patterns – An Optimization Anecdote(https://www.python.org/doc/essays/list2str/) & Array vs. List Performance(https://jacksondunstan.com/articles/3058).
+
+
+Perbandingan Antara Array dan List Dengan C#
+
+Biasanya orang-orang sering menggunakan istilah “array” padahal hal yang dia bicarakan merupakan “list“.
+
+Python memiliki modul array tersendiri, anda bisa memanggil modulnya dengan kode from array import array. Anda bisa bereksperimen untuk memasukan nilai yang berbeda di dalam array seperti anda memasukan ke dalam list
+
+>>> from array import array 
+>>> arr = array('i') 
+>>> arr.append(1) 
+>>> arr 
+array('i', [1]) 
+>>> arr.append(2) 
+>>> arr 
+array('i', [1, 2]) 
+>>> arr.append(3.3) 
+Traceback (most recent call last): 
+ File "<stdin>", line 1, in <module> 
+TypeError: integer argument expected, got float 
+Untuk lebih lengkapnya anda bisa cek dokumentasi resmi Python (https://docs.python.org/3/library/array.html).
+
+Bila anda memerlukan array untuk keperluan matematis, anda bisa mencoba NumPY(http://www.numpy.org) yang lebih baik untuk hal-hal bersifat matematis. Contoh kode NumPY
+
+>>> import numpy as np 
+>>> x = np.linspace(0, 5, 50) 
+>>> x 
+array([ 0. , 0.10204082, 0.20408163, 0.30612245, 0.40816327, 
+ 0.51020408, 0.6122449 , 0.71428571, 0.81632653, 0.91836735, 
+ 1.02040816, 1.12244898, 1.2244898 , 1.32653061, 1.42857143, 
+ 1.53061224, 1.63265306, 1.73469388, 1.83673469, 1.93877551, 
+ 2.04081633, 2.14285714, 2.24489796, 2.34693878, 2.44897959, 
+ 2.55102041, 2.65306122, 2.75510204, 2.85714286, 2.95918367, 
+ 3.06122449, 3.16326531, 3.26530612, 3.36734694, 3.46938776, 
+ 3.57142857, 3.67346939, 3.7755102 , 3.87755102, 3.97959184, 
+ 4.08163265, 4.18367347, 4.28571429, 4.3877551 , 4.48979592, 
+ 4.59183673, 4.69387755, 4.79591837, 4.89795918, 5. ]) 
+>>> x.dtype 
+dtype('float64') 
+>>> x.astype(int) 
+array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 
+ 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 
+ 4, 4, 4, 5]) 
+4,1 rb tayanganLihat 17 dukungan naik
+2 komentar dari Randy Cahya Wihandika dan lainnya
+Foto profil untuk Andre Tampubolon
+Andre Tampubolon, Software developer (2010-sekarang)
+Dijawab 1 Juli 2018
+Saya bandingkan list-nya Python dengan array-nya C.
+
+Pertama, list itu dinamis, sementara array itu permanen. Misal:
+
+list1 = [] 
+list1.append(‘a’) 
+list1.append(‘b’) 
+list1.append(‘c’) 
+# tambah lagi terus sampai 1000 
+Selama memori komputer masih cukup, ya tidak masalah. Berbeda dengan array di C yang sifatnya fixed, diatur saat compile time
+
+char myArray[30] // array yang menampung 30 karakter 
+Bisa saja dibuat dinamis, tentunya dengan memainkan pointer dan malloc :D
+
+Kedua, list bisa menampung banyak tipe data sekaligus.
+
+list1 = [] 
+list1.append(‘aa’) # tambahkan string 
+list1.append(‘bb’) # tambahkan string 
+list1.append(123)  # ok coba tambahkan integer 
+list1.append([‘x’,’y’,’z’]) # sekarang coba tambahkan list 
+ 
+#output: ['aa','bb',123',['x','y','z']]d}   
+print(list1) 
+Sementara di C:
+
+int myArr[4]; 
+Anda memiliki array of int yang hanya bisa diisi oleh integer. Tidak bisa tipe data lain
+
+Ketiga. List bisa menggunakan index negatif
+
+list1 = ['aaa','bbb','ccc','ddd','eee'] 
+print(list1[-1]) # output: ‘eee’ 
+print(list1[-4]) # output: ‘bbb’ 
+Kontras dengan C:
+
+int myArr[4] = {3, 88, 29, 5}; 
+printf(“%d\n”, myArr[-2]) // output acak setiap kali dijalankan :) 
+Apa lagi ya?
+
+1,6 rb tayanganLihat 10 dukungan naik
+1 komentar dari Davin
+Foto profil untuk Ardhi
+Ardhi, DevOps & Pengembang MVP (2019-sekarang)
+Dijawab 15 Juli 2018
+Biasanya array pada bahasa pemrograman lain atau di Pyhon sendiri adalah bungkusan / repackaging mentah-mentah dari bahasa pemrograman yang lebih rendah di bawahnya seperti C (tergantung bahasa pemrogramannya juga sih, tapi yang dimaksud dengan array biasanya merajuk ke sini, KSBS*).
+
+Jadi sifat-sifatnya tidak jauh berbeda seperti tipe datanya harus sama semua, fiturnya untuk mengakses memori low level, serta tetek bengek karakteristik signed, unsigned, short, double, yang spesialisasinya jelas diperuntukkan untuk efisiensi pengalokasian memori.
+
+Sementara list bisa lebih bebas untuk mencampur tipe datanya, integer dengan string misalnya, namun dengan fitur dan restriksi yang berbeda dengan array, seperti tentu saja anda tidak bisa melakukan operasi perhitungan di dalam list secara sekaligus jika tipe datanya berbeda. Di sisi lain list bisa di slice(), append(), extend(), dll.
+
+Untuk perhitungan standar di Python, selalu gunakan list, karena sudah dioptimisasi untuk performa dan kompatibilitas dengan lingkungan Python secara umumnya. Kalau ingin memakai array([‘a’,’b’,’c’]), disarankan menggunakan modul lain seperti scipy atau numpy untuk mendapatkan benefit pengalokasian memori yang lebih efisien.
+
+*koreksi saya bila salah.

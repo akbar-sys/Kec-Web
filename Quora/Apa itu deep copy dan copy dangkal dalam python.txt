@@ -1,0 +1,29 @@
+Apa itu deep copy dan copy dangkal dalam python?
+1 Jawaban
+Foto profil untuk Peb Ruswono Aryan
+Peb Ruswono Aryan, tahu Bahasa Indonesia
+Dijawab 20 Maret 2019 · Didukung Naik oleh Veni Johanna, eks-Software Engineer, Engineering Manager
+deep copy adalah menyalin data dengan membuat duplikat (clone) dari objek yang disalin.
+
+Pada kasus tipe data atomik (angka, boolean) atau immutable(string, tuple) penggunaan deepcopy mungkin tidak akan terlalu berdampak. Namun lain halnya dengan objek yang mutable seperti list atau dict.
+
+Pada objek berjenis ini, bila tidak dibuat duplikat maka perubahan pada objek asalnya akan berdampak pada hasil salinan. contohnya dapat dilihat di kode berikut;
+
+import copy 
+ 
+a = {'a':'b'} 
+b = [1, a] 
+ 
+# salinan biasa 
+c = b 
+ 
+# salinan dengan deepcopy 
+d = copy.deepcopy(b)  
+ 
+# ubah isi dict a 
+a['c'] = 'd' 
+ 
+# bandingkan isi c dengan d 
+print(c) # hasilnya [1, {'a': 'b', 'c': 'd'}] 
+print(d) # hasilnya [1, {'a': 'b'}] 
+isi elemen kedua dari list b adalah rujukan ke a sedangkan elemen kedua di list d adalah objek lain (duplikat) yang dibuat oleh deepcopy sehingga perubahan pada a tidak akan mengubah isi dari d.

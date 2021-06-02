@@ -1,0 +1,23 @@
+Apa kekurangan dari bahasa pemrograman Python?
+2 Jawaban
+Foto profil untuk EKRUT
+EKRUT, Recruiter (2016-sekarang)
+Dijawab 30 April
+
+Python merupakan bahasa pemrograman resmi yang digunakan oleh Google. Python memiliki banyak kelebihan, namun juga memiliki beberapa kekurangan.
+
+Berikut 6 kelemahan bahasa Python yang perlu kamu ketahui
+
+Kurangnya dukungan multiprosesor
+Walau mendukung multiprocessing, python dianggap tidak sefleksibel bahasa pemrograman lainnya. Hal ini dapat cukup membatasi penulisan kodemu.
+
+Lebih sedikit developers yang berpengalaman
+Oleh karena tidak banyaknya ahli programmer yang menggunakan bahasa pemrograman Python, kamu dapat menemukan kesulitan dalam mencari developer berpengalaman untuk membuat aplikasimu.
+
+… (lanjut)
+Foto profil untuk Andhika Aditya
+
+Foto profil untuk Mukhlim Taqun
+Mukhlim Taqun
+Dijawab 19 Februari 2019
+banyak pointnya, tapi yang paling mengganggu dan pasti semua setuju adalah versioningnya. akan ada selalu versi 2.x yang tak akan bisa dihilangkan dari muka bumi. python adalah satu-satunya bahasa yang tidak menjaga kompatibilitas dengan versi sebelumnya

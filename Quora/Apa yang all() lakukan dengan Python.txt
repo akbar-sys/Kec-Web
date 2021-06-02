@@ -1,0 +1,35 @@
+Apa yang all() lakukan dengan Python?
+13
+Jawaban
+Foto profil untuk Tony Flury
+Tony Flury, Pengembang Python s/w sejak 2011 - diterbitkan sejak 2015
+Dijawab 1 tahun yang lalu · Penulis memiliki 8,9 ribu jawaban dan 10,3 juta tampilan jawaban
+Semula Dijawab: Apa itu fungsi "semua" di Python?
+Semua fungsi bawaan dapat diterapkan ke semua iterable (daftar, kamus, set, ekspresi generator, tuple, atau objek khusus).
+
+semua akan mengembalikan True jika semua elemen dalam iterable adalah True, dan segera mengembalikan False setiap item adalah False.
+
+Ini juga setara:
+
+def my_all( dapat diubah): 
+	"""Python setara dengan semua fungsi bawaan""" 
+	untuk item dalam iterable: 
+		jika tidak barang: 
+			kembali Salah 
+	kembali Benar 
+Ingat bahwa string kosong, set kosong, kamus, daftar, nilai 0 (nol), 0.0 dan None semuanya dievaluasi dengan Python sebagai False.
+
+Jadi:
+
+semua([1,2,0,3,4]) 
+Akan mengembalikan False karena 0 di posisi 2, dan
+
+semua(['Halo', 'Dunia', '!']) 
+akan kembali Benar.
+
+Ingatlah bahwa Anda tidak perlu menggunakan semua dalam daftar - Anda dapat melakukan hal-hal seperti ini dengan ekspresi generator :
+
+all_even = semua( x%2 == 0 untuk x di my_numbers) 
+Di sini ekspresi (dalam apanggilan ll) akan menghasilkan aliran Truedan Falsenilai - Truejika item dalam my_numbersgenap dan Falsejika tidak.
+
+Oleh karena itu all_evenakan menjadi Truejika dan hanya jika semua elemen dalam my_numbersadalah genap.

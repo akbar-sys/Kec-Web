@@ -1,0 +1,85 @@
+Apa itu pemrograman fungsional?
+Terjemahkan jawaban dari bahasa Inggris
+Pertanyaan ini memiliki jawaban dalam bahasa Inggris! Terjemahkan jawaban Michael.
+3 Jawaban
+Foto profil untuk Inggriani Liem
+Inggriani Liem, mantan Dosen Informatika di Institut Teknologi Bandung (1979-2018)
+Dijawab 22 Juni 2019
+Pemrograman fungsional adalah sebuah paradigma pemrograman, di mana dalam mengkonstruksi program, anda membuat solusi dengan membuat definisi dan spesifikasi fungsi (nama, pemetaan domain ke range dan transformasinya ), kemudian mengimplementasi fungsi tsb dengan bahasa fungsional. Implementasi fungsi dikoding dalam bentuk ekspresi yang akan mengirimkan suatu nilai. Setelah itu, fungsi dapat dipakai utk menyelesaikan persoalan lebih kompleks. Dalam pemorgraman fungsional murni, kita tidak perlu mengenal/mendefinisikan "memori". Dasarnya adalah menciptakan fungsi dan memakai fungsi yg sudah ada seperti anda membayangkan punya mesin dg tombol yg jika dipencet akan mengerjakan apa yg dispesifikasikan utk tombol tsb . Contoh bahasa fungsional adalah LISP, scheme, Haskel.
+
+Di ITB (zaman saya masih mengajar), paradigma fungsional diajarkan sebelum paradigma prosedural karena membentuk pola pikir yang "bersih" berdasarkan spesifikasi. Tidak banyak perguruan tinggi yang mengajarkan paradigma tsb. saat ini, apalagi di Indonesia. Pemrograman fungsional ibarat bahasa Latin atau Yunani dlm bahasa manusia, silahkan baca The Perils of JavaSchools
+
+Siapa yang pernah ikut kuliah saya ttg pemrograman fungsional, semoga masih terkesan dengan betapa "bersih", dan singkatnya sebuah program fungsional. Kita tidak mengenal loop dalam pemrograman fungsional murni, hanya menggunakan analisis rekurens.
+
+2,8 rb tayanganLihat 83 dukungan naik
+1 komentar dari Raden Muhammad Hadi
+Foto profil untuk Rama Patria Himawan
+Rama Patria Himawan, minimal sehari koding sebaris.
+Diperbarui 4 Agustus 2019
+Semula Dijawab: Apa yang dimaksud dengan Functional Programming?
+Functional programming, emang ada ya programming yang ngga functional? terus apa gunanya kalo ngga functional dan ngga bisa dipake gitu?
+
+Kalau dari sejarahnya, yang gw tau, functional programming itu, programming yang didasarkan pada lambda calculus…
+
+yang bentuknya kira - kira kayak gini:
+
+type Lambda = (f: Lambda) => Lambda; 
+const zero: Lambda = (f: Lambda) => (i: Lambda) => i; 
+const one: Lambda = (f: Lambda) => (i: Lambda) => f(i); 
+const two: Lambda = (f: Lambda) => (i: Lambda) => f(f(i)); 
+const succ: Lambda = (n: Lambda) => (f: Lambda) => (i: Lambda) => f(n(f)(i)); 
+const add = (m: Lambda) => (n: Lambda) => (f: Lambda) => (i: Lambda) => m(f)(n(f)(i)); 
+const mult = (m: Lambda) => (n: Lambda) => (f: Lambda) => (i: Lambda) => m(n(f))(i); 
+Tidak ada angka, tidak ada boolean, tidak ada string, yang ada hanyalah anonymous function.
+
+Tapi, apakah programming dengan lambda calculus seperti itu membuat programming lebih baik?
+
+Hmmm… ya ngga juga sih.
+
+Tapi, kalo gw pribadi,
+
+Ada beberapa konsep yang gw suka dari functional programming.
+
+1. NextState = CurrentState + Action.
+
+hmm… jadi gimana ya, mindsetnya beda sih, antara kamu merubah state, dibandingkan dengan membuat state baru yang berdasarkan pada state saat ini dan action yang terjadi.
+
+2. Recursive function
+
+Sering kalo waktu programming itu kita main asal aja bikin algoritma yang ngga sengaja jadi tapi ngga tau kenapa.
+
+Dengan berfikir dalam kerangka recursive, mindset kita jadi:
+
+Ketika aku punya suatu masalah, apakah bila aku asumsikan aku punya cara untuk mengatasi suatu masalah lain (yang tidak lebih rumit dari masalah ini), masalah ini menjadi lebih mudah?
+
+3. Berpikir dalam kerangka input - output.
+
+Pada umumnya, bahasa fungsional lebih menekankan pada "what you want", instead of "how you want".
+
+Begitu pula saat berbicara dengan stakeholder, ketika dimintai membuat feature, tanyakan dulu apa inputnya, apa outputnya.
+
+Begitu pula saat menjelaskan sesuatu, lebih mudah menjelaskan apa input output suatu proses, daripada menjelaskan bagaimana suatu proses berkerja.
+
+4. Purity
+
+Terkait dengan jawaban sebelumnya, purity berarti function yang kita buat berada pada context dimana untuk input yang sama, outputnya tetaplah sama, tidak peduli kapan dikerjakan, ataupun berapa kali dikerjakan.
+
+Hal ini membantu pada saat melakukan testing dan juga melakukan reasoning apakah program yg kita buat make sense atau tidak
+
+5. Higher order function?
+
+menurut gw itu bonus sih, tapi ya, kemampuan untuk bermain dengan membuat fungsi baru dengan menggabungkan 2 fungsi itu mempermudah banyak hal sih, seperti membuat middleware, dan handling - handling generic case…
+
+Akhir kata:
+
+So I heard, you like recursive function, so I made you a recursive function that accept a recursive function that return a recursive function that accept a recursive function that return ….
+
+
+2 rb tayanganLihat 23 dukungan naik
+2 komentar dari Wisnu Adi Nurcahyo dan lainnya
+Foto profil untuk Herley Shaori
+Herley Shaori, Pelajar Ilmu Komputer
+Dijawab 22 Juni 2019
+Pemograman fungsional adalah sebuah paradigma dalam membuat program yang bertumpu pada pemanggilan fungsi untuk menyelesaikan masalah. Biasanya suatu masalah yang besar didekomposisi menjadi masalah yang lebih kecil sehingga fungsi yang dibuat memiliki ruang lingkup yang lebih kecil namun tangguh karena merupakan bagian dari solusi masalah besar dan mudah diuji. Hendaknya sebelum turun membuat kode program, perlu dibuat rancangan perangkat lunak. Untuk pemograman fungsional, rancangan yang harus ada adalah DFD (Data Flow Diagram).
+
+Kode fungsional (kode program menggunakan paradigma pemograman fungsional) cenderung lebih ringkas, lebih mudah diprediksi, dan lebih mudah untuk diuji daripada berorientasi objek - tetapi jika Anda tidak terbiasa dengan itu dan pola yang terkait dengannya, kode fungsional juga bisa tampak jauh lebih mudah. Mungkin salah satu hal yang menarik yang lain adalah perbedaan dengan paradigma pemograman berorientasi objek yaitu menanggap sebuah perangkat lunak terdiri dari objek-objek terkait dan perilaku objek tersebut. Tentunya masing-masing paradigma pemograman memiliki kelebihan dan kekurangan masing-masing. Tidak ada satu paradigma yang jauh lebih hebat dari paradigma yang lain. Tergantung dengan domain masalah dan kebutuhan yang dihadapi.

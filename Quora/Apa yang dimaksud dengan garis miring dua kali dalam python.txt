@@ -1,0 +1,43 @@
+Apa yang dimaksud dengan // dalam python?
+13
+Jawaban
+Foto profil untuk Raja Rajput
+Raja Rajput, Pimpinan Teknis di Accenture (2011-sekarang)
+Diperbarui 2 tahun yang lalu · Penulis memiliki 201 jawaban dan 716.6 ribu tampilan jawaban
+Semula Dijawab: Apa yang dimaksud dengan // dalam python?
+Apa yang dimaksud dengan // dalam python?
+
+Ini divisi lantai . Python docs memiliki dokumentasi yang sangat bagus tentang ini.
+
+Python3: Pembagian matematika yang dibulatkan ke bawah ke bilangan bulat terdekat. Operator pembagian lantai adalah //. Misalnya, ekspresi 11 // 4 dievaluasi menjadi 2 berbeda dengan 2,75 yang dikembalikan oleh float true division .
+
+>>> 11//4 
+2 
+>>> 11/4 
+2.75 
+Perhatikan bahwa (-11) // 4 adalah -3 karena -2,75 dibulatkan ke bawah.
+
+>>> -11//4 
+-3 
+>>> -11/4 
+-2,75 
+Python2: Pembagian sejati mengembalikan bilangan bulat bulat dalam versi python yang lebih lama. Pembagian lantai sama.
+
+>>> 11//4 
+2 
+>>> 11/4 
+2 
+ 
+>>> -11//4 
+-3 
+>>> -11/4 
+-3 
+Terima kasih!! Ikuti aku
+
+15,7 ribu tampilanLihat upvotes
+
+Aishwarya Selengkapnya, Operational Head dan Digital Marketing Analyst di RisingRoots (2020-sekarang)
+Dijawab 11 bulan yang lalu
+The //Operator tidak versi Python dari pembagian integer. Pembagian bilangan bulat Python tidak persis sama dengan pembagian bilangan bulat yang ditawarkan oleh beberapa bahasa lain (seperti C), karena ia membulatkan ke arah tak terhingga negatif, bukan ke nol.
+
+Dalam Python 2, pembagian lantai adalah perilaku default ketika Anda membagi dua bilangan bulat (menggunakan operator pembagian normal /). Karena ini bisa tidak terduga (terutama ketika Anda tidak pilih-pilih tentang jenis angka apa yang Anda dapatkan sebagai argumen untuk suatu fungsi), Python 3 telah berubah untuk membuat pembagian "benar" (titik mengambang) norma untuk pembagian yang akan dibulatkan jika tidak, dan itu akan melakukan pembagian "lantai" hanya jika diminta secara eksplisit.

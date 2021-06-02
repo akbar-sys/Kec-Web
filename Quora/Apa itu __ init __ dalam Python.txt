@@ -1,0 +1,10 @@
+Apa itu __ init __ dalam Python?
+1 Jawaban
+Foto profil untuk Chandra Destiawan
+Chandra Destiawan, Programmer sejak tahun 2004
+Dijawab 29 September 2019
+Ada dua hal:
+
+Jika didefinisikan dalam sebuah kelas, artinya konstruktor.
+Jika dituliskan sebagai nama file, berarti dianggap sebagai module, adapun nama module-nya adalah nama parent directory - nya.
+52 tayanganLihat 2 dukungan naik

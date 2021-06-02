@@ -1,0 +1,29 @@
+Bagaimana cara memasang Python 3 pada Windows 10 x64?
+1 Jawaban
+Foto profil untuk Ahmad Ma'ruf
+Ahmad Ma'ruf, belajar Teknik Komputer Jaringan di SMK Negeri 1 Wonosobo (2020)
+Dijawab 16 Maret 2020
+Buka official website python Welcome to Python.org
+Klik downloads
+Pilih download for windows (dibawahnya ada button python 3.x.x)
+Tunggu sampai download selesai
+Setelah download selesai, buka/jalankan file-nya.
+Tinggal klik install now. Centang box "install launcher for all users". Dan box "add python 3.x.x to PATH dan tunggu hingga selesai (mungkin ada beberapa dialog box tambahan, silahkan sesuaikan).
+Python3 sudah terinstall.
+Eitss… tapi gimana pakainya?….
+
+Yang pertama kita bisa akses intrepeter python-nya melalui cmd yaitu dengan perintah py -3
+
+Yang kedua pakai IDE (integrated development environment). IDE merupakan aplikasi yang secara khusus memberikan fasilitas untuk developer dalam mengembangkan sofware. IDE tiap bahasa pemrograman itu berbeda. Nah, pada python, IDE yang paling populer itu pycharm. Jadi kita coba install pycharm-nya juga.
+
+Buka website pycharm http://www.jetbrains.com/pycharm/
+Klik download
+Pilih yang community edition. Karena yang professional edition berbayar. dan tentunya developer professional tidak perlu bertanya cara install python seperti ini lagi.
+Tunggu hingga download selesai
+Buka dan jalankan file yang barusan di download.
+Ikuti perintahnya, tinggal next-next aja.
+Klik install dan tunggu hingga selesai.
+Pycharm sudah bisa dipakai.
+Note : biasanya ketika baru memulai pycharm, kita diminta untuk menentukan path dari intrepeter python kita. Kita tinggal sesuaikan dengan lokasi instalasi python3 kita. Default-nya di C:\Program Files (x86)\Python3x-xx\python.exe
+
+Sekarang kita bisa mulai coding-coding. Saran aja, tiap buat project baru, selalu gunakan venv (virtual environment) baru. Agar tidak mengganggu projecr lainnya. Untuk lebih detailnya mengenai venv, silahkan gunakan layanan search engine, seperti Google atau bing.

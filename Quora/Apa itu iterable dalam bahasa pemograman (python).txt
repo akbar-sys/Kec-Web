@@ -1,0 +1,31 @@
+Apa itu iterable dalam bahasa pemograman (python)?
+2 Jawaban
+Foto profil untuk Mico Siahaan
+Mico Siahaan, Business Development Manager (2020-sekarang)
+Dijawab 12 Desember 2019
+Dalam pemrograman Python, iterable adalah sebuah objek yang dapat diiterasi. Dapat diiterasi maksudnya elemen dari objek dari diakses melalui perulangan karena Iterable object adalah koleksi atau kumpulan dari objek lain. Iterable object dalam Python : string, list, tuple, dictionary, set, frozenset
+
+a_string = "ini adalah string" 
+a_list = ["ini", "adalah", "list"] 
+a_tuple = ("ini", "adalah", "tuple") 
+a_dictionary = {"ini":1, "adalah":2, "dictionary":3} 
+a_set = set(["ini", "adalah", "set"]) 
+a_frozenset = frozenset(["ini", "adalah", "frozenset"]) 
+Tiap elemen dalam iterable dapat diakses melalui perulan … (lanjut)
+1 komentar dari Fajar Firdaus
+Foto profil untuk Zulkifli
+Zulkifli, IT Enthusiast (2014-sekarang)
+Dijawab 9 Desember 2019
+Sebuah iterator Python adalah kelas yang mendefinisikan sebuah fungsi __iter__(). Sebagian besar objek Python bersifat iterable, artinya kamu bisa melakukan loop terhadap setiap elemen dalam objek tersebut. Contoh iterable pada Python misalnya string, list, tuple, dictionary, dan range.
+
+Kita lihat contoh di bawah, kita melakukan loop terhadap daftar warna:
+
+colors= [“red”,”blue”,”yellow”]
+
+def my_funct():
+
+ for color in colors:
+
+ print color
+
+Source :code.tutsplus.com

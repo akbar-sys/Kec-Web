@@ -1,0 +1,17 @@
+Apa maksud dari Class pada Python? Kapan saya harus menggunakanya?
+1 Jawaban
+Foto profil untuk Mico Siahaan
+Mico Siahaan, Business Development Manager (2020-sekarang)
+Dijawab 30 Januari 2020
+Dalam Python, juga dalam bahasa pemrograman lain yang beorientasi objek, Class adalah cetak biru dari sebuah objek. Ketika pemrogram mendefinisikan sebuah Class, pemrogram mendefinisikan kelompok objek yang memiliki sifat (dalam terminologi Python: property) dan kelakuan (dalam terminologi Python: method). yang serupa.
+
+Kapan menggunakan Class? Kita menggunakan Class saat ingin mendesain dan membangun program dengan pendekatan Object Oriented. (OOP Object Oriented Programming). Dalam Python pemrogram tidak harus menggunakan OOP dalam membuat program. Tidak ada aturan yang baku apakah aplikasi sebaiknya didesain dengan pendekatan OOP atau bukan OOP. Akan tetapi OOP merupakan pendekatan yang direkomendasikan dalam pengembangan aplikasi yang kompleks dan melibatkan banyak pemrogram. Mayoritas aplikasi modern sepanjang pengetahuan saya didesain dan diprogram menggunakan pendekatan OOP:
+
+game-game masa kini ditulis menggunakan Unity dalam C++ (OOP)
+Mozilla Firefox, Google Chrome, web browser modern ditulis dalam C++ (OOP)
+dan lain-lain
+Dari dunia Python sendiri:
+
+Django, Flask, Zope dan aplikasi web framework didesain menggunakan pendekatan OOP
+PyQt framework pengembangan GUI dalam Python menggunakan pendekatan OOP.
+Tidak ada aturan baku kapan menggunakan Class dan OOP. Akan tetapi adalah lebih baik mengasah pemahaman mengenai Class dan OOP sejak awal dan menggunakan OOP bahkan untuk aplikasi-aplikasi “sederhana”.

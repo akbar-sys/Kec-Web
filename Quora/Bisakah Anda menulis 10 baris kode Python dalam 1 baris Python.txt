@@ -1,0 +1,49 @@
+Bisakah Anda menulis 10 baris kode Python dalam 1 baris Python?
+Terjemahkan jawaban dari bahasa Inggris
+Pertanyaan ini memiliki jawaban dalam bahasa Inggris! Terjemahkan jawaban Dave.
+3 Jawaban
+Foto profil untuk Ferdina Kusumah
+Ferdina Kusumah, Pengembang perangkat lunak
+Dijawab 10 Maret 2019
+
+Hasilnya adalah
+
+[0, 1, 3, 4, 5, 6, 8, 9, 10, 11, 13, 14, 15, 16, 18, 19, 20, 21, 23, 24, 25, 26, 28, 29, 30, 31, 33, 34, 35, 36, 38, 39, 40, 41, 43, 44]
+
+Mungkin ini adalah potongan program python code yang sederhana.
+
+Stepnya adalah
+
+Ambil bilangan dari 1–20 yang sisa baginya habis dengan 2
+Jumlahkan semua bilangan tersebut
+Ambil bilangan dari 1 sampai penjumlahan angka hasil nomer 2 lalu bagi dengan 2 dan bulatkan kebawah jika sisa baginya habis dengan 2 dan 5.
+
+Ini adalah kode yang sama dengan contoh di atasnya dengan hanya satu baris, namun beberapa orang merasa kesulitan untuk membaca kodenya jika d … (lanjut)
+Foto profil untuk Andhika Aditya
+
+Foto profil untuk Yuwono Bangun Nagoro
+Yuwono Bangun Nagoro, Software Engineer di Start up (2016-sekarang)
+Dijawab 13 Oktober 2019
+Tidak bisa. Karena saya tidak menguasai bahasa pemrograman Python.
+
+366 tayanganLihat 3 dukungan naik · Jawaban diminta oleh Hari Kishan
+Foto profil untuk Andhika Aditya
+
+Foto profil untuk Artur Sibayang
+Artur Sibayang, Bekerja di bidang IT
+Dijawab 28 Januari
+10 baris kode py
+
+url1='https://url1' 
+url2='https://url2' 
+url3='https://url3' 
+url4='https://url4' 
+url5='https://url5' 
+url6='https://url6' 
+url7='https://url7' 
+url8='https://url8' 
+url9='https://url9' 
+url10'https://url10' 
+1 baris kode py
+
+urls = ['https://url1','https://url2','url3','https://url4','https://url5','https://url6','https://url7','https://url8','https://url9','https://url10']

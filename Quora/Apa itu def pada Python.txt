@@ -1,0 +1,32 @@
+Apa itu def pada Python?
+2 Jawaban
+Foto profil untuk Daniel Syahputra
+Daniel Syahputra, belajar di Universitas Indonesia (2023)
+Diperbarui 29 April 2020
+def merupakan keyword yang digunakan untuk menyatakn suatu fungsi pada program python.
+
+kurang lebih tampilannya seperti ini:
+
+def nama_fungsi(parameter):
+
+Lalu apa itu fungsi pada python?
+
+Fungsi adalah blok kode yang terorganisir dengan baik sehingga suatu saat kita dapat menggunakan nya kembali(reusable).
+
+# Program menghitung hasil faktorial 
+hasil_faktorial = 1 
+n = 4 
+for i in range(1,n+1): 
+	hasil_faktorial *= i 
+print(hasil_faktorial) 
+Contoh diatas adalah membuat instruksi yang dapat menghitung faktorial dari suatu bilangan. Lalu bagaimana jika anda ingin menggunakan instruksi itu lagi suatu saat? Anda mun … (lanjut)
+Foto profil untuk Andhika Aditya
+
+Foto profil untuk Ferdina Kusumah
+Ferdina Kusumah, Pengembang perangkat lunak
+Dijawab 27 Januari 2020
+def pada bahasa python adalah suatu cara untuk mendifinisikan sebuah method atau fungsi.
+
+Yang mana isi dalam sebuah method atau fungsi ini terisolasi dari luar fungsi
+
+secara sederhana di artikan seperti itu

@@ -1,0 +1,40 @@
+Bagaimana cara menghitung Faktor Persekutuan Terbesar (FPB) di Python?
+1 Jawaban
+Foto profil untuk Yosua Herbi Pradika
+Yosua Herbi Pradika, Pecinta Hujan
+Penerjemah · Diterjemahkan 21 Januari 2020
+Foto profil untuk Lukas Schmidinger
+Lukas Schmidinger
+I am the tech support in my family and learned programming.
+Jawaban ini mungkin bukan terjemahan yang tepat untuk jawaban Lukas Schmidinger pada Quora dalam bahasa Inggris:
+How do I compute the greatest common divisor in Python?
+Semula Dijawab: Bagaimana cara menghitung pembagi umum terbesar di Python?
+Bagaimana cara menghitung pembagi umum terbesar di Python?
+
+Anda tahu ada lelucon ini
+
+
+Ini sepenuhnya dicoba di sini:
+
+from math import gcd  # your work 
+import os, sys 
+ 
+#so that windows can handle the color 
+if sys.platform.lower() == "win32": 
+	os.system('color') 
+try: 
+	a = int(input("Provide A: ")) 
+	b = int(input("Provide B: ")) 
+except Exception as err: 
+	print(f"\33[31m Error: {err}\33[0m") 
+	exit() 
+g = gcd(a, b) # that's the relevant line of code here, 
+# the rest is just filler 
+if g == 0: 
+	print("A and B are zero") 
+elif g == 1: 
+	print("A and B are co-prime") 
+else: 
+	aa, bb=f"\33[32m A={a} \33[0m", f"\33[33m B={b} \33[0m" 
+	print(f"The gcd of {aa} and {bb} is \33[34m {g} \33[0m.") 
+"\33[31m" digunakan untuk red error print, informasi lebih lanjut di sini: Bagaimana cara mencetak teks berwarna di terminal dengan Python?

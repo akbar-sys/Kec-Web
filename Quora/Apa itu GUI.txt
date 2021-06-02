@@ -1,0 +1,18 @@
+Apa itu GUI?
+2 Jawaban
+Foto profil untuk Meidika Wardana
+Meidika Wardana, Fullstack Android Developer di Freelance (2016-sekarang)
+Dijawab 1 Februari 2020
+GUI adalah singkatan dari Graphical User Interface. Biasanya istilah ini dipakai untuk tampilan aplikasi yang tidak hanya berupa baris2 perintah saja.
+
+Kalau Anda seorang programmer, pasti sesekali bahkan sering memakai command line (di Windows) atau terminal (di Linux). Nah. aplikasi yang hanya bisa berjalan di command line tersebut, adalah aplikasi yang tidak punya GUI.
+
+Sedangkan aplikasi yang bisa berjalan di luar command line, dan mempunyai tampilan sendiri artinya aplikasi tersebut punya GUI. Contohnya aplikasi browser Google Chrome, Microsoft Word, dan sebagainya.
+
+108 tayanganLihat 2 dukungan naik · Jawaban diminta oleh Dedy Chasan AM
+Foto profil untuk Andhika Aditya
+
+Foto profil untuk Sjoe Gama
+Sjoe Gama, programmer di Freelance (2016-sekarang)
+Dijawab 11 Februari 2020
+Graphic User Interface, biasanya merujuk untuk antar muka dari sebuah aplikasi.

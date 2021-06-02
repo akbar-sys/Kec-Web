@@ -1,0 +1,32 @@
+Apa fungsi dan variabel underscore dalam bahasa Python dan untuk apa mereka digunakan?
+2 Jawaban
+Foto profil untuk Widi Satriaji
+Widi Satriaji, Jr. Data Scientist (2018-sekarang)
+Diperbarui 14 Oktober 2018
+Underscore (_) di Python digunakan untuk menerima kembalian (return) nilai yang tidak akan kita gunakan (throwaway placeholder). Contoh paling sederhana:
+
+for i in range(0, 10): 
+    print("Hello world") 
+Karena variabel i tidak pernah digunakan, kamu bisa menuliskannya sebagai:
+
+for _ in range(0, 10): 
+    print("Hello world") 
+Use case lain adalah ketika kamu hanya membutuhkan beberapa nilai dari seluruh nilai yang dikembalikan. Contoh:
+
+# Nilai angka 2 akan diabaikan 
+x, _, z = [1, 2, 3] 
+Catatan: Meski begitu, dari kedua contoh di atas variabel (_) masih bisa kita akses. Cara tersebut hanya sebagai penanda … (lanjut)
+Foto profil untuk Andhika Aditya
+
+Foto profil untuk Pandu Poluan
+Pandu Poluan, Programmer Python dalam konteks DevOps, dan hobbyist
+Dijawab 15 Oktober 2018
+Hanya underscore, atau underscore sebagai awalan?
+
+Hanya underscore biasanya digunakan untuk ‘membuang’ nilai yang tidak kita perlukan saat unpacking. Contoh:
+
+for path, _, fname in os.walk(startdir):
+
+print(os.path.join(path, fname))
+
+Underscore sebagai awalan adalah konvensi bahwa variabel tertentu agar diperlakukan sebagai private; di kemudian hari, bisa jadi variabel tersebut berubah (berubah nama, berubah semantik, atau hilang samasekali).

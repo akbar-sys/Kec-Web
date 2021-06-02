@@ -1,0 +1,8 @@
+Apa itu NumPy?
+Terjemahkan jawaban dari bahasa Inggris
+Pertanyaan ini memiliki jawaban dalam bahasa Inggris! Terjemahkan jawaban Håkon.
+1 Jawaban
+Foto profil untuk Roberto Wu
+Roberto Wu, Web Developer (2017-sekarang)
+Dijawab 3 Januari 2019
+Apabila yang anda maksud NumPy pada Python, maka NumPy adalah sebuah library pada Python yang berfungsi untuk melakukan operasi vektor dan matriks dengan mengolah array dan array multidimensi. Biasanya NumPy digunakan untuk kebutuhan dalam menganalisis data.

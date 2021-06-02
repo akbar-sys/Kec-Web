@@ -1,0 +1,95 @@
+Apa fitur tersembunyi dari Python?
+Terjemahkan jawaban dari bahasa Inggris
+Pertanyaan ini memiliki jawaban dalam bahasa Inggris! Terjemahkan jawaban Pravesh.
+1 Jawaban
+Foto profil untuk Muhammad Resya Elyasa
+Muhammad Resya Elyasa, Senior System Analyst (2015-sekarang)
+Penerjemah · Diperbarui 2 Desember 2019
+Foto profil untuk Jonathan Goldsmith
+Jonathan Goldsmith
+pythonista-in-training
+Jawaban ini mungkin bukan terjemahan yang tepat untuk jawaban Jonathan Goldsmith pada Quora dalam bahasa Inggris:
+What are some hidden features of Python?
+StackOverflow memiliki kumpulan fitur tersembunyi yang sangat bagus di sini: Hidden features of Python
+
+Inilah beberapa fitur tersembunyi yang saya suka:
+
+Sintaks for .. else
+
+for i in foo:  
+ if i == 0:  
+ 	break  
+else: print("i was never 0") 
+Decorators
+
+Membungkus fungsi di fungsi lain untuk menambahkan meta-fungsionalitas. Saya menggunakan ini setiap saat untuk memoize fungsi yang rekursif:
+
+class memoize: 
+ def __init__(self, f): 
+ 	self.f = f 
+ 	self.dict = {} 
+ def __call__(self, *args): 
+ 	if not args in self.dict: 
+ 		self.dict[args] = self.f(*args) 
+ 	return self.dict[args] 
+  
+@memoize 
+def fib(n): 
+ if n < 2: 
+ 	return 1 
+ return fib(n-1) + fib(n-2) #turn expensive calculations into dict lookups! 
+get() dalam Dictionaries
+
+Jika d ['key'] tidak ada, maka saat memanggilnya akan memunculkan exception.
+
+d.get ('key') akan return None ada jika 'key' tidak ada, dan kamu juga dapat memberikan nilai return, bukan sebaliknya, misalnya : d.get ('key', 0)
+
+'this' module
+
+Mungkin fitur 'tersembunyi' Python yang paling terkenal adalah modul ini. Coba ketikkan import this ke shell dan akan menampilkan:
+
+The Zen of Python, by Tim Peters
+
+Beautiful is better than ugly.
+Explicit is better than implicit.
+Simple is better than complex.
+Complex is better than complicated.
+Flat is better than nested.
+Sparse is better than dense.
+Readability counts.
+Special cases aren't special enough to break the rules.
+Although practicality beats purity.
+Errors should never pass silently.
+Unless explicitly silenced.
+In the face of ambiguity, refuse the temptation to guess.
+There should be one-- and preferably only one --obvious way to do it.
+Although that way may not be obvious at first unless you're Dutch.
+Now is better than never.
+Although never is often better than *right* now.
+If the implementation is hard to explain, it's a bad idea.
+If the implementation is easy to explain, it may be a good idea.
+Namespaces are one honking great idea -- let's do more of those!
+
+Yang Artinya :
+
+Zen Python, oleh Tim Peters
+
+Cantik lebih baik daripada jelek.
+Eksplisit lebih baik daripada implisit.
+Sederhana lebih baik daripada kompleks.
+Kompleks lebih baik daripada rumit.
+Flat lebih baik daripada bercabang.
+Jarang lebih baik daripada padat.
+Jumlah keterbacaan diperhitungkan.
+Kasus khusus tidak cukup istimewa untuk melanggar aturan.
+Meskipun kepraktisan mengalahkan kemurnian.
+Kesalahan tidak boleh terjadi secara diam-diam.
+Kecuali secara eksplisit dibungkam.
+Dalam menghadapi ambiguitas, tolak godaan untuk menebak.
+Harus ada satu - dan lebih disukai hanya satu - cara yang jelas untuk melakukannya.
+Meskipun demikian mungkin tidak jelas pada awalnya kecuali Anda orang Belanda.
+Sekarang lebih baik daripada tidak sama sekali.
+Meskipun tidak pernah sering lebih baik daripada * sekarang *.
+Jika implementasinya sulit dijelaskan, itu ide yang buruk.
+Jika implementasinya mudah dijelaskan, mungkin ide yang bagus.
+Namespaces adalah salah satu ide bagus - mari kita lakukan lebih dari itu!

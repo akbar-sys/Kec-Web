@@ -1,0 +1,24 @@
+Apa library Python yang digunakan untuk visualisasi data?
+2 Jawaban
+Foto profil untuk Handoyo Sjarif
+Handoyo Sjarif, Data Science Instructor di Algoritma Data Science School
+Dijawab 6 Juni 2020
+Visualisasi data menjadi bagian yang esensial untuk mengkomunikasikan insight data dari seorang Analyst, Scientist, dsb kepada target pasar/audiencenya. Sejatinya mengapa visualisasi penting karena visualisasi bisa menjadi tools yang baik untuk menampilkan ringkasan dalam bentuk grafis dan bisa diterima secara mudah oleh audience. Visualisasi juga harus memiliki nilai/value yang bisa memberikan gambaran tentang apa yang tidak terlihat secara kasat mata pada data seperti kata dari John Tukey berikut:
+
+“ The greatest value of a picture is when it forces us to notice what we never expected to see.”
+
+… (lanjut)
+Foto profil untuk Andhika Aditya
+
+Foto profil untuk Galih Hadi
+Galih Hadi, S1 Teknik Informatika & Data science, Universitas Negeri Malang
+Dijawab 15 Mei 2020
+Yang menurut saya penting
+
+Matplotlib
+Seaborn
+Bokeh
+Altair
+Plotly
+ggplot
+Saya paling sering pake Matplotlib dan Seaborn.

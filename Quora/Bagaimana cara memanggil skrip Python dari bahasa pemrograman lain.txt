@@ -1,0 +1,46 @@
+Bagaimana cara memanggil skrip Python dari bahasa pemrograman lain?
+2 Jawaban
+Foto profil untuk Bayu Aditya H
+Bayu Aditya H, kentongan, alat komunikasi jarak jauh.
+Dijawab 10 November 2020
+Tergantung apa yang dimaksud dengan bahasa pemrograman lain itu.
+
+Cara yang biasa dilakukan adalah dengan minta tolong sistem operasi melalui antarmuka yang dimiliki oleh sistem operasi itu, yakni shell. Shell adalah penerjemah baris perintah yang membuka akses ke layanan milik sistem operasi.[1]
+
+Semisal bahasa C. Dalam bahasa C, ada fungsi yang bernama system(). Ini berguna untuk memanggil fungsi yang dimiliki oleh sistem operasi.
+
+Semisal untuk memanggil skrip Python bernama "program.py" ini.
+
+#!/usr/bin/python 
+print("Halo Python."); 
+Dipanggil menggunakan fungsi system() dari kode "program.c".
+
+#include  
+… (lanjut)
+Catatan Kaki
+
+[1] Shell (computing) - Wikipedia
+5 komentar dari Bayu Aditya H dan lainnya
+Foto profil untuk Frans Caisar Ramadhan
+Frans Caisar Ramadhan, Pemrogram infrastruktur
+Diperbarui 20 November 2020
+Untuk Go, bisa menggunakan os/exec package.
+
+The Go Playground
+
+Contoh:
+
+package main 
+ 
+import ( 
+	"log" 
+	"os/exec" 
+) 
+ 
+func main() { 
+	cmd := exec.Command("python", "main.py") 
+	err := cmd.Start() 
+	if err != nil { 
+		log.Fatal(err) 
+	} 
+}

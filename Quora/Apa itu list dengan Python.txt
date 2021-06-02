@@ -1,0 +1,51 @@
+Apa itu list dengan Python?
+26
+Jawaban
+Foto profil untuk Tony Flury
+Tony Flury, Pengembang Python s/w sejak 2011 - diterbitkan sejak 2015
+Dijawab 1 tahun yang lalu · Penulis memiliki 8,9 ribu jawaban dan 10,3 juta tampilan jawaban
+Daftar dalam Python dianalogikan dengan larik dalam bahasa seperti C - ini adalah salah satu 'struktur wadah' paling dasar - yaitu struktur yang dapat 'berisi' beberapa item lainnya.
+
+Daftar dalam Python adalah contoh dari urutan urutan heterogen berukuran dinamis
+
+Berukuran dinamis - ketika Anda membuat daftar pada awalnya, Anda tidak perlu menentukan ukuran tertentu, dan itu dapat berkembang untuk mengakomodasi berapa banyak data yang Anda butuhkan (dalam batas yang ditetapkan oleh O/S).
+Heterogen - dapat berisi item data lainnya, dan daftar apa pun dapat berisi campuran jenis apa pun. daftar python sangat fleksibel sehingga mereka bahkan dapat memuat sendiri - tidak disarankan.
+Dipesan - mereka mempertahankan kontennya dalam urutan yang ditentukan oleh aplikasi.
+Urutan - mereka mampu mengakses elemen mereka satu demi satu secara berurutan
+Daftar python juga diindeks, artinya selain dapat diakses secara berurutan, daftar tersebut juga dapat diakses oleh indeks bilangan bulat.
+
+Adapun penggunaannya - cukup sederhana Anda menggunakannya kapan pun Anda perlu mengumpulkan pengelompokan item, di mana urutan item dalam grup itu penting, item tidak perlu unik, dan item hanya perlu diakses dengan nomor indeks .
+
+Misalnya baris dalam file dapat direpresentasikan sebagai daftar, kata-kata pada setiap baris dapat direpresentasikan sebagai daftar.
+
+Ada jenis wadah lain yang tersedia dengan Python, jika daftar tidak berfungsi untuk Anda:
+
+jika Anda hanya menginginkan 'urutan' yang unik maka Anda dapat menggunakan set Python; itu tidak terus memesan utuh sekalipun.
+Jika Anda perlu mengakses data dengan sesuatu yang lain bilangan bulat maka mungkin pemetaan (atau dikenal sebagai kamus) adalah solusi yang baik.
+1.1K tampilanLihat upvotesLihat pembagian · Jawaban diminta olehMansur Ahmad
+
+Digitechjay, mantan Manajer Operasi di Swiggy (2018-2020)
+Dijawab 3 tahun yang lalu · Penulis punya 62 jawaban dan 119.5 ribu tampilan jawaban
+Sebuah daftar adalah struktur data dengan Python yang merupakan bisa berubah, atau berubah-ubah, memerintahkan urutan elemen. Setiap elemen atau nilai yang ada di dalam daftar disebut item. Sama seperti stringdidefinisikan sebagai karakter di antara tanda kutip, daftar didefinisikan dengan memiliki nilai di antara tanda kurung siku [ ].
+
+Daftar sangat bagus untuk digunakan saat Anda ingin bekerja dengan banyak nilai terkait. Mereka memungkinkan Anda untuk menyimpan data bersama yang dimiliki bersama, menyingkat kode Anda, dan melakukan metode dan operasi yang sama pada beberapa nilai sekaligus.
+
+Untuk memulai, mari buat daftar yang berisi item dari tipe data string:
+
+sea_creatures = ['hiu', 'sotong', 'cumi-cumi', 'udang belalang', 'anemon'] 
+Saat kami mencetak daftar, hasilnya terlihat persis seperti daftar yang kami buat:
+
+cetak(makhluk_laut) 
+Output['hiu', 'sotong', 'cumi-cumi', 'udang belalang', 'anemon'] 
+Daftar Metode
+
+Berikut adalah beberapa metode daftar umum lainnya.
+
+list.append(elem) -- menambahkan satu elemen ke akhir daftar. Kesalahan umum: tidak mengembalikan daftar baru, hanya memodifikasi yang asli.
+list.insert(index, elem) -- menyisipkan elemen pada indeks yang diberikan, menggeser elemen ke kanan.
+list.extend(list2) menambahkan elemen dalam list2 ke akhir daftar. Menggunakan + atau += pada daftar mirip dengan menggunakan extend().
+list.index(elem) -- mencari elemen yang diberikan dari awal daftar dan mengembalikan indeksnya. Melempar ValueError jika elemen tidak muncul (gunakan "in" untuk memeriksa tanpa ValueError).
+list.remove(elem) -- mencari contoh pertama dari elemen yang diberikan dan menghapusnya (melempar ValueError jika tidak ada)
+list.sort() - - mengurutkan daftar pada tempatnya (tidak mengembalikannya). (Fungsi yang diurutkan () yang ditunjukkan di bawah ini lebih disukai.)
+list.reverse() -- membalikkan daftar pada tempatnya (tidak mengembalikannya)
+list.pop(index) -- menghapus dan mengembalikan elemen pada indeks yang diberikan. Mengembalikan elemen paling kanan jika indeks dihilangkan (kira-kira kebalikan dari append()).

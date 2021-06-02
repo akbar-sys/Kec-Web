@@ -1,0 +1,8 @@
+Apa cara paling efisien untuk mendapatkan indeks elemen terbesar terkecil kesekian dari array dengan Python?
+1 Jawaban
+Foto profil untuk Peb Ruswono Aryan
+Peb Ruswono Aryan, tahu Bahasa Indonesia
+Dijawab 3 Agustus 2018 · Didukung Naik oleh Veni Johanna, eks-Software Engineer, Engineering Manager
+gunakan sorted yang menghasilkan list baru berisi elemen terurut.
+
+parameter asalnya adalah mengurut membesar sehingga indeks terbesar kesekian bisa menggunakan indeks negatif (-1 untuk terbesar pertama, -2 terbesar kedua dst.) begitu pula dengan indeks elemen terkecil kesekian (0 untuk indeks elemen terkecil, 1 untuk elemen terkecil kedua, dst).

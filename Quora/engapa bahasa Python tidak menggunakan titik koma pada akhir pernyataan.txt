@@ -1,0 +1,27 @@
+Mengapa bahasa Python tidak menggunakan titik koma pada akhir pernyataan?
+Terjemahkan jawaban dari bahasa Inggris
+Pertanyaan ini memiliki jawaban dalam bahasa Inggris! Terjemahkan jawaban Gary.
+3 Jawaban
+Foto profil untuk Jaimy Azle
+Jaimy Azle, belajar Ekonomi di Universitas Gadjah Mada
+Dijawab 10 Januari 2019
+Sederhananya titik koma sebagai akhir pernyataan dalam baris perintah pada kode program BUKAN merupakan aspek yang disyaratkan oleh mesin untuk bisa dieksekusi, bukan juga disyaratkan oleh manusia agar bisa dibaca, melainkan ditambahkan oleh perancang bahasa pemrograman tersebut semata mata agar mudah dalam memisahkan antara satu perintah dengan perintah lainnya.
+
+Mudah dalam memisahkan, artinya menurunkan kompleksitas penulisan modul parsing pada kompiler yang menerjemahkan kode program tersebut menjadi kode instruksi mesin.
+
+Dari penjelasan di atas, titik koma pada dasarnya bukan sesuatu memilik … (lanjut)
+1 komentar dari Revi Renansiva
+Foto profil untuk Fakhrul Zaein
+Fakhrul Zaein, Menyukai film yang membuka persepektif baru terhadap dunia
+Dijawab 13 Januari 2019
+Dalan bahasa pemrograman python titik koma tetap digunakan, hanya saja fungsinya berbeda dari bahasa pemrograman lain, dimana pada bahasa pemrograman lain seperti C atau C++ , titik koma berfungsi untuk mengakhiri sebuah baris perintah, sedangkan dalam bahasa pemrograman python titik koma berfungsi untuk menggabungkan beberapa perintah menjadi satu baris, karena dalam pemrograman python baris perintah diakhiri dengan enter atau berganti baris.
+
+151 tayangan · Jawaban diminta oleh Zacharias
+Foto profil untuk Andhika Aditya
+
+Foto profil untuk Muhamad Hudya Ramadhana
+Muhamad Hudya Ramadhana, mantan Full-stack Developer di Content Collision (2018-2019)
+Dijawab 24 Januari 2019
+Why does Python not require semicolons at the end of statements?
+
+Sudah dijawab disini, coba untuk Googling terlebih dahulu.
