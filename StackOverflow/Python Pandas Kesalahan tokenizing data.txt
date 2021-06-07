@@ -1,0 +1,118 @@
+Python Pandas Kesalahan tokenizing data
+Ditanyakan 7 tahun, 10 bulan yang lalu
+Aktif hari ini
+Dilihat 952k kali
+
+453
+
+
+96
+Saya mencoba menggunakan pandas untuk memanipulasi file .csv tetapi saya mendapatkan kesalahan ini:
+
+pandas.parser.CparserError: Kesalahan tokenizing data. Kesalahan C: Diharapkan 2 bidang di baris 3, melihat 12
+
+Saya telah mencoba membaca dokumen pandas, tetapi tidak menemukan apa pun.
+
+Kode saya sederhana:
+
+path = 'GOOG Key Ratios.csv'
+#print(open(path).read())
+data = pd.read_csv(path)
+Bagaimana saya bisa menyelesaikan ini? Haruskah saya menggunakan csvmodul atau bahasa lain?
+
+File dari Morningstar
+
+ular piton
+csv
+panda
+Bagikan
+Mengikuti
+diedit 30 Desember '17 pukul 15:00
+
+Ronak Shah
+288k 16 16 lencana emas97 97 lencana perak143143 lencana perunggu
+ditanyakan pada 4 Agustus 13 pada 1:54
+
+abu-abu
+4.833 3 3 lencana emas13 13 lencana perak1919 lencana perunggu
+12
+Jika kesalahan ini muncul saat membaca file yang ditulis oleh pandas.to_csv(), MUNGKIN karena ada '\r' dalam nama kolom, dalam hal ini to_csv() akan benar-benar menulis nama kolom berikutnya ke kolom pertama dari bingkai data, menyebabkan perbedaan antara jumlah kolom di baris X pertama. Perbedaan ini adalah salah satu penyebab kesalahan C. -  pengguna0 23 Jan '17 pukul 0:56
+16
+Terkadang hanya secara eksplisit memberikan parameter "sep" membantu. Tampaknya menjadi masalah pengurai. -  gilgamash 23 Mei '18 pukul 12:30
+3
+Kesalahan ini mungkin muncul juga saat Anda menggunakan koma sebagai pembatas dan Anda memiliki lebih banyak koma daripada yang diharapkan (lebih banyak bidang di baris kesalahan kemudian ditentukan di header). Jadi, Anda perlu menghapus bidang tambahan atau menghapus koma tambahan jika tidak sengaja ada di sana. Anda dapat memperbaikinya secara manual dan kemudian Anda tidak perlu melewati baris kesalahan. -  tsveti_iko 22 Agustus '18 pukul 9:44 
+3
+Komentar dari gilgamash membantu saya. Buka file csv di editor teks (seperti editor windows atau notepad++) jadi lihat karakter mana yang digunakan untuk pemisahan. Jika itu titik koma misalnya coba pd.read_csv("<path>", sep=";"). Jangan gunakan Excel untuk memeriksa karena terkadang memasukkan data ke dalam kolom secara default dan karenanya menghapus pemisah. -  Julian 19 Juni '19 pukul 13:05
+Mengenai komentar oleh @gilgamash - ini mengirim saya ke arah yang benar, namun dalam kasus saya itu diselesaikan dengan secara eksplisit tidak memberikan parameter "sep". -  TheLoneDeranger 5 Agustus '19 pukul 23:41
+Tampilkan 5 komentar lainnya
+40 Jawaban
+1
+2
+Lanjut
+
+686
+
+Anda juga bisa mencoba;
+
+data = pd.read_csv('file1.csv', error_bad_lines=False)
+Perhatikan bahwa ini akan menyebabkan garis yang menyinggung dilewati.
+
+Bagikan
+Mengikuti
+diedit 4 Mar '19 pada 16:44
+
+renaud
+14.4k 4 4 lencana emas73 73 lencana perak7575 lencana perunggu
+dijawab 8 Agustus 13 jam 14:47
+
+orang kaya
+12.6k 15 15 lencana emas44 44 lencana perak6464 lencana perunggu
+174
+Perhatikan bahwa menggunakan error_bad_lines=False akan menyebabkan baris yang menyinggung dilewati. -  biobirdman 20 Mei '14 pukul 7:27
+12
+Tersandung pada jawaban ini, apakah ada cara untuk mengisi kolom yang hilang pada baris yang menghasilkan sesuatu seperti expected 8 fields, saw 9? -  Petra Barus 24 Sep '14 jam 10:11
+32
+Solusi yang lebih baik adalah menyelidiki file yang menyinggung dan memperbaiki baris yang buruk sehingga dapat dibaca oleh read_csv. @PetraBarus, mengapa tidak menambahkan kolom ke file CSV yang hilang (dengan nilai nol sesuai kebutuhan)? -  kebahagiaan 6 Okt '14 pukul 22:57
+5
+Ya, saya baru saja melakukannya. Jauh lebih mudah dengan menambahkan kolom. Membuka CSV di spreadsheet melakukan ini. -  Petra Barus 7 Okt '14 jam 2:17
+11
+Melewati names=["col1", "col2", ...]jumlah maksimum kolom yang diharapkan juga berfungsi, dan inilah cara saya memecahkan masalah ini ketika saya menemukannya. Lihat: stackoverflow.com/questions/18039057/… –  Steven Rouko 8 Jan '19 pukul 18:58 
+Tampilkan 7 komentar lainnya
+
+130
+
+Ini mungkin masalah dengan
+
+pembatas dalam data Anda
+baris pertama, seperti yang dicatat oleh @TomAugspurger
+Untuk mengatasinya, coba tentukan argumen sepdan/atau headersaat memanggil read_csv. Contohnya,
+
+df = pandas.read_csv(fileName, sep='delimiter', header=None)
+Dalam kode di atas, septentukan pembatas Anda dan header=Noneberi tahu panda bahwa data sumber Anda tidak memiliki baris untuk header/judul kolom. Jadi kata dokumen : "Jika file tidak berisi baris header, maka Anda harus secara eksplisit meneruskan header=None". Dalam contoh ini, pandas secara otomatis membuat indeks bilangan bulat untuk setiap bidang {0,1,2,...}.
+
+Menurut dokumen, hal pembatas seharusnya tidak menjadi masalah. Dokumen mengatakan bahwa "jika sep adalah Tidak Ada [tidak ditentukan], akan mencoba menentukan ini secara otomatis." Namun saya belum beruntung dengan ini, termasuk contoh dengan pembatas yang jelas.
+
+Bagikan
+Mengikuti
+diedit 14 Jan '20 pukul 17:02
+dijawab 28 Okt '14 jam 2:18
+
+grisaitis
+3.030 2 2 lencana emas23 23 lencana perak2929 lencana perunggu
+2
+Ya, terkadang pembatas mungkin menjadi penyebab masalah ini. Saya menghadapi masalah yang sama di mana pembatas adalah titik koma (;) -  Anurag Sharma 15 Februari '20 pukul 6:11
+Tambahkan komentar
+
+52
+
+Parser semakin bingung dengan header file. Ia membaca baris pertama dan menyimpulkan jumlah kolom dari baris itu. Tetapi dua baris pertama tidak mewakili data aktual dalam file.
+
+Cobalah dengan data = pd.read_csv(path, skiprows=2)
+
+Bagikan
+Mengikuti
+dijawab 4 Agustus '13 jam 2:24
+
+TomAugspurger
+23.8k 6 6 lencana emas77 77 lencana perak6767 lencana perunggu
+Tambahkan komentar

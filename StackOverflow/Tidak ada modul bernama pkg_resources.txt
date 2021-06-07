@@ -1,0 +1,147 @@
+Tidak ada modul bernama pkg_resources
+Ditanyakan 9 tahun, 8 bulan yang lalu
+Aktif 22 hari yang lalu
+Dilihat 550rb kali
+
+487
+
+
+121
+Saya menyebarkan aplikasi Django ke server dev dan saya menemukan kesalahan ini ketika saya menjalankan pip install -r requirements.txt:
+
+Traceback (most recent call last):
+  File "/var/www/mydir/virtualenvs/dev/bin/pip", line 5, in <module>
+    from pkg_resources import load_entry_point
+ImportError: No module named pkg_resources
+pkg_resourcestampaknya didistribusikan dengan setuptools. Awalnya saya pikir ini mungkin tidak diinstal ke Python di virtualenv, jadi saya menginstal setuptools 2.6(versi yang sama dengan Python) ke paket situs Python di virtualenv dengan perintah berikut:
+
+sh setuptools-0.6c11-py2.6.egg --install-dir /var/www/mydir/virtualenvs/dev/lib/python2.6/site-packages
+EDIT: Ini hanya terjadi di dalam virtualenv. Jika saya membuka konsol di luar virtualenv maka pkg_resourcesada, tetapi saya masih mendapatkan kesalahan yang sama.
+
+Adakah ide mengapa pkg_resourcestidak ada di jalan?
+
+ular piton
+django
+virtualenv
+alat penyiapan
+pip
+Bagikan
+Perbaiki pertanyaan ini
+Mengikuti
+diedit 20 Mar '19 pada 22:16
+
+daaawx
+2.268 2 2 lencana emas12 12 lencana perak1313 lencana perunggu
+tanya 16 Sep '11 jam 14:26
+
+aliran api
+7.356 9 9 lencana emas35 35 lencana perak4444 lencana perunggu
+Saat memasang nltk, masalah yang sama terjadi. Pertanyaan bagus dan jawaban bermanfaat –  laike9m 20 Mei '13 pada 7:01
+6
+pip uninstall -y setuptoolsdan kemudian pip install setuptools==39.1.0bekerja untuk saya di Anaconda di Windows 10. –  Ryan 15 Agustus '18 pukul 1:50
+1
+@Ryan bekerja untuk saya di Ubuntu 16.04 juga, terima kasih, Tuan! -  ListrikRocnic 22 Okt '18 pukul 16:31
+Tambahkan komentar
+35 Jawaban
+1
+2
+Lanjut
+
+685
+
+Pembaruan Juli 2018
+
+Kebanyakan orang sekarang harus menggunakan pip install setuptools(mungkin dengan sudo).
+
+Beberapa mungkin perlu (kembali) menginstal python-setuptoolspaket melalui manajer paket mereka ( apt-get install, yum install, dll.).
+
+Masalah ini bisa sangat bergantung pada OS dan lingkungan pengembang Anda. Lihat warisan/jawaban lain di bawah ini jika jawaban di atas tidak berhasil untuk Anda.
+
+Penjelasan
+
+Pesan kesalahan ini disebabkan oleh setuptoolspaket Python yang hilang/rusak . Per komentar Matt M. dan masalah setuptools #581 , skrip bootstrap yang dirujuk di bawah ini bukan lagi metode instalasi yang disarankan.
+
+Instruksi skrip bootstrap akan tetap di bawah, jika masih bermanfaat bagi siapa pun.
+
+Jawaban Warisan
+
+Saya mengalami hal yang sama ImportErrorhari ini ketika mencoba menggunakan pip. Entah bagaimana setuptoolspaket itu telah dihapus di lingkungan Python saya.
+
+Untuk memperbaiki masalah ini, jalankan skrip penyiapan untuk setuptools:
+
+wget https://bootstrap.pypa.io/ez_setup.py -O - | python
+(atau jika Anda belum wgetmenginstal (mis. OS X), coba
+
+curl https://bootstrap.pypa.io/ez_setup.py | python
+mungkin dengan tambahan sudo.)
+
+Jika Anda memiliki versi distribute, atau di setuptoolsbawah 0.6, Anda harus menghapusnya terlebih dahulu.*
+
+Lihat Petunjuk Pemasangan untuk detail lebih lanjut.
+
+* Jika Anda sudah memiliki distribute, memutakhirkannya ke "pembungkus kompatibilitas" yang mengalihkan Anda menjadi setuptoolslebih mudah. Tapi jika barang sudah rusak, jangan coba-coba.
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 25 Juli '18 pukul 6:30
+dijawab 10 Mei '12 pukul 16:29
+
+cwc
+7.957 2 2 lencana emas18 18 lencana perak1818 lencana perunggu
+42
+Piping curl ke perintah lokal selalu membuat saya takut, tetapi ini berfungsi dengan baik. :) Saya telah menjalankan sudo pythonmeskipun YMMV. -  Nik Reiman 5 Desember '12 pukul 10:49
+5
+Di bawah Cygwin saya harus menginstal paket python-setuptools . Ini membuat easy_install berfungsi kembali, yang mengalami masalah yang sama. Kemudian saya biasa easy_install pipmembuat pip berfungsi lagi. Masalah saya muncul dari Cygwin memutakhirkan Python dari 2,6 ke 2,7 di belakang saya saat menginstal sesuatu yang tidak terkait. -  Steve Pitcher 21 Mar '13 pada 9:27
+5
+Ini adalah jawaban terbaik tahun lalu… tetapi pada pertengahan 2013, distributesudah usang, dan setuptoolsmerupakan penggantinya. Saya akan mengedit jawaban untuk memperbaruinya, tetapi saya tidak yakin itu cara terbaik untuk menanganinya, jadi seseorang dapat mengembalikan hasil edit, dalam hal ini: Buka di sini . -  abarnert 16 Agustus '13 pukul 23:27
+1
+URL ini tidak berfungsi untuk saya tetapi yang ini berhasil: peak.telecommunity.com/dist/ez_setup.py –  ajtrichards 30 April '14 pukul 19:25
+1
+@Cerin: Akan lebih membantu untuk semua orang jika Anda mengatakan apa yang terjadi ketika Anda mencoba. Dan apakah Anda menggunakan sudo, seperti yang disebutkan @Nik di atas? -  Michael Scheper 31 Agustus '14 pukul 14:38
+Tampilkan 16 komentar lainnya
+
+132
+
+sudo apt-get install --reinstall python-pkg-resources
+memperbaikinya untuk saya di Debian. Sepertinya menghapus beberapa paket .deb (twisted set dalam kasus saya) telah merusak jalur yang digunakan python untuk menemukan paket
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+dijawab 16 Nov '14 jam 9:31
+
+Marek
+1,489 1 1 lencana emas8 8 lencana perak66 lencana perunggu
+11
+Saya menggunakan Python 3 jadi saya harus menjalankan Sudo apt-get install --reinstall python3-pkg-resources dan itu memperbaikinya. Terima kasih! -  Robert Townley 5 Juli '17 pukul 13:28 
+tidak membantu dengan yapf saya kira, ada hubungannya dengan python3/python2 -  jangan cerah 29 Sep '19 jam 3:17 
+Tambahkan komentar
+
+62
+
+Saya telah melihat kesalahan ini ketika mencoba menginstal rhodecode ke virtualenv di ubuntu 13.10. Bagi saya solusinya adalah lari
+
+pip install --upgrade setuptools
+pip install --upgrade distribute 
+sebelum saya menjalankan easy_install rhodecode.
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 19 Jan '14 pada 0:40
+
+Stephen Fuhry
+11.1k 6 6 lencana emas49 49 lencana perak5252 lencana perunggu
+dijawab 22 Okt '13 jam 10:06
+
+Ali Akdurak
+3,561 1 1 lencana emas16 16 lencana perak1515 lencana perunggu
+14
+pip install --upgrade setuptoolssendirian melakukan trik untuk saya. -  ryantuck 23 Sep '16 pukul 19:16
+saya butuhpip install --upgrade setuptools --user -  dfrankow 20 Okt '16 pukul 0:00
+6
+Saya tidak dapat menjalankan pip install --upgrade setuptoolskarena kesalahan yang sama:No module named pkg_resources –  McLawrence 28 April '17 pukul 12:38
+1
+pip install --upgrade distributemelakukan pekerjaan saat menggunakan modul venv Python 3. --distributeBendera yang didukung virtualenv Python 2 , tetapi seseorang harus menginstal distributepada lingkungan yang dibuat oleh venv. -  Nirmal 19 Sep '17 pukul 13:24 
+Tambahkan komentar

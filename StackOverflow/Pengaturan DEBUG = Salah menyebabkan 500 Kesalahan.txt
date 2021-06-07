@@ -1,0 +1,279 @@
+Pengaturan DEBUG = Salah menyebabkan 500 Kesalahan
+Ditanyakan 8 tahun, 3 bulan yang lalu
+Aktif 2 bulan lalu
+Dilihat 156k kali
+
+304
+
+
+72
+Setelah saya mengubah DEBUG = False, situs saya akan menghasilkan 500 (menggunakan wsgi & manage.py runserver), dan tidak ada info kesalahan di log kesalahan Apache dan itu akan berjalan normal ketika saya mengubah debugke True.
+
+Saya menggunakan Django 1.5 & Python 2.7.3 di sini adalah log akses Apache dan tanpa log apa pun di log kesalahan Apacheche
+
+www.beta800.net:80 222.247.56.11 - - [28/Feb/2013:13:42:28 +0800] "GET / HTTP/1.1" 500 257 "-" "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.22 (KHTML, like Gecko) Chrome/25.0.1364.97 Safari/537.22"
+www.beta800.net:80 222.247.56.11 - - [28/Feb/2013:13:42:28 +0800] "GET /favicon.ico HTTP/1.1" 500 257 "-" "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.22 (KHTML, like Gecko) Chrome/25.0.1364.97 Safari/537.22"
+www.beta800.net:80 222.247.56.11 - - [28/Feb/2013:13:42:28 +0800] "GET /favicon.ico HTTP/1.1" 500 257 "-" "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.22 (KHTML, like Gecko) Chrome/25.0.1364.97 Safari/537.22"
+Ini file pengaturan saya:
+
+import os.path    
+DEBUG = False 
+#TEMPLATE_DEBUG = DEBUG
+
+HERE = os.path.dirname(__file__)
+ADMINS = (
+    ('admin', 'xyzadmin@qq.com'),
+)
+
+MANAGERS = ADMINS
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'zdm',                      # Or path to database file if using sqlite3.
+        'USER': 'root',                      # Not used with sqlite3.
+        'PASSWORD': 'passwd',                  # Not used with sqlite3.
+        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+    }
+}
+
+# Local time zone for this installation. Choices can be found here:
+# http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
+# although not all choices may be available on all operating systems.
+# In a Windows environment this must be set to your system time zone.
+TIME_ZONE = 'America/Chicago'
+
+# Language code for this installation. All choices can be found here:
+# http://www.i18nguy.com/unicode/language-identifiers.html
+LANGUAGE_CODE = 'en-us'
+
+SITE_ID = 1
+
+# If you set this to False, Django will make some optimizations so as not
+# to load the internationalization machinery.
+USE_I18N = True
+
+# If you set this to False, Django will not format dates, numbers and
+# calendars according to the current locale.
+USE_L10N = True
+
+# If you set this to False, Django will not use timezone-aware datetimes.
+USE_TZ = True
+
+# Absolute filesystem path to the directory that will hold user-uploaded files.
+# Example: "/home/media/media.lawrence.com/media/"
+MEDIA_ROOT = ''
+
+# URL that handles the media served from MEDIA_ROOT. Make sure to use a
+# trailing slash.
+# Examples: "http://media.lawrence.com/media/", "http://example.com/media/"
+MEDIA_URL = ''
+
+# Absolute path to the directory static files should be collected to.
+# Don't put anything in this directory yourself; store your static files
+# in apps' "static/" subdirectories and in STATICFILES_DIRS.
+# Example: "/home/media/media.lawrence.com/static/"
+#STATIC_ROOT = os.path.join(HERE, 'static').replace('\\','/')
+
+# URL prefix for static files.
+# Example: "http://media.lawrence.com/static/"
+STATIC_URL = '/static/'
+#STATIC_ROOT = os.path.join(HERE, 'static').replace('\\','/')
+S= os.path.join(HERE, 'static').replace('\\','/')
+
+# Additional locations of static files
+STATICFILES_DIRS = (
+    # Put strings here, like "/home/html/static" or "C:/www/django/static".
+    # Always use forward slashes, even on Windows.
+    # Don't forget to use absolute paths, not relative paths.
+    '/home/zdm/static',
+)
+
+# List of finder classes that know how to find static files in
+# various locations.
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+#    'django.contrib.staticfiles.finders.DefaultStorageFinder',
+)
+
+# Make this unique, and don't share it with anybody.
+SECRET_KEY = '9a7!^gp8ojyk-^^d@*whuw!0rml+r+uaie4ur$(do9zz_6!hy0'
+
+# List of callables that know how to import templates from various sources.
+TEMPLATE_LOADERS = (
+    'django.template.loaders.filesystem.Loader',
+    'django.template.loaders.app_directories.Loader',
+#     'django.template.loaders.eggs.Loader',
+)
+
+MIDDLEWARE_CLASSES = (
+    'django.middleware.common.CommonMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    # Uncomment the next line for simple clickjacking protection:
+    # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
+)
+
+ROOT_URLCONF = 'zdm.urls'
+
+# Python dotted path to the WSGI application used by Django's runserver.
+WSGI_APPLICATION = 'zdm.wsgi.application'
+
+TEMPLATE_DIRS = (
+    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
+    # Always use forward slashes, even on Windows.
+    # Don't forget to use absolute paths, not relative paths.
+    '/home/zdm/templates',
+)
+
+INSTALLED_APPS = (
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.sites',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    # Uncomment the next line to enable the admin:
+    'django.contrib.admin',
+    # Uncomment the next line to enable admin documentation:
+    # 'django.contrib.admindocs',
+    'zdm',
+    'portal',
+    'admin',
+    'tagging',
+)
+django
+pengaturan
+django-1.5
+Bagikan
+Perbaiki pertanyaan ini
+Mengikuti
+diedit 7 Nov '15 jam 12:31
+
+kacang
+54.8k 9 9 lencana emas74 74 lencana perak122122 lencana perunggu
+ditanyakan pada 28 Februari 13 jam 5:27
+
+zhiguo.wang
+3.893 3 3 lencana emas14 14 lencana perak88 lencana perunggu
+Ya, saya telah menambahkan file html 403 & 404 500 di direktori template saya –  zhiguo.wang 28 Februari '13 pukul 5:36
+Apakah Anda memiliki file 500.html dan 404.html dan 403.html? Saya pikir saya ingat mengalami masalah dengan proyek yang disebarkan yang tidak memiliki file-file itu di root direktori template saya. -  intinya 28 Februari '13 pukul 5:36
+Jika situs Anda menghasilkan kesalahan 500 harus ada beberapa info di log apache, Anda mungkin ingin melewati bagian akhir dari file log kesalahan untuk dilihat orang. -  intinya 28 Februari '13 pukul 5:38
+93
+Anda mungkin ingin mengubah SECRET_KEY Anda sekarang karena tersedia untuk umum... –  asastral 17 Juni '13 pukul 7:29
+1
+Ini bukan jawaban untuk semua orang. Seperti yang ditunjukkan di bawah ini di https://stackoverflow.com/a/37218484/4028977 , mungkin ada banyak alasan mengapa ini terjadi. Dengan beberapa pencatatan sederhana, Anda dapat mengetahuinya tanpa menebak-nebak. -  rampok 10 Februari '17 pukul 19:31
+Tampilkan 2 komentar lainnya
+31 Jawaban
+1
+2
+Lanjut
+
+418
+
+Django 1.5 memperkenalkan pengaturan host yang diizinkan yang diperlukan untuk alasan keamanan. File pengaturan yang dibuat dengan Django 1.5 memiliki bagian baru ini yang perlu Anda tambahkan:
+
+# Hosts/domain names that are valid for this site; required if DEBUG is False
+# See https://docs.djangoproject.com/en/1.9/ref/settings/#allowed-hosts
+ALLOWED_HOSTS = []
+Tambahkan host Anda di sini seperti ['www.beta800.net']atau ['*']untuk tes cepat, tetapi jangan gunakan ['*']untuk produksi .
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 16 Juni '19 pukul 16:06
+
+pengguna8193706
+331 2 2 lencana perak99 lencana perunggu
+dijawab 28 Februari '13 jam 5:43
+
+Rico
+7.887 3 3 lencana emas15 15 lencana perak2020 lencana perunggu
+34
+Wow - ini menggigit kita dengan keras. Sangat menyebalkan bahwa pengaturan ini terkubur dalam dokumen. Situs produksi kami tidak akan berfungsi dengan DEBUG = False. Terima kasih telah menunjukkan ini!!! -  rusak 28 Mar '13 pukul 6:45
+4
+Selengkapnya tentang masalah keamanan yang memperkenalkan setelan ini: Serangan header Host HTTP Praktis . Pasti akan meyakinkan Anda untuk tidak menggunakan ['*']dalam produksi. -  gertvdijk 2 Mei 13 jam 8:36 
+4
+bl. menjengkelkan karena mereka bahkan tidak memasukkannya sebagai nilai default di settings.py, mungkin dengan komentar penjelasan... –  hwjp 27 Mei '13 jam 9:19
+7
+Terkadang saya bertanya-tanya mengapa Django menjadi semakin terbelakang! Tentunya orang-orang itu adalah programmer yang jauh lebih baik daripada saya, tetapi saya benar-benar tidak mengerti keputusan untuk "memperbaiki" kerentanan di tingkat aplikasi, ketika langkah nyata dan bersih adalah mengkonfigurasi server dengan benar. Hal yang sama berlaku untuk "caching template" dan "koneksi persisten" ... Kode tidak berguna yang tidak akan pernah digunakan di situs web yang serius; masih disajikan sebagai cawan suci pemrograman! Mungkin hanya saya, saya pernah salah sebelumnya! -  StefanNch 3 Mei '14 pukul 20:29
+3
+Tidak apa-apa, menemukan masalahnya. Itu terkait dengan django-pipelineperilaku ketika statis belum dikumpulkan. Sebagai tip umum, menempatkan breakpoint dalam handle_uncaught_exceptionmetode Django akan membantu anda mengetahui apa yang terjadi di sini. -  Pieter 17 Januari '16 pukul 17:32
+Tampilkan 8 komentar lainnya
+
+61
+
+Saya tahu ini terlambat tetapi saya berakhir di sini dengan mencari kesalahan saya 500 dengan DEBUG=False, dalam kasus saya ternyata itu adalah ALLOWED_HOSTStetapi saya menggunakan os.environ.get('variable')untuk mengisi host, saya tidak melihat ini sampai saya mengaktifkan logging, Anda bisa catat semua kesalahan ke file dengan yang di bawah ini dan itu akan masuk bahkan ketika DEBUG=False:
+
+# settings.py
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format' : "[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s",
+            'datefmt' : "%d/%b/%Y %H:%M:%S"
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        },
+    },
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': 'mysite.log',
+            'formatter': 'verbose'
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers':['file'],
+            'propagate': True,
+            'level':'DEBUG',
+        },
+        'MYAPP': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+        },
+    }
+}
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+dijawab 13 Mei '16 pukul 20:02
+
+squareborg
+1.282 12 12 lencana perak1717 lencana perunggu
+24
+Ini harus menjadi jawaban yang diterima. Jauh lebih berguna untuk menanyakan kerangka itu sendiri apa yang salah setelah menggunakan pengaturan produksi, daripada mencoba menebak. -  Stefan Dragnev 27 Juni '16 pukul 12:49
+4
+Memang, ini bukan sesuatu untuk berkeliaran dalam kegelapan. Lihat saja pesan kesalahan yang biasanya Anda lihat menggunakan metode ini. Dalam kasus saya, saya kehilangan pengaturan yang berbeda di settings.py saya yang dicari oleh aplikasi saya. Yang saya butuhkan hanyalah log untuk melacak ini. Satu catatan penting: Saya menambahkan /path/to/my/django/ sebelum 'mysite.log' seperti yang ditunjukkan dalam contoh dokumen: docs.djangoproject.com/en/1.10/topics/logging/#examples –  rampok 10 Februari '17 pukul 19:27 
+4
+Saya telah menghabiskan berjam-jam mencari solusi, tidak ada gunanya. menurut jawaban ini gunakan saja logging dan Anda seharusnya memiliki masalah, ini adalah jawaban terbaik. Terima kasih OP! -  Tumpukan 4 Nov '17 pukul 13:26
+5
+Terima kasih! Ini memecahkan kesalahan saya. Ternyata saya perlu menjalankan collectstatic untuk mengumpulkan beberapa aset statis dari sebuah paket. -  sup tema 12 Mei '19 pukul 13:38
+1
+@Gorgonzola jika Anda memiliki sys admin di tim Anda holla di mereka. Mereka paling baik dalam memecahkan masalah izin ditolak. Seperti yang saya katakan, ada banyak hal yang bisa menghalangi. -  squareborg 14 April pukul 8:42
+Tampilkan 5 komentar lainnya
+
+39
+
+Saya mengalami masalah yang sama baru-baru ini di Django 2.0. Saya dapat memecahkan masalah dengan mengatur DEBUG_PROPAGATE_EXCEPTIONS = True. Lihat di sini: https://docs.djangoproject.com/en/2.0/ref/settings/#debug-propagate-exceptions
+
+Dalam kasus saya, kesalahannya adalah ValueError: Missing staticfiles manifest entry for 'admin/css/base.css'. Saya memperbaikinya dengan menjalankan python manage.py collectstatic.
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+dijawab 10 Februari '18 pukul 19:16
+
+Kyle Gibson
+882 8 8 lencana perak1212 lencana perunggu
+Saya melakukan hal yang sama tetapi collectstatic tidak memperbaikinya untuk saya. Apakah Anda mendapatkan "kesalahan tidak dapat dijangkau"? Dalam hal ini, bagaimana Anda memperbaikinya? -  Kavi Vaidya 19 Nov '18 pukul 18:43 
+Mengapa ini begitu jauh ke bawah? Ini membantu apa pun alasan kesalahannya. -  Kuda Nil 31 Maret pukul 22:24
+Tambahkan komentar

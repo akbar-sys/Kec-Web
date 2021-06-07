@@ -1,0 +1,113 @@
+Bagaimana cara memperbaiki kesalahan "ImportError: Tidak ada modul bernama ..." dengan Python?
+Ditanyakan 11 tahun, 3 bulan yang lalu
+Aktif 1 tahun, 6 bulan lalu
+Dilihat 496k kali
+
+124
+
+
+23
+Apa cara yang benar untuk memperbaiki kesalahan ImportError ini?
+
+Saya memiliki struktur direktori berikut:
+
+/home/bodacydo
+/home/bodacydo/work
+/home/bodacydo/work/project
+/home/bodacydo/work/project/programs
+/home/bodacydo/work/project/foo
+Dan saya ada di direktori
+
+/home/bodacydo/work/project
+Sekarang jika saya mengetik
+
+python ./programs/my_python_program.py
+Saya langsung mendapatkan
+
+ImportError: No module named foo.tasks
+Ini ./programs/my_python_program.pyberisi baris berikut:
+
+from foo.tasks import my_function
+Saya tidak mengerti mengapa python tidak akan menemukan ./foo/tasks.py- itu ada di sana.
+
+Jika saya melakukannya dari shell Python, maka itu berfungsi:
+
+python
+>>> from foo.tasks import my_function
+Ini hanya tidak berfungsi jika saya menyebutnya melalui python ./programs/my_python_program.pyskrip.
+
+ular piton
+Bagikan
+Mengikuti
+diedit 9 Juli '15 pukul 20:36
+
+eric
+4,553 8 8 lencana emas50 50 lencana perak106106 lencana perunggu
+tanya 24 Feb '10 jam 12:31
+
+bodacydo
+64k 83 83 lencana emas206 206 lencana perak304304 lencana perunggu
+Tambahkan komentar
+7 Jawaban
+
+129
+
+Python tidak menambahkan direktori saat ini ke sys.path, melainkan direktori tempat skrip berada. Tambahkan /home/bodacydo/work/projectke salah satu sys.pathatau $PYTHONPATH.
+
+Bagikan
+Mengikuti
+dijawab 24 Feb '10 jam 12:47
+
+Ignacio Vazquez-Abrams
+701k 132 132 lencana emas1239 1239 lencana perak12851285 lencana perunggu
+9
+Jadi apa gunanya memiliki init .py di folder root? Tampaknya tidak ada gunanya jika Anda mengedit sys.path atau pythonpath. –  user1980175 Jan 4 '14 di 23:13
+12
+@Editor: __init__.pyhanya menunjukkan bahwa direktori harus diperlakukan sebagai sebuah paket, ketika induknya berada di dalam sys.pathatau merupakan paket itu sendiri. -  Ignacio Vazquez-Abrams 4 Jan '14 pukul 23:15 
+5
+Selain itu periksa izin pada folder. Itu adalah masalah dalam kasus saya. -  SidJ 24 Agustus '16 pukul 3:08
+17
+Untuk menambahkan dir saat ini ke jalur python, gunakanexport PYTHONPATH=`pwd` –  rodorgas 2 Mei '17 pukul 21:39 
+2
+Apa yang berhasil bagi saya adalah menambahkan $PYTHONPATH direktori induk proyek, dalam kasus Anda adalah: /home/bodacydo/work... lihat jawaban ini –  maledr53 3 Juni '17 pukul 22:22 
+Tampilkan 1 komentar lagi
+
+36
+
+Apakah Anda memiliki file bernama __init__.pydi direktori foo? Jika tidak maka python tidak akan mengenali foo sebagai paket python.
+
+Lihat bagian tentang paket dalam tutorial python untuk informasi lebih lanjut.
+
+Bagikan
+Mengikuti
+dijawab 24 Feb '10 jam 13:00
+
+Dave Kirby
+23.1k 5 5 lencana emas60 60 lencana perak7979 lencana perunggu
+Terima kasih dan ya, saya punya __init__.py. Masalahnya kali ini adalah dengan $PYTHONPATH. Solusi Ignacio berhasil. -  bodacydo 24 Februari '10 pukul 13:08
+1
+File init .py diperlukan untuk membuat Python memperlakukan direktori sebagai berisi paket; ini dilakukan untuk mencegah direktori dengan nama umum, seperti string, menyembunyikan modul valid yang muncul kemudian di jalur pencarian modul secara tidak sengaja. Dalam kasus yang paling sederhana, init .py hanya bisa berupa file kosong –  ikan pano 14 Januari '16 pukul 21:13
+Terima kasih telah menyelamatkan saya kapan-kapan. -  timon_the_destroyer 31 Mar '17 pukul 13:24
+Tambahkan komentar
+
+9
+
+Berikut ini adalah solusi langkah demi langkah:
+
+Menambahkan script yang disebut run.pydalam /home/bodacydo/work/projectdan mengedit seperti ini:
+
+import programs.my_python_program
+programs.my_python_program.main()
+(ganti main()dengan metode setara Anda di my_python_program.)
+
+Pergi ke /home/bodacydo/work/project
+Lari run.py
+Penjelasan: Karena python menambahkan ke PYTHONPATH jalur skrip dari mana ia berjalan , menjalankan run.pyakan menambahkan /home/bodacydo/work/project. Dan voila , import foo.tasksakan ditemukan.
+
+Bagikan
+Mengikuti
+dijawab 25 Okt '11 jam 7:38
+
+cyborg
+9.443 4 4 lencana emas35 35 lencana perak5555 lencana perunggu
+Tambahkan komentar

@@ -1,0 +1,110 @@
+Kesalahan Python: AttributeError: objek 'modul' tidak memiliki atribut
+Ditanyakan 10 tahun, 4 bulan yang lalu
+Aktif 11 bulan yang lalu
+Dilihat 127k kali
+
+49
+
+
+8
+Saya benar-benar baru mengenal Python dan saya tahu pertanyaan ini ditanyakan berkali-kali, tetapi sayangnya tampaknya situasi saya sedikit berbeda ... Saya telah membuat sebuah paket (atau begitulah menurut saya). Pohon katalognya seperti ini:
+
+mydir
+    lib   (__init__.py)
+        mod1  (__init__.py, mod11.py)
+Dalam kurung ada file dalam katalog. Kedua __init__.pyfile memiliki panjang nol.
+
+File tersebut mydir/lib/mod1/mod11.pyberisi sebagai berikut:
+
+def mod12():
+    print "mod12"
+Sekarang, saya menjalankan python, then import lib, yang berfungsi OK, lalu lib.mod11()atau lib.mod12().
+
+Salah satu dari dua yang terakhir memberi saya pesan kesalahan subjek. Sebenarnya dir(lib)setelah Langkah 2 tidak ditampilkan mod11atau mod12keduanya. Sepertinya saya melewatkan sesuatu yang sangat sederhana.
+
+(Saya menggunakan Python 2.6 di Ubuntu 10.10)
+
+Terima kasih
+
+ular piton
+paket
+Bagikan
+Perbaiki pertanyaan ini
+Mengikuti
+diedit 20 Juli pukul 23:34
+
+danben
+73.9k 18 18 lencana emas117 117 lencana perak141141 lencana perunggu
+tanya 2 Februari '11 jam 6:22
+
+Alex
+491 1 1 lencana emas4 4 lencana perak33 lencana perunggu
+2
+Pesan kesalahan dalam subjek tidak lengkap. Mungkin bermanfaat untuk memposting pesan kesalahan lengkap di sini di badan. -  keito 2 Februari '11 pada 7:08
+Tambahkan komentar
+4 Jawaban
+
+41
+
+Saat Anda import lib, Anda mengimpor paket. Satu-satunya file yang dievaluasi dan dijalankan dalam kasus ini adalah 0 byte __init__.pydi direktori lib.
+
+Jika Anda ingin mengakses fungsi Anda, Anda dapat melakukan sesuatu seperti ini from lib.mod1 import mod1dan kemudian menjalankan mod12fungsi seperti itu mod1.mod12().
+
+Jika Anda ingin dapat mengakses mod1ketika Anda mengimpor lib, Anda harus menempatkan import mod1dalam __init__.pyfile di dalam libdirektori.
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+dijawab 2 Februari '11 jam 7:11
+
+Noufal Ibrahim
+66.9k 11 11 lencana emas123 123 lencana perak160160 lencana perunggu
+Tambahkan komentar
+
+30
+
+Lebih tepatnya, direktori Anda mod1dan libbukan modul, melainkan paket. File mod11.pyadalah modul.
+
+Python tidak secara otomatis mengimpor subpaket atau modul. Anda harus melakukannya secara eksplisit, atau "menipu" dengan menambahkan pernyataan impor di inisialisasi.
+
+>>> import lib
+>>> dir(lib)
+['__builtins__', '__doc__', '__file__', '__name__', '__package__', '__path__']
+>>> import lib.pkg1
+>>> import lib.pkg1.mod11
+>>> lib.pkg1.mod11.mod12()
+mod12
+Alternatifnya adalah menggunakan fromsintaks untuk "menarik" modul dari paket ke dalam ruang nama skrip Anda.
+
+>>> from lib.pkg1 import mod11
+Kemudian referensikan fungsinya sebagai sederhana mod11.mod12().
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+dijawab 2 Februari '11 jam 7:17
+
+keito
+38k 10 10 lencana emas48 48 lencana perak6767 lencana perunggu
+Tambahkan komentar
+
+6
+
+Cara saya melakukannya adalah dengan membiarkan file __ init__.py kosong, dan lakukan:
+
+import lib.mod1.mod11
+lib.mod1.mod11.mod12()
+atau
+
+from lib.mod1.mod11 import mod12
+mod12()
+Anda mungkin menemukan bahwa dir mod1 tidak diperlukan, cukup miliki mod12.py di lib.
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+dijawab 2 Februari '11 jam 7:09
+
+Gary van der Merwe
+7.976 3 3 lencana emas38 38 lencana perak7373 lencana perunggu
+Tambahkan komentar

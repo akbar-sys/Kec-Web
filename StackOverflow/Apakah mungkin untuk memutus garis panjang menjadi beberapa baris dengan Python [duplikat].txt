@@ -1,0 +1,138 @@
+Apakah mungkin untuk memutus garis panjang menjadi beberapa baris dengan Python? [duplikat]
+Ditanyakan 10 tahun, 6 bulan yang lalu
+Aktif 2 bulan lalu
+Dilihat 988k kali
+
+612
+
+
+124
+Pertanyaan ini sudah memiliki jawaban di sini :
+Bagaimana saya bisa melakukan jeda baris (kelanjutan baris)? (10 jawaban)
+Tutup 3 tahun yang lalu .
+Sama seperti C, Anda dapat memecah garis panjang menjadi beberapa garis pendek. Tapi di Python , jika saya melakukan ini, akan ada kesalahan indentasi ... Apakah mungkin?
+
+ular piton
+jeda baris
+Bagikan
+Perbaiki pertanyaan ini
+Mengikuti
+diedit 7 Februari pukul 5:44
+
+Peter Mortensen
+28.3k 21 21 lencana emas95 95 lencana perak123123 lencana perunggu
+tanya 13 Nov '10 jam 12:17
+
+Bin Chen
+54.9k 51 51 lencana emas136 136 lencana perak180180 lencana perunggu
+Seseorang juga dapat memutuskan panggilan metode (obj.method()) dalam beberapa baris dengan tanda kurung, stackoverflow.com/a/64812795/687896 –  Brandt 12 Nov '20 pukul 22:33
+Tambahkan komentar
+7 Jawaban
+
+699
+
+Dari PEP 8 - Panduan Gaya untuk Kode Python :
+
+Cara yang lebih disukai untuk membungkus garis panjang adalah dengan menggunakan kelanjutan garis tersirat Python di dalam tanda kurung, kurung siku, dan kurung kurawal. Jika perlu, Anda dapat menambahkan sepasang tanda kurung tambahan di sekitar ekspresi, tetapi terkadang menggunakan garis miring terbalik terlihat lebih baik. Pastikan untuk membuat indentasi baris lanjutan dengan tepat.
+
+Contoh kelanjutan baris implisit:
+
+a = some_function(
+    '1' + '2' + '3' - '4')
+Pada topik jeda baris di sekitar operator biner, selanjutnya dikatakan:
+
+Selama beberapa dekade, gaya yang disarankan adalah mendobrak operator biner. Tapi ini bisa merusak keterbacaan dalam dua cara: operator cenderung tersebar di kolom yang berbeda di layar, dan setiap operator dipindahkan dari operan dan ke baris sebelumnya.
+
+Dalam kode Python, diperbolehkan untuk memecah sebelum atau sesudah operator biner, selama konvensi konsisten secara lokal. Untuk kode baru, gaya Knuth (jeda baris sebelum operator) disarankan.
+
+Contoh kelanjutan baris eksplisit:
+
+a = '1'   \
+    + '2' \
+    + '3' \
+    - '4'
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 19 Maret pukul 15:13
+
+Peter Mortensen
+28.3k 21 21 lencana emas95 95 lencana perak123123 lencana perunggu
+dijawab 13 Nov '10 jam 12:20
+
+Darin Dimitrov
+960k 257 257 lencana emas3197 3197 lencana perak28762876 lencana perunggu
+31
+Untuk contoh kedua, ia tidak menyukai spasi (yang tidak dapat Anda lihat) setelah ' \' –  kapulaga 9 Maret '17 pukul 11:49 
+@cardamom Masalah ini bukan kekhususan python; misalnya, jika Anda mencoba menulis skrip shell, misalnya, forloop untuk membuat direktori: for i in dir1\ (baris baru) dir2\ (baris baru) dir3\ (baris baru) ... mkdir $iagar skrip ini dapat dijalankan, tidak boleh ada spasi setelah garis miring terbalik –  DavidC. 7 Agustus '17 pukul 17:26 
+@cardamom Sebenarnya tidak suka karakter apa pun (kecuali baris baru). Sayang sekali untuk komentar… –  Skippy le Grand Gourou 30 Okt '19 jam 10:33
+Tambahkan komentar
+
+231
+
+Ada lebih dari satu cara untuk melakukannya.
+
+1). Pernyataan panjang:
+
+>>> def print_something():
+         print 'This is a really long line,', \
+               'but we can make it across multiple lines.'
+2). Menggunakan tanda kurung:
+
+>>> def print_something():
+        print ('Wow, this also works?',
+               'I never knew!')
+3). Menggunakan \lagi:
+
+>>> x = 10
+>>> if x == 10 or x > 0 or \
+       x < 100:
+       print 'True'
+Mengutip PEP8 :
+
+Cara yang lebih disukai untuk membungkus garis panjang adalah dengan menggunakan kelanjutan garis tersirat Python di dalam tanda kurung, kurung siku, dan kurung kurawal. Jika perlu, Anda dapat menambahkan sepasang tanda kurung tambahan di sekitar ekspresi, tetapi terkadang menggunakan garis miring terbalik terlihat lebih baik. Pastikan untuk membuat indentasi baris lanjutan dengan tepat. Tempat yang lebih disukai untuk menerobos operator biner adalah setelah operator, bukan sebelumnya.
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 12 Mei '15 pukul 18:17
+
+Michael Pryor
+23.5k 18 18 lencana emas68 68 lencana perak9090 lencana perunggu
+dijawab Nov 13 '10 jam 12:26
+
+pengguna225312
+108k 64 64 lencana emas161 161 lencana perak179179 lencana perunggu
+Ini muncul selama pembicaraan tentang gaya kode di PyOhio dan kami sampai pada kesimpulan bahwa 2) adalah cara standar yang baik untuk pergi. Itu tidak sempurna karena mengubah teks tidak semudah itu, tapi setidaknya itu baik-baik saja. -  Rick 13 Nov '10 pukul 16:53
+@ user225312 bisakah Anda juga menggunakan''' kode baris baru lebih banyak kode'''' atau ini kebiasaan buruk? -  onxx Apr 6 '15 pada 22:14 
+yang kedua mencetak Tuple dengan python 2.7 –  iggy 19 Okt '16 pukul 17:44
+yang pertama memberi saya SyntaxError di IDLE(v.3.5), mengapa? Juga, jika saya tidak memulai dengan tanda kurung memberi saya kesalahan yang sama dengan tanda kurung yang hilang. Dengan tanda kurung tidak memberi saya apa - apa –  Yannis Dran 22 Nov '16 pukul 23:05 
+3
+Kalimat terakhir yang menyebutkan melanggar setelah operator, bertentangan dengan apa yang disarankan PEP8 untuk melanggar sebelum operator untuk meningkatkan keterbacaan. -  milpita 17 Januari '17 pukul 19:02
+Tampilkan 1 komentar lagi
+
+33
+
+Jika Anda ingin menetapkan string panjang ke variabel, Anda dapat melakukannya seperti di bawah ini:
+
+net_weights_pathname = (
+    '/home/acgtyrant/BigDatas/'
+    'model_configs/lenet_iter_10000.caffemodel')
+Jangan tambahkan koma, atau Anda akan mendapatkan tupel yang berisi banyak string!
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 19 Maret pukul 15:16
+
+Peter Mortensen
+28.3k 21 21 lencana emas95 95 lencana perak123123 lencana perunggu
+dijawab 27 Apr '16 jam 7:17
+
+penyerang
+1,445 1 1 lencana emas13 13 lencana perak2323 lencana perunggu
+8
+Ini berfungsi karena python secara otomatis menggabungkan string di dalam tanda kurung, tanpa perlu meletakkan +operator. -  biruCepat 17 Okt '17 pukul 14:30
+Untuk interpolasi string, letakkan fsebelum setiap string pendek,uri = (f"example.com/version8.2/apps/{self.market}" f"/app/{self.product_name}/ranks?start_date={self.week_ago_str}&end_date={self.today_str}") –  Charlie 23 Juli '18 pukul 19:05
+Ini juga berfungsi dengan baik jika Anda menempatkan semua string Anda dalam string multi-baris, yaitu antara triple ", misalnya ( """line 1 line2""") , dan mungkin tidak akan membawa "risiko koma" :) –  jmng 25 Juli '18 pukul 17:17
+Tambahkan komentar

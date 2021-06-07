@@ -1,0 +1,137 @@
+Python: Tidak ditemukan kompiler C yang dapat diterima di $PATH saat menginstal python installing
+Ditanyakan 7 tahun, 7 bulan yang lalu
+Aktif 3 bulan lalu
+Dilihat 490rb kali
+
+280
+
+
+45
+Saya mencoba menginstal lingkungan python baru di hosting bersama saya. Saya mengikuti langkah-langkah yang tertulis dalam posting ini :
+
+mkdir ~/src
+wget http://www.python.org/ftp/python/2.7.1/Python-2.7.1.tgz
+tar -zxvf Python-2.7.1.tar.gz
+cd Python-2.7.1
+mkdir ~/.localpython
+./configure --prefix=/home/<user>/.localpython
+make
+make install
+Setelah datang ke perintah "./configure --prefix=/home//.localpython" saya mendapatkan output berikut:
+
+checking for --enable-universalsdk... no
+checking for --with-universal-archs... 32-bit
+checking MACHDEP... linux3
+checking EXTRAPLATDIR... 
+checking machine type as reported by uname -m... x86_64
+checking for --without-gcc... no
+checking for gcc... no
+checking for cc... no
+checking for cl.exe... no
+configure: error: in `/home3/mikos89/Python-2.7.1':
+configure: error: no acceptable C compiler found in $PATH
+See `config.log' for more details.
+Bagaimana masalah ini bisa diselesaikan? Saya sudah mencoba mencari solusi selama 3 jam tetapi masih terjebak di satu tempat.
+
+MEMPERBARUI
+
+Hostgator tidak mengizinkan gcc di akun bersama mereka: http://support.hostgator.com/articles/pre-sales-questions/compatible-technologies
+
+ular piton
+kompiler-kesalahan
+virtualenv
+Bagikan
+Perbaiki pertanyaan ini
+Mengikuti
+diedit 3 Februari pukul 20:37
+
+Janji Preston
+8.882 5 5 lencana emas44 44 lencana perak7070 lencana perunggu
+tanya 6 Nov 13 jam 15:38
+
+mik.ro
+3,401 2 2 lencana emas15 15 lencana perak2222 lencana perunggu
+1
+masalah persis sama -  menyalahkan 22 Des '16 pukul 3:21
+1
+Anda harus mencoba menemukan binari prebuild untuk sistem Anda. Ini adalah cara termudah jika Anda tidak memiliki akses root. -  C. Yduqoli 15 '20 Mei pukul 1:47
+Tambahkan komentar
+11 Jawaban
+
+511
+
+Kompiler gcc tidak ada dalam file $PATH. Itu berarti Anda tidak menginstal gcc atau tidak ada dalam variabel $PATH Anda.
+
+Untuk menginstal gcc gunakan ini: (jalankan sebagai root)
+
+Basis Redhat:
+
+yum groupinstall "Development Tools"
+Basis Debian:
+
+apt-get install build-essential
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 13 Juni '18 pukul 11:52
+pengguna4734394
+dijawab 6 Nov '13 jam 15:54
+
+vahid abdi
+7.850 4 4 lencana emas27 27 lencana perak3333 lencana perunggu
+13
+Saya suka metode menginstal build-essential , yang berisi gcc, g++, make, dll. –  Spektral 9 Juli '14 pukul 20:06
+2
+Apakah ada alternatif untuk zypper? -  Almino Melo 29 Apr '15 pukul 17:39
+1
+ini adalah shared hosting, bagaimana ini bisa menjadi solusi yang diterima? kita membutuhkan python, dalam kasus datang untuk node, yang juga masuk sebagai level pengguna, tanpa root. ini adalah pemecah kesepakatan untuk semua ini, membutuhkan root. ini seharusnya menjadi prosedur non root IMO -  menyalahkan 22 Des '16 pada 3:51 
+1
+Sebenarnya itu yum groupinstall "Pembangunan T ools" di CentOS 7 -  Francesco Gualazzi 30 Januari '17 pukul 14:35
+4
+Bagaimana Anda menentukan apakah itu diinstal tetapi tidak dalam variabel $PATH Anda? -  JMess 30 Mei '17 pukul 21:25
+Tampilkan 3 komentar lainnya
+
+91
+
+kamu harus lari
+
+yum install gcc
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+dijawab 23 Apr '14 jam 16:40
+
+mlowton
+910 6 6 lencana perak44 lencana perunggu
+3
+Bekerja pada CentOS 7. Terima kasih –  Faliorn 24 Februari '16 pada 15:01
+Bekerja di Debian 4.9. Terima kasih -  Jad Chahine 21 Agustus '17 pukul 8:19
+1
+Bekerja pada CentOS 8. Terima kasih –  twasbrilig 15 Desember '19 pukul 5:56
+Saya mendapatkan kesalahan "Kesalahan mengakses file untuk file konfigurasi:///etc/yum.conf". Saya memiliki hosting bersama Bluehost. -  Paul Chris Jones 05 Maret '20 pukul 16:15
+Hai @PaulChrisJones, saya mengalami masalah yang sama ketika saya mencoba menginstal gcc di acc hosting blueshot saya menggunakan ssh. Saya mengalami ini karena file konfigurasi saya tidak dapat dijalankan. Jika Anda berhasil menemukan solusi, beri tahu saya. Ini akan sangat membantu! -  domba hitam 369 27 Mei '20 pukul 12:51
+Tambahkan komentar
+
+74
+
+untuk Ubuntu/Debian:
+
+# sudo apt-get install build-essential
+Untuk RHEL/CentOS
+
+#rpm -qa | grep gcc
+# yum install gcc glibc glibc-common gd gd-devel -y
+atau
+
+ # yum groupinstall "Development tools" -y
+Selengkapnya rujuk link
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 26 Sep '15 pada 7:30
+dijawab 06 Juli '15 jam 12:51
+
+lakshmikandan
+3,570 2 2 lencana emas23 23 lencana perak3333 lencana perunggu
+Tambahkan komentar

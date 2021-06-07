@@ -1,0 +1,142 @@
+Kesalahan python untuk request.get
+Ditanyakan 5 tahun, 9 bulan yang lalu
+Aktif 5 tahun, 9 bulan lalu
+Dilihat 1k kali
+
+1
+
+
+Saya mencoba menulis skrip Python yang memungkinkan saya mengakses halaman web dan mengunduh file dari halaman itu. Upaya pertama saya adalah membuka halaman itu dan saya mencoba kode berikut:
+
+import requests
+
+url = 'https://www.google.com/?gws_rd=ssl' #using google as an example
+
+r = requests.get(url)
+
+print(r.url)
+Saya diberi kesalahan ini:
+
+runfile('C:/Users/ME/Desktop/TMS502.py', wdir='C:/Users/ME/Desktop')
+Traceback (most recent call last):
+
+  File "<ipython-input-23-bc585dcceef8>", line 1, in <module>
+    runfile('C:/Users/ME/Desktop/TMS502.py', wdir='C:/Users/ME/Desktop')
+
+  File "C:\Users\ME\AppData\Local\Continuum\Anaconda\lib\site-packages\spyderlib\widgets\externalshell\sitecustomize.py", line 585, in runfile
+    execfile(filename, namespace)
+
+  File "C:/Users/ME/Desktop/TMS502.py", line 16, in <module>
+    r = requests.get(url)
+
+  File "C:\Users\ME\AppData\Local\Continuum\Anaconda\lib\site-packages\requests\api.py", line 55, in get
+    return request('get', url, **kwargs)
+
+  File "C:\Users\ME\AppData\Local\Continuum\Anaconda\lib\site-packages\requests\api.py", line 44, in request
+    return session.request(method=method, url=url, **kwargs)
+
+  File "C:\Users\ME\AppData\Local\Continuum\Anaconda\lib\site-packages\requests\sessions.py", line 456, in request
+    resp = self.send(prep, **send_kwargs)
+
+  File "C:\Users\ME\AppData\Local\Continuum\Anaconda\lib\site-packages\requests\sessions.py", line 559, in send
+    r = adapter.send(request, **kwargs)
+
+  File "C:\Users\ME\AppData\Local\Continuum\Anaconda\lib\site-packages\requests\adapters.py", line 375, in send
+    raise ConnectionError(e, request=request)
+
+ConnectionError: HTTPSConnectionPool(host='www.google.com', port=443): Max retries exceeded with url: /?gws_rd=ssl (Caused by <class 'socket.error'>: [Errno 10054] An existing connection was forcibly closed by the remote host)
+Dapatkah seseorang tolong bantu saya?
+
+ular piton
+python-permintaan
+Bagikan
+Mengikuti
+diedit 13 Agustus '15 pukul 18:08
+
+Roland Smith
+36k 3 3 lencana emas52 52 lencana perak7979 lencana perunggu
+tanya 13 Agustus '15 jam 18:00
+
+Bilal
+61 77 lencana perunggu
+Tidak dapat mereproduksi, bekerja untuk saya. -  menjadi nyata 13 Agustus '15 pukul 18:06
+Bekerja untuk saya juga. -  Roland Smith 13 Agustus '15 pukul 18:09
+Tambahkan komentar
+3 Jawaban
+
+3
+
+Anda mendapatkan kesalahan itu karena sisi jarak jauh (dalam hal ini Google) menutup permintaan Anda atau Anda tidak lagi dapat membuat koneksi ke sana.
+
+Dari kesalahan:
+
+ConnectionError: HTTPSConnectionPool(host='www.google.com', port=443): 
+Max retries exceeded with url: /?gws_rd=ssl 
+(Caused by <class 'socket.error'>: [Errno 10054] An existing connection was forcibly closed by the remote host)
+Kita dapat melihat ke sumber untuk petunjuk:
+
+class MaxRetryError(RequestError):
+    """Raised when the maximum number of retries is exceeded.
+    :param pool: The connection pool
+    :type pool: :class:`~urllib3.connectionpool.HTTPConnectionPool`
+    :param string url: The requested Url
+    :param exceptions.Exception reason: The underlying error
+    """
+
+    def __init__(self, pool, url, reason=None):
+        self.reason = reason
+
+        message = "Max retries exceeded with url: %s (Caused by %r)" % (
+            url, reason)
+
+        RequestError.__init__(self, pool, url, message)
+Coba host contoh lain dan kode Anda akan berfungsi, seperti https://example.org .
+
+Pesan kesalahan "Sambungan yang ada ditutup secara paksa oleh host jarak jauh" berasal dari sistem operasi Anda (Windows) dan Permintaan menunjukkan teks ini kepada Anda sebagai upaya untuk membantu.
+
+Bagikan
+Mengikuti
+diedit 14 Agustus '15 pukul 11:41
+dijawab 14 Agustus '15 pukul 11:15
+pengguna559633
+Tambahkan komentar
+
+0
+
+Kode Anda baik-baik saja.
+
+Saya kira masalahnya disebabkan oleh url = 'https://www.google.com/?gws_rd=ssl'.
+
+Mungkin jaringan Anda tidak dapat dijangkau www.google.com, coba url lain.
+
+Bagikan
+Mengikuti
+dijawab 14 Agustus '15 pukul 11:15
+
+luoluo
+4.833 2 2 lencana emas25 25 lencana perak3838 lencana perunggu
+Tambahkan komentar
+
+-3
+
+y apakah Anda repot-repot dengan permintaan:
+
+from urllib2 import urlopen
+u = urlopen("https://www.google.com/?gws_rd=ssl")
+data = u.read()
+u.close()
+Mungkin ini akan berhasil.
+
+Bagikan
+Mengikuti
+diedit 14 Agustus '15 pukul 11:07
+dijawab 13 Agustus '15 pukul 18:34
+
+Dalen
+3,678 1 1 lencana emas13 13 lencana perak2929 lencana perunggu
+Sekarang saya mendapatkan: <urlopen error [Errno 10054] Koneksi yang ada ditutup paksa oleh remote host> –  Bilal 13 Agustus '15 pukul 19:00
+Saya pikir ini terjadi karena pengaturan untuk komputer saya di perusahaan saya dan saya mungkin perlu melewati semacam layar validasi kata sandi agar ini berfungsi. -  Bilal 13 Agustus '15 pukul 19:01 
+Hm, menarik! Jika apa yang Anda katakan itu benar, maka dua hal yang dapat saya pikirkan sekarang adalah: 1. Apakah browser web Anda berfungsi, dan apakah ada proxy HTTP yang dikonfigurasi pada PC Anda. Jika ada proxy, Anda harus memberikan info tambahan baik ke urllib atau permintaan agar mereka menggunakan proxy ini. Dan 2. Mungkin firewall memblokir permintaan HTTP yang tidak dibuat oleh browser. Dalam hal ini Anda bisa membodohinya. -  Dalen 13 Agustus '15 pukul 19:13
+Untuk melakukannya dengan urllib: r = Request("http://..."); r.add_header("User-Agent", "kompatibel dengan Mozilla/5.0;"); u = urlopen(r); dll. dll. Mungkin tetap tidak berfungsi dan Anda harus menyediakan Agen-Pengguna yang lebih lengkap untuk meniru salah satu browser web yang ada. Tapi aku tidak suka melakukannya. Terasa ilegal. (jangan lupa Impor Permintaan dari urllib2) –  Dalen 13 Agustus '15 pukul 19:18
+Seseorang tersinggung dengan pemikiran bahwa sesuatu mungkin tidak berfungsi di ipython, jadi saya mengedit posting. Saya melihat tidak ada orang lain yang memiliki sesuatu yang pintar untuk ditawarkan. -  Dalen 14 Agustus '15 pukul 11:13
+Tampilkan 6 komentar lainnya

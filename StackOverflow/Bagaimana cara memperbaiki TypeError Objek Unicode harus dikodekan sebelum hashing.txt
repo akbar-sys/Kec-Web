@@ -1,0 +1,150 @@
+Bagaimana cara memperbaiki TypeError: Objek Unicode harus dikodekan sebelum hashing?
+Ditanyakan 9 tahun, 8 bulan yang lalu
+Aktif 4 bulan yang lalu
+Dilihat 419rb kali
+
+372
+
+
+39
+Saya memiliki kesalahan ini:
+
+Traceback (most recent call last):
+  File "python_md5_cracker.py", line 27, in <module>
+  m.update(line)
+TypeError: Unicode-objects must be encoded before hashing
+ketika saya mencoba mengeksekusi kode ini dengan Python 3.2.2 :
+
+import hashlib, sys
+m = hashlib.md5()
+hash = ""
+hash_file = input("What is the file name in which the hash resides?  ")
+wordlist = input("What is your wordlist?  (Enter the file name)  ")
+try:
+  hashdocument = open(hash_file, "r")
+except IOError:
+  print("Invalid file.")
+  raw_input()
+  sys.exit()
+else:
+  hash = hashdocument.readline()
+  hash = hash.replace("\n", "")
+
+try:
+  wordlistfile = open(wordlist, "r")
+except IOError:
+  print("Invalid file.")
+  raw_input()
+  sys.exit()
+else:
+  pass
+for line in wordlistfile:
+  # Flush the buffer (this caused a massive problem when placed 
+  # at the beginning of the script, because the buffer kept getting
+  # overwritten, thus comparing incorrect hashes)
+  m = hashlib.md5()
+  line = line.replace("\n", "")
+  m.update(line)
+  word_hash = m.hexdigest()
+  if word_hash == hash:
+    print("Collision! The word corresponding to the given hash is", line)
+    input()
+    sys.exit()
+
+print("The hash given does not correspond to any supplied word in the wordlist.")
+input()
+sys.exit()
+ular piton
+python-3.x
+kode tunggal
+kesalahan sintaks
+hashlib
+Bagikan
+Perbaiki pertanyaan ini
+Mengikuti
+diedit 23 Mei 19 pukul 17:52
+
+Agustinus
+2.166 17 17 lencana perak2323 lencana perunggu
+ditanyakan 28 Sep '11 pada 15:04
+
+JohnnyDariBF
+8.330 10 10 lencana emas43 43 lencana perak5050 lencana perunggu
+1
+Saya menemukan membuka file dengan 'rb' membantu kasus saya. -  dlamblin 28 Nov '17 pukul 7:06
+Tambahkan komentar
+10 Jawaban
+
+369
+
+Mungkin mencari pengkodean karakter dari wordlistfile.
+
+wordlistfile = open(wordlist,"r",encoding='utf-8')
+Atau, jika Anda bekerja berdasarkan baris demi baris:
+
+line.encode('utf-8')
+EDIT
+Per komentar di bawah dan jawaban ini .
+
+Jawaban saya di atas mengasumsikan bahwa output yang diinginkan adalah strdari wordlistfile. Jika Anda nyaman bekerja di bytes, maka lebih baik Anda menggunakan open(wordlist, "rb"). Tetapi penting untuk diingat bahwa Anda TIDAKhashfile boleh menggunakan jika Anda membandingkannya dengan output . menghasilkan a dan yang tidak dapat dibandingkan secara langsung dengan objek byte: . (Ada banyak lagi topik ini, tapi saya tidak punya waktu ATM).rbhexdigesthashlib.md5(value).hashdigest()str'abc' != b'abc'
+
+Perlu juga dicatat bahwa baris ini:
+
+line.replace("\n", "")
+Mungkin seharusnya
+
+line.strip()
+Itu akan berfungsi untuk byte dan str. Tetapi jika Anda memutuskan untuk hanya mengonversi ke bytes, maka Anda dapat mengubah baris menjadi:
+
+line.replace(b"\n", b"")
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 14 Januari pukul 15:19
+dijawab 28 Sep '11 jam 15:10
+
+cwallenpoole
+72.3k 22 22 lencana emas119 119 lencana perak159159 lencana perunggu
+3
+open(wordlist,"r",encoding='utf-8')mengapa menggunakan terbuka dengan pengkodean tertentu, pengkodean ditentukan codec decode, tanpa opsi ini, menggunakan pengkodean yang bergantung pada platform. -  Tangki Woo 19 Jan '16 pada 1:05
+Paruh pertama ini benar-benar salah, dan mengejutkan karena mendapat suara setinggi itu. Menentukan secara encodingeksplisit hanya mengubah cara mendekode byte pada disk untuk mendapatkan str(tipe teks yang menyimpan Unicode arbitrer), tetapi itu akan mendekode strtanpa itu, dan masalahnya digunakan strdi tempat pertama. The line.encode('utf-8') membatalkan perintah yang keliru decoding, tapi OP hanya harus membuka file dalam 'rb'modus di tempat pertama (dengan tidak ada encoding) sehingga linemerupakan bytesobjek di tempat pertama (beberapa perubahan sepele yang diperlukan untuk mencocokkan, misalnya dalam .replace("\n", '')). -  ShadowRanger 13 Januari pukul 4:21
+@ShadowRanger Dan jika OP ingin sebuah str? Saya menambahkan sedikit pada jawabannya, tetapi jawaban asli saya adalah singkat, manis, dan segera tersedia. Itu juga merupakan jawaban yang tepat untuk proyek yang sedang saya kerjakan ketika saya menulis balasan di atas, jadi¯\_(ツ)_/¯ –  cwallenpoole 14 Januari pukul 15:20
+Tambahkan komentar
+
+153
+
+Anda harus mendefinisikan encoding formatseperti utf-8, Coba cara mudah ini,
+
+Contoh ini menghasilkan angka acak menggunakan algoritma SHA256:
+
+>>> import hashlib
+>>> hashlib.sha256(str(random.getrandbits(256)).encode('utf-8')).hexdigest()
+'cd183a211ed2434eac4f31b317c573c50e6c24e3a28b82ddcb0bf8bedf387a9f'
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 5 '17 Mei pukul 20:54
+
+komunitas ♦
+1 11 lencana perak
+dijawab 19 Mar '14 jam 12:03
+
+Jay Patel
+23.9k 12 12 lencana emas63 63 lencana perak7474 lencana perunggu
+Tambahkan komentar
+
+33
+
+import hashlib
+string_to_hash = '123'
+hash_object = hashlib.sha256(str(string_to_hash).encode('utf-8'))
+print('Hash', hash_object.hexdigest())
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+dijawab 16 Des '18 jam 14:15
+
+Sabyasachi
+1.144 10 10 lencana perak1616 lencana perunggu
+metode hashlib.sha256 selalu mengharapkan unicode. Dalam Python-2 str adalah str dan unicode, jadi hanya melewati string_to_hash dulu berfungsi dengan baik. Namun, dalam Python-3 string(text, here string_to_hash) dan unicode adalah dua tipe yang berbeda. Jadi ketika kita hanya melewatkan string_to_hash(yang bertipe teks), itu akan menimbulkan kesalahan yang menyatakan nilai unicode diperlukan. -  kundan 29 Okt '20 pukul 20:17
+Tambahkan komentar

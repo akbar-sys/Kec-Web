@@ -1,0 +1,122 @@
+Menambahkan nilai parameter default dengan petunjuk ketik di Python
+Ditanyakan 4 tahun, 10 bulan yang lalu
+Aktif 1 tahun, 11 bulan yang lalu
+Dilihat 137k kali
+
+355
+
+
+42
+Jika saya memiliki fungsi seperti ini:
+
+def foo(name, opts={}):
+  pass
+Dan saya ingin menambahkan petunjuk jenis ke parameter, bagaimana cara melakukannya? Cara saya berasumsi memberi saya kesalahan sintaks:
+
+def foo(name: str, opts={}: dict) -> str:
+  pass
+Berikut ini tidak menimbulkan kesalahan sintaks tetapi sepertinya bukan cara intuitif untuk menangani kasus ini:
+
+def foo(name: str, opts: dict={}) -> str:
+  pass
+Saya tidak dapat menemukan apa pun di typingdokumentasi atau di pencarian Google.
+
+Sunting: Saya tidak tahu bagaimana argumen default bekerja dengan Python, tetapi demi pertanyaan ini, saya akan menyimpan contoh di atas. Secara umum, jauh lebih baik untuk melakukan hal berikut:
+
+def foo(name: str, opts: dict=None) -> str:
+  if not opts:
+    opts={}
+  pass
+ular piton
+python-3.x
+jenis-petunjuk
+Bagikan
+Mengikuti
+diedit 2 Agustus '16 pukul 18:53
+ditanyakan 2 Agustus '16 pada 18:01
+
+josh
+6,538 3 3 lencana emas28 28 lencana perak4949 lencana perunggu
+5
+Fungsi terakhir adalah cara yang benar. Ini adalah cara yang sama juga dilakukan oleh scalabahasa. -  Israel Unterman 2 Agustus '16 pukul 18:07
+23
+Anda memiliki tipe default yang bisa berubah - yang akan menyebabkan masalah -  tidak ada 2 Agustus '16 pukul 18:15
+lihat jawaban pembaruan saya, @josh –  tidak ada 2 Agustus '16 pukul 18:41
+2
+@noɥʇʎԀʎzɐɹƆ Tidak kecuali Anda menggunakannya untuk, misalnya memoisasi. :P –  Mateen Ulhaq 27 Sep '18 pukul 17:05
+Tambahkan komentar
+3 Jawaban
+
+410
+
+Cara kedua Anda benar.
+
+def foo(opts: dict = {}):
+    pass
+
+print(foo.__annotations__)
+keluaran ini
+
+{'opts': <class 'dict'>}
+Memang benar bahwa itu tidak tercantum dalam PEP 484 , tetapi petunjuk jenis adalah aplikasi anotasi fungsi, yang didokumentasikan dalam PEP 3107. Bagian sintaks memperjelas bahwa argumen kata kunci bekerja dengan anotasi fungsi dengan cara ini.
+
+Saya sangat menyarankan untuk tidak menggunakan argumen kata kunci yang bisa berubah. Informasi lebih lanjut di sini .
+
+Bagikan
+Mengikuti
+diedit 11 Okt '16 pada 21:02
+dijawab 2 Agustus '16 pukul 18:18
+
+tidak ada
+6.415 2 2 lencana emas38 38 lencana perak6363 lencana perunggu
+1
+Lihat legacy.python.org/dev/peps/pep-3107/#syntax . Petunjuk jenis hanyalah aplikasi anotasi fungsi. -  chepner 2 Agustus '16 pukul 18:25
+3
+Wow, saya tidak tahu tentang argumen default yang bisa diubah di Python... terutama yang berasal dari Javascript/Ruby di mana argumen default bekerja secara berbeda. Tidak akan mengulangi apa yang sudah dikatakan ad nauseum sekitar SO tentang hal itu, saya hanya senang saya mengetahui tentang ini sebelum menggigit saya. Terima kasih! -  josh 2 Agustus '16 pukul 18:42 
+9
+Saya selalu disarankan untuk menggunakan None daripada tipe yang bisa berubah seperti {} atau [] atau objek default karena mutasi ke objek itu tanpa salinan-dalam akan tetap ada di antara iterasi. -  MrMesees 25 Okt '18 jam 10:35
+3
+tentukan fungsi yang cukup dengan argumen kata kunci yang dapat diubah dan hanya masalah waktu sebelum Anda menemukan diri Anda melihat kembali sesi debugging 4 jam mempertanyakan pilihan hidup Anda –  Joseph Sheedy 10 Juni '19 pukul 20:50
+2
+Bukankah seharusnya tidak ada spasi putih di sekitar =in dict = {}seperti konvensi untuk argumen kata kunci yang tidak diisyaratkan tipe? -  aktual_panda 24 Mar '20 pada 9:52
+Tampilkan 1 komentar lagi
+
+48
+
+Jika Anda menggunakan pengetikan (diperkenalkan dalam Python 3.5), Anda dapat menggunakan typing.Optional, di mana Optional[X]setara dengan Union[X, None]. Ini digunakan untuk memberi sinyal bahwa nilai eksplisit Nonediperbolehkan . Dari mengetik. Opsional :
+
+def foo(arg: Optional[int] = None) -> None:
+    ...
+Bagikan
+Mengikuti
+dijawab 19 Jun '19 jam 14:41
+
+Tomasz Bartkowiak
+5.369 1 1 lencana emas38 38 lencana perak4444 lencana perunggu
+3
+Bukankah seharusnya tidak ada spasi putih di sekitar =in Optional[int] = Noneseperti konvensi untuk argumen kata kunci yang tidak diisyaratkan tipe? -  aktual_panda 24 Mar '20 pada 9:52 
+5
+@actual_panda jawabannya benar. gayanya berbeda ketika ada petunjuk jenis. ada contoh di PEP 484 –  joel 3 Juli '20 pukul 11:05 
+Tambahkan komentar
+
+14
+
+Saya baru-baru ini melihat one-liner ini:
+
+def foo(name: str, opts: dict=None) -> str:
+    opts = {} if not opts else opts
+    pass
+Bagikan
+Mengikuti
+dijawab 5 Jun '19 jam 20:43
+
+Kirkalicious
+149 1 1 lencana perak44 lencana perunggu
+Hai @Kirkalicious, terima kasih atas jawaban Anda. Bisakah Anda menjelaskan cara kerjanya? -  Nathan 5 Juni '19 pukul 21:09
+8
+Dikte kosong yang diteruskan sebagai parameter default adalah dict yang sama untuk setiap panggilan. Jadi jika fungsi tersebut bermutasi maka default waktu berikutnya akan menjadi nilai bermutasi dari terakhir kali. Membuat Nonedefault dan kemudian memeriksa di dalam metode menghindari masalah ini dengan mengalokasikan dict baru setiap kali metode dipanggil. -  Ian Goldby 21 Juni '19 pukul 7:36
+1
+Bisakah Anda memperbarui jawaban Anda ( tanpa "Edit:", "Perbarui:", atau serupa)? Komentar dapat hilang sewaktu-waktu. -  Peter Mortensen 14 Juli '20 pukul 15:26 
+4
+Bagaimana denganopts = opts or {} -  run_the_race 19 Sep '20 pada 15:49
+Tambahkan komentar

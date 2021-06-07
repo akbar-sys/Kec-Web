@@ -1,0 +1,119 @@
+Kesalahan sintaks saat dicetak dengan Python 3 [duplikat]
+Ditanyakan 12 tahun, 1 bulan yang lalu
+Aktif 1 tahun, 6 bulan lalu
+Dilihat 249k kali
+
+269
+
+
+22
+Pertanyaan ini sudah memiliki jawaban di sini :
+Apa yang dimaksud dengan "SyntaxError: Tanda kurung hilang saat memanggil 'print'" dengan Python? (9 jawaban)
+Tutup 4 tahun yang lalu .
+Mengapa saya menerima kesalahan sintaks saat mencetak string di Python 3?
+
+>>> print "hello World"
+  File "<stdin>", line 1
+    print "hello World"
+                      ^
+SyntaxError: invalid syntax
+ular piton
+python-3.x
+Bagikan
+Perbaiki pertanyaan ini
+Mengikuti
+diedit 12 Sep '14 jam 7:20
+
+Duncan Jones
+59.3k 24 24 lencana emas169 169 lencana perak227227 lencana perunggu
+tanya 5 Mei '09 jam 21:19
+
+Scott
+10.6k 10 10 lencana emas47 47 lencana perak8383 lencana perunggu
+18
+petunjuk: untuk kode kompatibilitas di python 2.7+ letakkan ini di awal modul:from __future__ import print_function –  Yauhen Yakimovich 12 Agustus '13 pukul 13:12
+...import print_function sepertinya tidak berfungsi, apakah Anda perlu mengubah sesuatu di pernyataan cetak? atau harus impor melakukannya? -  RASMiranda 28 Mar '14 pukul 11:18
+5
+Sebagai catatan, kasus ini akan mendapatkan pesan kesalahan khusus di Python 3.4.2: stackoverflow.com/questions/25445439/… –  ncoghlan 22 Agustus '14 pukul 11:01
+1
+2to3 adalah program Python yang membaca kode sumber Python 2.x dan menerapkan serangkaian pemecah masalah untuk mengubahnya menjadi kode Python 3.x yang valid. Informasi lebih lanjut dapat ditemukan di sini: [Dokumentasi Python: Terjemahan kode Python 2 ke 3 otomatis]( docs .python.org/2/library/2to3.html ) –  Oliver Sievers 19 Juli '15 pukul 10:21
+Menutup ini sebagai penipuan dari posting lain oleh @ncoghlan, karena 1. Ini memiliki jawaban yang lebih komprehensif 2. Ini diperbarui agar sesuai dengan kesalahan terbaru. -  Bhargav Rao ♦ 20 Juni '16 pukul 16:27
+Tambahkan komentar
+3 Jawaban
+
+338
+
+Dalam Python 3, print menjadi fungsi . Ini berarti Anda harus memasukkan tanda kurung sekarang seperti yang disebutkan di bawah ini:
+
+print("Hello World")
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 14 Februari '17 pada 7:24
+
+NSNoob
+5,320 5 5 lencana emas35 35 lencana perak5151 lencana perunggu
+dijawab 5 Mei '09 pukul 21:21
+
+Tidak diketahui
+43.4k 24 24 lencana emas132 132 lencana perak174174 lencana perunggu
+Tambahkan komentar
+
+48
+
+Sepertinya Anda menggunakan Python 3.0, di mana print telah berubah menjadi fungsi yang dapat dipanggil alih-alih pernyataan.
+
+print('Hello world!')
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 14 Februari '17 pada 7:26
+
+NSNoob
+5,320 5 5 lencana emas35 35 lencana perak5151 lencana perunggu
+dijawab 5 Mei '09 pukul 21:21
+
+brianz
+6.878 2 2 lencana emas33 33 lencana perak4343 lencana perunggu
+Tambahkan komentar
+
+29
+
+Karena di Python 3, print statementtelah diganti dengan print() function, dengan argumen kata kunci untuk menggantikan sebagian besar sintaks khusus dari pernyataan cetak lama. Jadi Anda harus menulisnya sebagai
+
+print("Hello World")
+Tetapi jika Anda menulis ini dalam sebuah program dan seseorang yang menggunakan Python 2.x mencoba menjalankannya, mereka akan mendapatkan kesalahan. Untuk menghindari hal ini, adalah praktik yang baik untuk mengimpor fungsi cetak:
+
+from __future__ import print_function
+Sekarang kode Anda berfungsi pada 2.x & 3.x.
+
+Lihat contoh di bawah ini juga untuk membiasakan diri dengan fungsi print().
+
+Old: print "The answer is", 2*2
+New: print("The answer is", 2*2)
+
+Old: print x,           # Trailing comma suppresses newline
+New: print(x, end=" ")  # Appends a space instead of a newline
+
+Old: print              # Prints a newline
+New: print()            # You must call the function!
+
+Old: print >>sys.stderr, "fatal error"
+New: print("fatal error", file=sys.stderr)
+
+Old: print (x, y)       # prints repr((x, y))
+New: print((x, y))      # Not the same as print(x, y)!
+Sumber: Apa yang Baru Di Python 3.0?
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 28 Nov '19 pukul 23:38
+
+TheTechRobo36414519
+688 9 9 lencana perak2222 lencana perunggu
+dijawab 27 Okt '14 jam 12:35
+
+ChillarAnand
+22.9k 8 8 lencana emas98 98 lencana perak114114 lencana perunggu
+Tambahkan komentar

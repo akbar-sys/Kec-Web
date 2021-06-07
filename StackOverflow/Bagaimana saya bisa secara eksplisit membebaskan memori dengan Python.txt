@@ -1,0 +1,122 @@
+Bagaimana saya bisa secara eksplisit membebaskan memori dengan Python?
+Ditanyakan 11 tahun, 9 bulan yang lalu
+Aktif 2 bulan lalu
+Dilihat 591k kali
+
+471
+
+
+174
+Saya menulis program Python yang bekerja pada file input besar untuk membuat beberapa juta objek yang mewakili segitiga. Algoritmanya adalah:
+
+membaca file masukan
+memproses file dan membuat daftar segitiga, diwakili oleh simpulnya
+output simpul dalam format OFF: daftar simpul diikuti oleh daftar segitiga. Segitiga diwakili oleh indeks ke dalam daftar simpul
+Persyaratan OFF bahwa saya mencetak daftar simpul lengkap sebelum saya mencetak segitiga berarti saya harus menyimpan daftar segitiga di memori sebelum saya menulis output ke file. Sementara itu saya mendapatkan kesalahan memori karena ukuran daftar.
+
+Apa cara terbaik untuk memberi tahu Python bahwa saya tidak lagi membutuhkan beberapa data, dan itu dapat dibebaskan?
+
+ular piton
+Penyimpanan
+manajemen memori
+Bagikan
+Mengikuti
+diedit 25 Nov 13 jam 20:26
+
+Aaron Balai ♦
+292k 75 75 lencana emas370 370 lencana perak312312 lencana perunggu
+ditanyakan 22 Agustus '09 pukul 19:10
+
+Nathan Fellman
+109k 95 95 lencana emas246 246 lencana perak308308 lencana perunggu
+11
+Mengapa tidak mencetak segitiga ke file perantara, dan membacanya kembali saat Anda membutuhkannya? -  Alice Purcell 22 Agustus '09 pukul 21:03
+3
+Pertanyaan ini berpotensi tentang dua hal yang sangat berbeda. Apakah kesalahan tersebut berasal dari proses Python yang sama , dalam hal ini kami peduli untuk membebaskan memori ke tumpukan proses Python, atau apakah mereka berasal dari proses yang berbeda pada sistem, dalam hal ini kami peduli untuk membebaskan memori ke OS? -  Charles Duffy 20 Nov '18 pukul 13:16 
+Tambahkan komentar
+10 Jawaban
+
+565
+
+Menurut Dokumentasi Resmi Python , Anda dapat secara eksplisit memanggil Pengumpul Sampah untuk melepaskan memori yang tidak direferensikan dengan gc.collect(). Contoh:
+
+import gc
+
+gc.collect()
+Anda harus melakukannya setelah menandai apa yang ingin Anda buang menggunakan del:
+
+del my_array
+del my_object
+gc.collect()
+Bagikan
+Mengikuti
+diedit 16 Maret pukul 19:10
+dijawab 22 Agustus '09 19:18
+
+Havenard
+23.3k 4 4 lencana emas31 31 lencana perak5959 lencana perunggu
+24
+Hal-hal adalah sampah yang sering dikumpulkan, kecuali dalam beberapa kasus yang tidak biasa, jadi saya tidak berpikir itu akan banyak membantu. -  Lennart Regebro 22 Agustus '09 pukul 19:31
+29
+Secara umum, gc.collect() harus dihindari. Pengumpul sampah tahu bagaimana melakukan tugasnya. Yang mengatakan, jika OP berada dalam situasi di mana dia tiba-tiba membatalkan alokasi banyak objek (seperti dalam jutaan), gc.collect mungkin terbukti berguna. -  Jason Baker 22 Agustus '09 pukul 19:53
+190
+Sebenarnya menyebut gc.collect()diri Anda di akhir loop dapat membantu menghindari fragmentasi memori, yang pada gilirannya membantu menjaga kinerja tetap tinggi. Saya telah melihat ini membuat perbedaan yang signifikan (~20% runtime IIRC) –  RobM 22 Februari '11 pukul 18:54
+57
+Saya menggunakan python 3.6. Memanggil gc.collect()setelah memuat kerangka data pandas dari hdf5 (500k baris) mengurangi penggunaan memori dari 1,7GB menjadi 500MB –  John 18 Januari '18 pukul 20:30 
+33
+Saya perlu memuat dan memproses beberapa array numpy 25GB dalam sistem dengan memori 32GB. Menggunakan del my_arraydiikuti oleh gc.collect()setelah memproses array adalah satu-satunya cara memori benar-benar dilepaskan dan proses saya bertahan untuk memuat array berikutnya. -  David 12 Okt '18 jam 8:10
+Tampilkan 13 komentar lainnya
+
+122
+
+Sayangnya (bergantung pada versi dan rilis Python Anda) beberapa jenis objek menggunakan "daftar gratis" yang merupakan pengoptimalan lokal yang rapi tetapi dapat menyebabkan fragmentasi memori, khususnya dengan membuat semakin banyak memori "diperuntukkan" hanya untuk objek dari jenis tertentu dan sehingga tidak tersedia untuk "dana umum".
+
+Satu-satunya cara yang benar-benar andal untuk memastikan bahwa penggunaan memori yang besar tetapi sementara TIDAK mengembalikan semua sumber daya ke sistem ketika selesai, adalah dengan membuat penggunaan itu terjadi dalam subproses, yang melakukan pekerjaan yang haus memori kemudian berakhir. Dalam kondisi seperti itu, sistem operasi AKAN melakukan tugasnya, dan dengan senang hati mendaur ulang semua sumber daya yang mungkin telah ditelan subproses. Untungnya, multiprocessingmodul ini membuat operasi semacam ini (yang dulunya agak merepotkan) tidak terlalu buruk dalam versi Python modern.
+
+Dalam kasus penggunaan Anda, tampaknya cara terbaik bagi subproses untuk mengumpulkan beberapa hasil dan memastikan hasil tersebut tersedia untuk proses utama adalah dengan menggunakan file semi-sementara (maksud saya semi-sementara, BUKAN jenis file yang otomatis hilang saat ditutup, hanya file biasa yang Anda hapus secara eksplisit saat Anda selesai menggunakannya).
+
+Bagikan
+Mengikuti
+diedit 30 Juni '14 pukul 12:59
+
+tshepang
+10.8k 21 21 lencana emas84 84 lencana perak127127 lencana perunggu
+dijawab 22 Agustus '09 pukul 19:21
+
+Alex Martelli
+764k 157 157 lencana emas1161 1161 lencana perak13461346 lencana perunggu
+37
+Saya yakin ingin melihat contoh sepele ini. -  Aaron Balai ♦ 25 Nov '13 pukul 20:26
+5
+Serius. Apa yang dikatakan @AaronHall. -  Noob Saibot 29 Mei '14 jam 3:55
+17
+@AaronHall Contoh sepele sekarang tersedia , menggunakan multiprocessing.Manageralih - alih file untuk mengimplementasikan status bersama. -  pengguna4815162342 11 Juni '14 pukul 14:54
+1
+jika saya memiliki daftar penunjuk file yang dibuka, apakah saya 1) perlu menghapus seluruh daftar atau 2) setiap elemen dalam daftar satu per satu dan kemudian memanggil gc.collect()? -  Charlie Parker 31 Maret pukul 16:03
+Tambahkan komentar
+
+60
+
+The delPernyataan mungkin digunakan, tetapi IIRC itu tidak dijamin untuk membebaskan memori . The docs di sini ... dan mengapa tidak dirilis di sini .
+
+Saya telah mendengar orang-orang di Linux dan sistem tipe Unix melakukan proses python untuk melakukan beberapa pekerjaan, mendapatkan hasil dan kemudian mematikannya.
+
+Artikel ini memiliki catatan tentang pengumpul sampah Python, tetapi saya pikir kurangnya kontrol memori adalah kelemahan dari memori yang dikelola
+
+Bagikan
+Mengikuti
+diedit 22 Feb '18 pada 21:54
+
+perkasa
+6.271 3 3 lencana emas30 30 lencana perak3636 lencana perunggu
+dijawab 22 Agustus '09 pukul 19:16
+
+Aiden Bell
+27.4k 3 3 lencana emas68 68 lencana perak117117 lencana perunggu
+Akankah IronPython dan Jython menjadi pilihan lain untuk menghindari masalah ini? -  Esteban Kuber 22 Agustus '09 pukul 19:23
+@voyager: Tidak, tidak akan. Dan tidak ada bahasa lain, sungguh. Masalahnya adalah dia membaca data dalam jumlah besar ke dalam daftar, dan datanya terlalu besar untuk memori. -  Lennart Regebro 22 Agustus '09 pukul 19:27
+1
+Kemungkinan akan lebih buruk di bawah IronPython atau Jython. Di lingkungan itu, Anda bahkan tidak dijamin memori akan dilepaskan jika tidak ada lagi yang memegang referensi. -  Jason Baker 22 Agustus '09 pukul 19:33
+@voyager, ya, karena mesin virtual Java mencari memori untuk bebas secara global. Untuk JVM, Jython tidak ada yang istimewa. Di sisi lain, JVM memiliki kekurangannya sendiri, misalnya Anda harus menyatakan terlebih dahulu seberapa besar heap yang dapat digunakan. -  Prof Falken 8 Mei 13 jam 7:41
+Ini implementasi yang agak buruk dari pengumpul sampah Python. Visual Basic 6 dan VBA juga memiliki memori yang dikelola, tetapi tidak ada yang pernah mengeluh tentang memori yang tidak dibebaskan di sana. -  Anatoly Alekseev 24 Okt '20 pada 1:34
+Tampilkan 1 komentar lagi

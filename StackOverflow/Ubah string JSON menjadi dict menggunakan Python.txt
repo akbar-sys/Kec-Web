@@ -1,0 +1,129 @@
+Ubah string JSON menjadi dict menggunakan Python
+Ditanyakan 10 tahun, 5 bulan yang lalu
+Aktif 1 tahun, 2 bulan lalu
+Dilihat 813rb kali
+
+443
+
+
+77
+Saya sedikit bingung dengan JSON di Python. Bagi saya, ini tampak seperti kamus, dan untuk alasan itu saya mencoba melakukan itu:
+
+{
+    "glossary":
+    {
+        "title": "example glossary",
+        "GlossDiv":
+        {
+            "title": "S",
+            "GlossList":
+            {
+                "GlossEntry":
+                {
+                    "ID": "SGML",
+                    "SortAs": "SGML",
+                    "GlossTerm": "Standard Generalized Markup Language",
+                    "Acronym": "SGML",
+                    "Abbrev": "ISO 8879:1986",
+                    "GlossDef":
+                    {
+                        "para": "A meta-markup language, used to create markup languages such as DocBook.",
+                        "GlossSeeAlso": ["GML", "XML"]
+                    },
+                    "GlossSee": "markup"
+                }
+            }
+        }
+    }
+}
+Tetapi ketika saya melakukannya print dict(json), itu memberikan kesalahan.
+
+Bagaimana saya bisa mengubah string ini menjadi struktur dan kemudian memanggil json["title"]untuk mendapatkan "contoh glosarium"?
+
+ular piton
+json
+tali
+Bagikan
+Mengikuti
+diedit 2 April '20 pukul 14:15
+
+kubanczyk
+3,458 30 30 lencana perak4545 lencana perunggu
+tanya 24 Des '10 jam 19:48
+
+Frias
+9.851 8 8 lencana emas31 31 lencana perak3838 lencana perunggu
+Tambahkan komentar
+4 Jawaban
+
+793
+
+json.loads()
+
+import json
+
+d = json.loads(j)
+print d['glossary']['title']
+Bagikan
+Mengikuti
+diedit 24 Juli '18 jam 8:28
+
+David Leon
+921 7 7 lencana perak2222 lencana perunggu
+dijawab 24 Des '10 pukul 19:51
+
+Ignacio Vazquez-Abrams
+700k 132 132 lencana emas1237 1237 lencana perak12851285 lencana perunggu
+10
+Apa perbedaan antara json.load dan json.loads ? -  Shivam Agrawal 05 Mei '15 jam 7:26
+5
+@ShivamAgrawal: Persis seperti yang tertulis di kaleng . -  Ignacio Vazquez-Abrams 5 Mei '15 pukul 7:43
+69
+@ShivamAgrawal: Perbedaannya adalah .load()mem-parsing objek file; .loads()mem-parsing objek string/unicode. -  fyngyrz 19 Sep '16 pukul 17:07
+2
+Ini mengganggu saya bahwa penulis fungsi ini tidak menulis fungsi pembungkus untuk melakukan pemeriksaan tipe pada data yang diteruskan untuk secara otomatis memilih fungsi yang tepat untuk dipanggil. Saya juga tidak suka nomenklatur yang tidak jelas yang digunakan. Inilah yang saya tulis untuk mengatasi ini: def read_json(json_data): if (type(json_data) == str): return json.loads(json_data) elif (str(type(json_data)) == "<class '_io.TextIOWrapper'>"): return json.load(json_data)Saya yakin ini dapat ditingkatkan, tetapi sekarang Anda dapat memanggil d = read_json(j)json 'str' atau 'file'. -  Jacques Mathieu 31 Mei '18 pukul 16:32 
+2
+@JacquesMathieu, Hai Jacques, thanx untuk fungsi Anda, saya melakukan perbaikan kecil karena saya kadang-kadang menggunakan kamus: def read_json(json_data): if (type(json_data) == str): # Untuk string kembali json.loads(json_data) elif (str(type(json_data)) == "<class '_io.TextIOWrapper'>"): #Untuk file kembali json.load(json_data) elif (type(json_data) == dict): # Untuk kamus kembalikan json.loads (json.dumps(json_data)) –  Gabriel Aizcorbe 2 Juni '18 pukul 20:25
+Tampilkan 2 komentar lainnya
+
+103
+
+Ketika saya mulai menggunakan json, saya bingung dan tidak dapat mengetahuinya untuk beberapa waktu, tetapi akhirnya saya mendapatkan apa yang saya inginkan
+Inilah solusi sederhananya
+
+import json
+m = {'id': 2, 'name': 'hussain'}
+n = json.dumps(m)
+o = json.loads(n)
+print(o['id'], o['name'])
+Bagikan
+Mengikuti
+diedit 23 Jan '20 jam 10:43
+dijawab 17 Sep '12 jam 7:59
+
+Husain
+4.369 5 5 lencana emas38 38 lencana perak6363 lencana perunggu
+Mengapa Anda dumps (m) pertama? -  Han Van Pham 30 Nov '18 pukul 9:47
+Saya menggunakannya untuk mendemonstrasikan serialisasi dan deserialisasi. Menggunakan loads(..)pada '{"id": 2, "name": "hussain"}'juga harus baik-baik saja seperti jawaban yang diterima. -  Husain 3 Des '18 pukul 2:47
+1
+dumps and load berfungsi sempurna untuk saya, sementara jawaban yang diterima tidak, terima kasih banyak @Hussain karena telah menyelamatkan saya time, FYI, saya mencoba loadsdari string dinamis dengan pengkodean utf-8... –  Muhammad Sufian 27 Juli '19 pukul 13:11
+Tambahkan komentar
+
+21
+
+gunakan simplejson atau cjson untuk mempercepat
+
+import simplejson as json
+
+json.loads(obj)
+
+or 
+
+cjson.decode(obj)
+Bagikan
+Mengikuti
+dijawab 26 Des '10 jam 20:33
+
+locojay
+6,553 3 3 lencana emas30 30 lencana perak4141 lencana perunggu
+Tambahkan komentar

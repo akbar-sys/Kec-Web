@@ -1,0 +1,140 @@
+Mengapa python setup.py mengatakan perintah 'bdist_wheel' tidak valid di Travis CI?
+Ditanyakan 5 tahun, 4 bulan yang lalu
+Aktif 21 hari yang lalu
+Dilihat 460rb kali
+
+607
+
+
+78
+Paket Python saya memiliki setup.pyyang dibangun dengan baik secara lokal di Ubuntu Trusty dan pada Vagrant Ubuntu Trusty VM baru ketika saya menyediakannya seperti ini:
+
+sudo apt-get install python python-dev --force-yes --assume-yes --fix-broken
+curl --silent --show-error --retry 5 https://bootstrap.pypa.io/get-pip.py | sudo python2.7
+sudo -H pip install setuptools wheel virtualenv --upgrade
+Tetapi ketika saya melakukan hal yang sama pada Travis CI Trusty Beta VM:
+
+- sudo apt-get install python python-dev --force-yes --assume-yes --fix-broken
+- curl --silent --show-error --retry 5 https://bootstrap.pypa.io/get-pip.py | sudo python2.7
+- sudo -H pip install setuptools wheel virtualenv --upgrade
+Saya mendapat:
+
+python2.7 setup.py bdist_wheel
+usage: setup.py [global_opts] cmd1 [cmd1_opts] [cmd2 [cmd2_opts] ...]
+   or: setup.py --help [cmd1 cmd2 ...]
+   or: setup.py --help-commands
+   or: setup.py cmd --help
+error: invalid command 'bdist_wheel'
+Ini Mengapa saya tidak bisa membuat roda dengan python? terkait tetapi perhatikan saya menginstal roda dan memutakhirkan setuptools.
+
+ular piton
+travis-ci
+setup.py
+pypi
+Bagikan
+Perbaiki pertanyaan ini
+Mengikuti
+diedit 15 Mei '18 pukul 10:37
+
+kasravnd
+94.7k 16 16 lencana emas137 137 lencana perak166166 lencana perunggu
+tanya 15 Jan '16 jam 20:19
+
+nokome
+7.016 2 2 lencana emas12 12 lencana perak1515 lencana perunggu
+Tambahkan komentar
+18 Jawaban
+
+932
+
+Harus menginstal wheelpaket. Semuanya up to date tetapi masih memberikan kesalahan.
+
+pip install wheel
+kemudian
+
+python setup.py bdist_wheel 
+Bekerja tanpa masalah.
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+dijawab 1 Juli '17 pukul 15:03
+
+frmdstryr
+14.6k 3 3 lencana emas34 34 lencana perak3030 lencana perunggu
+113
+"pip install wheel" terkadang cukup –  pabrik oksidasi 23 Februari '18 pukul 16:47
+29
+Saya perlu pip3 install wheel- karena saya sudah memasang roda piptetapi tidak pip3. -  TetraDev 7 Juli '19 pukul 6:24
+5
+Ini berhasil tetapi setelah pip install wheelsaya harus pip uninstall -r requirements.txtdan mengulangpip install -r requirements.txt –  kode_sederhana 2 Agustus '19 jam 8:21
+27
+can't open file 'setup.py': [Errno 2] No such file or directory -  Cerin 15 Agustus '19 pukul 1:50
+6
+Apakah ada cara untuk menginstal secara otomatis wheeldi lingkungan virtual yang bersih? python3 -m venv --system-site-packagesakan menambahkan terlalu banyak paket. -  Tobias Set 27 Des '19 pukul 2:01
+Tampilkan 2 komentar lainnya
+
+203
+
+Januari 2020
+
+2 jam terbuang.
+
+Pada AWS Ubuntu 18.04 new machine, instalasi di bawah ini diperlukan:
+
+sudo apt-get install gcc libpq-dev -y
+sudo apt-get install python-dev  python-pip -y
+sudo apt-get install python3-dev python3-pip python3-venv python3-wheel -y
+pip3 install wheel
+Terutama baris terakhir adalah keharusan.
+Namun sebelum 3 baris mungkin diperlukan sebagai prasyarat.
+
+Semoga membantu.
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 30 Jan '20 pada 2:46
+dijawab 5 Jan '20 jam 3:38
+
+Manohar Reddy Poreddy
+16.5k 7 7 lencana emas112 112 lencana perak9898 lencana perunggu
+9
+Tepat satu tahun kemudian, dan Anda telah menyelamatkan saya dari banyak perjuangan. Terima kasih. -  DaveTheMinion Jan 5 '20 at 22:36
+11
+Saya menggunakan --no-install-recommendsgambar Docker ( DL3015 ) dan mengalami kesalahan ini, saya perlu menginstal python3-wheel. Terima kasih! -  dimo414 8 Februari '20 pada 6:37
+1
+Baris terakhir harus no-op, karena roda sudah terpasang. Apakah Anda menjalankannya dengan --upgrade? Jika ada yang bisa membuat Dockerfile minimal mulai dari Ubuntu 18.04 itu akan menjadi standar emas. -  l0b0 9 Juni '20 pukul 20:59 
+1
+Saya harus menginstal juga Sudo apt install build-essential , karena saya memiliki masalah yang sama untuk pip3 install shap. Kemudian bekerja! -  Mutato 17 Agustus '20 pukul 10:57
+1
+@MahdiA.Bolow Terima kasih telah memberi tahu tentang 20,04 –  Manohar Reddy Poreddy 13 Okt '20 pada 6:48
+Tampilkan 7 komentar lainnya
+
+105
+
+pip install wheel
+bekerja untuk saya, tetapi Anda juga dapat menambahkan ini
+
+setup(
+    ...
+    setup_requires=['wheel']
+)
+ke setup.py dan simpan sendiri perintah pip install
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+dijawab 22 Februari '19 pukul 19:13
+
+Nathaniel Gentile
+1,585 1 1 lencana emas11 11 lencana perak1111 lencana perunggu
+2
+Orang-orang itu sudah memasang roda dan masih mendapatkan kesalahan yang dapat ditambahkan setup_requires=['wheel']untuk menghilangkan kesalahan ini -  Shankar Pandala 14 Juni '19 pukul 6:26
+2
+Ini tidak berfungsi seperti yang diharapkan: 1 - pada awalnya hanya berfungsi karena kami telah menginstal wheeldengan pip. Ini akan gagal lagi dalam instalasi bersih 2 - dokumentasi mengatakan "Catatan: proyek yang terdaftar di setup_requires TIDAK akan diinstal secara otomatis pada sistem tempat skrip pengaturan dijalankan." -  Tobias Set 27 Des '19 pukul 1:58
+Tidak hanya itu, @TobiasSette, tetapi tautan dokumentasi yang sama mengatakan: "Peringatan Menggunakan setup_requires tidak disarankan demi PEP-518." -  Jeff Wright 2 Juni '20 pukul 18:24
+1
+@JeffWright mungkin berkecil hati tetapi ini adalah SATU-SATUNYA cara saya dapat menjalankan python setup.py bdist_wheel --universaldi virtualenv tempat saya secara khusus mencopot pemasangan wheeluntuk menguji. Saya percaya setup_requirespemicu easy_installuntuk mengambil wheelyang menyebabkannya tidak muncul pip listtetapi Anda dapat melihatnya di .eggsfolder. Karena ini adalah satu-satunya salinan roda lokal, ini dapat berguna jika Anda tidak dapat pip install wheelatau mengalami masalah dengan pip install --user wheel. -  naga788 23 Juli '20 pukul 14:14
+Bagaimana saya bisa menginstal setup_requires? menggunakan python setup.py bdist_wheel ? -  alper 25 April pukul 12:25
+Tambahkan komentar

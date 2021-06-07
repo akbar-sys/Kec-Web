@@ -1,0 +1,130 @@
+Menemukan metode apa yang dimiliki objek Python
+Ditanyakan 12 tahun, 9 bulan yang lalu
+Aktif 9 hari yang lalu
+Dilihat 469k kali
+
+502
+
+
+167
+Diberikan objek Python dalam bentuk apa pun, apakah ada cara mudah untuk mendapatkan daftar semua metode yang dimiliki objek ini?
+
+Atau,
+
+jika ini tidak memungkinkan, apakah setidaknya ada cara mudah untuk memeriksa apakah metode tersebut memiliki metode tertentu selain sekadar memeriksa apakah terjadi kesalahan saat metode dipanggil?
+
+ular piton
+introspeksi
+Bagikan
+Perbaiki pertanyaan ini
+Mengikuti
+diedit 8 Sep '17 pukul 17:35
+
+pembuat kode hutan
+28.9k 11 11 lencana emas78 78 lencana perak105105 lencana perunggu
+ditanyakan 29 Agustus 08 jam 15:05
+
+Thomas Lötzer
+22.5k 16 16 lencana emas64 64 lencana perak5555 lencana perunggu
+Relevan: https://stackoverflow.com/q/46033277/1959808 –  Ioannis Filippidis 9 Sep '17 pukul 7:39
+Tambahkan komentar
+21 Jawaban
+
+604
+
+Untuk banyak objek , Anda dapat menggunakan kode ini, mengganti 'objek' dengan objek yang Anda minati:
+
+object_methods = [method_name for method_name in dir(object)
+                  if callable(getattr(object, method_name))]
+Saya menemukannya di diveintopython.net (sekarang diarsipkan). Mudah-mudahan, itu akan memberikan beberapa detail lebih lanjut!
+
+Jika Anda mendapatkan AttributeError, Anda dapat menggunakan ini sebagai gantinya :
+
+getattr(tidak toleran terhadap sub-kelas virtual abstrak python3.6 gaya panda. Kode ini melakukan hal yang sama seperti di atas dan mengabaikan pengecualian.
+
+import pandas as pd
+df = pd.DataFrame([[10, 20, 30], [100, 200, 300]],
+                  columns=['foo', 'bar', 'baz'])
+def get_methods(object, spacing=20):
+  methodList = []
+  for method_name in dir(object):
+    try:
+        if callable(getattr(object, method_name)):
+            methodList.append(str(method_name))
+    except:
+        methodList.append(str(method_name))
+  processFunc = (lambda s: ' '.join(s.split())) or (lambda s: s)
+  for method in methodList:
+    try:
+        print(str(method.ljust(spacing)) + ' ' +
+              processFunc(str(getattr(object, method).__doc__)[0:90]))
+    except:
+        print(method.ljust(spacing) + ' ' + ' getattr() failed')
+
+get_methods(df['foo'])
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 2 Desember '20 pukul 13:07
+
+Peter Mortensen
+28.3k 21 21 lencana emas95 95 lencana perak123123 lencana perunggu
+dijawab 29 Agustus '08 jam 15:09
+
+ljs
+34.8k 32 32 lencana emas101 101 lencana perak123123 lencana perunggu
+4
+Ini adalah pemahaman daftar, mengembalikan daftar metode di mana metode adalah item dalam daftar yang dikembalikan oleh dir(objek), dan di mana setiap metode ditambahkan ke daftar hanya jika getattr(objek,metode) mengembalikan callable. -  Mnebuerquo 13 Sep '14 pada 1:02
+1
+Bagaimana tepatnya Anda menggunakan ini? Untuk mengatakan cetak daftar metode. -  rawa 20 Agustus '15 pukul 14:25 
+14
+@marsh Untuk mencetak metode: print [method for method in dir(object) if callable(getattr(object, method))]. -  Orienteerix 29 Okt '15 jam 10:51
+1
+Saya mendapatkan AttributeError: module 'pandas.core.common' has no attribute 'AbstractMethodError'ketika saya mencoba menjalankan ini. Lihat detailnya di stackoverflow.com/q/54713287/9677043 . -  Karl Baker 15 Februari '19 pukul 16:26
+1
+tidak berfungsi untuk objek dataframe panda di python 3.6. -  Stefan Karlsson 25 Juli '19 pukul 7:19
+Tampilkan 6 komentar lainnya
+
+268
+
+Anda dapat menggunakan dir()fungsi bawaan untuk mendapatkan daftar semua atribut yang dimiliki modul. Coba ini di baris perintah untuk melihat cara kerjanya.
+
+>>> import moduleName
+>>> dir(moduleName)
+Juga, Anda dapat menggunakan hasattr(module_name, "attr_name")fungsi untuk mengetahui apakah modul memiliki atribut tertentu.
+
+Lihat Panduan untuk introspeksi Python untuk informasi lebih lanjut.
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 26 Juli '12 pukul 17:51
+dijawab 29 Agustus '08 jam 15:36
+
+Bill the Lizard
+370k 201 201 lencana emas546 546 lencana perak842842 lencana perunggu
+hasattrmembantu kasus penggunaan saya untuk menemukan apakah objek python memiliki variabel atau metode anggota tertentu. -  Akshay 13 Februari '17 jam 8:08
+Saya tidak yakin mengapa solusi ini tidak cukup dipilih. Ini singkat dan akurat. -  Prasad Raghavendra 25 Mei '20 pada 1:21
+Tambahkan komentar
+
+114
+
+Cara paling sederhana adalah dengan menggunakan dir(objectname). Ini akan menampilkan semua metode yang tersedia untuk objek itu. Trik keren.
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 10 Sep '18 pukul 12:57
+
+Azat Ibrakov
+7.036 8 8 lencana emas31 31 lencana perak4040 lencana perunggu
+dijawab 20 Nov '13 jam 16:06
+
+Pawan Kumar
+1,714 2 2 lencana emas14 14 lencana perak1010 lencana perunggu
+4
+Ini juga menampilkan atribut objek, jadi jika Anda ingin secara khusus menemukan metode, itu tidak akan berfungsi. -  eric 9 Desember '17 pukul 18:05
+Iya. Sepakat. Tapi, saya tidak mengetahui teknik lain untuk hanya mendapatkan daftar metode. Mungkin ide terbaik adalah mendapatkan daftar atribut dan metode dan kemudian menggunakan <hasattr(object, "method_name"> untuk menyaringnya lebih lanjut? –  Pawan Kumar 10 Desember '17 pukul 1:30
+1
+@neuronet, saya mencoba menjalankan jawaban yang diterima tetapi mendapatkan file AttributeError: module 'pandas.core.common' has no attribute 'AbstractMethodError'. Ada ide? Lihat deets di stackoverflow.com/q/54713287/9677043 . +1 ke @Pawan Kumar b/c jawabannya berfungsi, dan ke @ljs untuk janji daftar metode yang difilter saja. -  Karl Baker 15 Februari '19 pukul 16:37
+Tambahkan komentar

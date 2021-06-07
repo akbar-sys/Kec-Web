@@ -1,0 +1,184 @@
+Python dan pip, daftar semua versi paket yang tersedia?
+Ditanyakan 10 tahun, 4 bulan yang lalu
+Aktif 2 bulan lalu
+Dilihat 323rb kali
+
+557
+
+
+147
+Diberi nama paket Python yang dapat diinstal dengan pip , apakah ada cara untuk mengetahui daftar semua versi yang mungkin dapat diinstal oleh pip? Sekarang ini trial and error.
+
+Saya mencoba menginstal versi untuk perpustakaan pihak ketiga, tetapi versi terbaru terlalu baru, ada perubahan yang tidak kompatibel ke belakang. Jadi saya ingin entah bagaimana memiliki daftar semua versi yang diketahui pip, sehingga saya dapat mengujinya.
+
+ular piton
+pip
+Bagikan
+Perbaiki pertanyaan ini
+Mengikuti
+diedit 1 Nov '19 pada 15:31
+
+wim
+267k 79 79 lencana emas484 484 lencana perak630630 lencana perunggu
+tanya 3 Feb 11 jam 15:24
+
+Rory
+48.7k 67 67 lencana emas174 174 lencana perak234234 lencana perunggu
+1
+Jawaban yang diterima tidak setara dengan yang lain dengan skrip karena tidak menghasilkan output yang sama. -  oligofren Apr 12 '13 jam 12:04
+24
+Harap perbarui jawaban yang dipilih. Kuning telur rusak dan tidak dibutuhkan. Jawabannya dengan pip install pylibmc==sempurna. -  Jonathan Sep 11 '17 pukul 18:25
+Harap perbarui jawaban yang diterima seperti yang disarankan @Jonathan. Saya tidak akan menyebutnya sempurna karena itu tidak akan berfungsi pada versi pip sebelumnya (v7 atau v8), tetapi sebaliknya bagus. -  Antony Hatchkins 28 Sep '17 jam 8:23
+2
+@Rory tolong perbarui jawaban yang diterima, kuning telur sudah mati. Jawaban Chris Montanaro adalah metode terbaik saat ini IMO. -  Ryan Fisher 6 Desember '17 pukul 17:50
+3
+@Rory Tolong ubah jawaban yang diterima untuk kepentingan pengunjung masa depan untuk pertanyaan populer ini. Proyek kuning telur tidak lagi dipertahankan dan tidak berfungsi seperti yang diklaim oleh jawaban itu. -  wim 1 November '19 pukul 15:35
+Tampilkan 2 komentar lainnya
+22 Jawaban
+
+181
+
+(pembaruan: Pada Maret 2020, banyak orang telah melaporkan bahwa kuning telur, yang diinstal melalui pip install yolk3k, hanya mengembalikan versi terbaru. Jawaban Chris tampaknya memiliki paling banyak suara positif dan bekerja untuk saya)
+
+Skrip di pastebin berfungsi. Namun itu sangat tidak nyaman jika Anda bekerja dengan banyak lingkungan/host karena Anda harus menyalin/membuatnya setiap saat.
+
+Solusi menyeluruh yang lebih baik adalah dengan menggunakan yellow3k , yang tersedia untuk diinstal dengan pip. Misalnya untuk melihat versi Django apa yang tersedia:
+
+$ pip install yolk3k
+$ yolk -V django
+Django 1.3
+Django 1.2.5
+Django 1.2.4
+Django 1.2.3
+Django 1.2.2
+Django 1.2.1
+Django 1.2
+Django 1.1.4
+Django 1.1.3
+Django 1.1.2
+Django 1.0.4
+yolk3kadalah garpu asli yolkyang berhenti dikembangkan pada tahun 2012 . Meskipun yolktidak lagi dipertahankan (seperti yang ditunjukkan dalam komentar di bawah), yolk3ktampaknya dan mendukung Python 3.
+
+Catatan: Saya tidak terlibat dalam pengembangan yellow3k. Jika sesuatu tampaknya tidak berfungsi sebagaimana mestinya, meninggalkan komentar di sini seharusnya tidak membuat banyak perbedaan. Gunakan pelacak masalah yellow3k sebagai gantinya dan pertimbangkan untuk mengirimkan perbaikan, jika memungkinkan.
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 20 Mar 20 pada 0:32
+
+JL Peyret
+7,559 2 2 lencana emas34 34 lencana perak4848 lencana perunggu
+dijawab 24 Mar '11 pukul 16:11
+
+m000
+5,232 3 3 lencana emas27 27 lencana perak2828 lencana perunggu
+5
+Jawaban di bawah ini (menggunakan skrip dari pastebin) lebih rumit, tetapi setidaknya berfungsi dalam kasus saya (mencari versi scipy). kuning telur hanya menunjukkan versi terakhir yang tersedia, skrip lainnya menunjukkan semua versi yang berasal dari 0.8.0. -  oligofren Apr 12 '13 jam 12:02
+40
+Sebagian besar waktu itu hanya akan mengembalikan versi terbaru –  PawelRoman 23 Des '14 pukul 11:49
+17
+Fir python3 cukup gunakan pip install yellow3k. Perintah kuning telur akan tersedia. -  Pierre Criulanscy 3 April '15 pukul 14:32
+12
+Seperti kuning telur, sebagian besar waktu yolk3k hanya mengembalikan versi terbaru. -  diabloneo 26 Mei '15 pukul 6:47
+9
+kuning telur pecah/tidak terawat lagi. hapus jawaban ini. -  wim 1 November '19 pukul 15:05
+Tampilkan 14 komentar lainnya
+
+1033
+
+Untuk pip >= 20.3 gunakan:
+
+pip install --use-deprecated=legacy-resolver pylibmc==
+Untuk pembaruan, lihat: https://github.com/pypa/pip/issues/9139
+
+Untuk pip >= 9.0 gunakan:
+
+$ pip install pylibmc==
+Collecting pylibmc==
+  Could not find a version that satisfies the requirement pylibmc== (from 
+  versions: 0.2, 0.3, 0.4, 0.5.1, 0.5.2, 0.5.3, 0.5.4, 0.5.5, 0.5, 0.6.1, 0.6, 
+  0.7.1, 0.7.2, 0.7.3, 0.7.4, 0.7, 0.8.1, 0.8.2, 0.8, 0.9.1, 0.9.2, 0.9, 
+  1.0-alpha, 1.0-beta, 1.0, 1.1.1, 1.1, 1.2.0, 1.2.1, 1.2.2, 1.2.3, 1.3.0)
+No matching distribution found for pylibmc==
+– semua versi yang tersedia akan dicetak tanpa benar-benar mengunduh atau menginstal paket tambahan apa pun.
+
+Untuk pip <9.0 gunakan:
+
+pip install pylibmc==blork
+di mana blorkdapat berupa string apa pun yang bukan nomor versi yang valid .
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 13 Februari pukul 20:07
+
+stason
+3,487 2 2 lencana emas22 22 lencana perak3838 lencana perunggu
+dijawab 30 Okt '14 jam 22:07
+
+Chris Montanaro
+13.5k 4 4 lencana emas17 17 lencana perak2929 lencana perunggu
+61
+Saya merasa aneh bahwa kesalahan pip mengeluarkan semua versi tetapi mereka tidak memiliki argumen untuk secara eksplisit mendapatkan data tersebut -  Chris Montanaro 17 Apr '15 pada 18:22
+35
+Ini harus ditandai sebagai jawaban yang benar karena tidak memerlukan paket lain untuk diinstal. -  Yves Dorfsman 2 Januari '18 pukul 4:10
+16
+Agak konyol bahwa ini sepertinya satu-satunya cara untuk melakukan ini di pip. Saya harap setidaknya ada masalah terbuka tentang ini di pelacak bug mereka? -  smheidrich 1 Juni '18 pukul 12:07
+12
+Saya telah mengirimkan masalah untuk 20.3: github.com/pypa/pip/issues/9252 –  Att Righ 9 Desember '20 pukul 17:28 
+8
+Cara yang lebih baik untuk mendapatkan kembali perilaku lama:pip install django== --use-deprecated=legacy-resolver –  wim 29 Des '20 pukul 21:45
+Tampilkan 18 komentar lainnya
+
+89
+
+Anda tidak memerlukan paket pihak ketiga untuk mendapatkan informasi ini. pypi menyediakan umpan JSON sederhana untuk semua paket di bawah
+
+https://pypi.org/pypi/{PKG_NAME}/json
+Berikut beberapa kode Python hanya menggunakan pustaka standar yang mendapatkan semua versi.
+
+import json
+import urllib2
+from distutils.version import StrictVersion
+
+def versions(package_name):
+    url = "https://pypi.org/pypi/%s/json" % (package_name,)
+    data = json.load(urllib2.urlopen(urllib2.Request(url)))
+    versions = data["releases"].keys()
+    versions.sort(key=StrictVersion)
+    return versions
+
+print "\n".join(versions("scikit-image"))
+Kode itu dicetak (per 23 Februari 2015):
+
+0.7.2
+0.8.0
+0.8.1
+0.8.2
+0.9.0
+0.9.1
+0.9.2
+0.9.3
+0.10.0
+0.10.1
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 3 Juli '20 pukul 12:58
+
+Limmy
+43 1010 lencana perunggu
+dijawab 02 Des '14 jam 00:03
+
+eric chiang
+2.121 18 18 lencana perak2020 lencana perunggu
+2
+JSON memiliki cukup banyak sarang. Saya dulu versions = [x for x in data["releases"] if any([y["python_version"] in ['cp26', '2.6'] for y in data["releases"][x]])]menemukan versi yang kompatibel dengan Python 2.6. (Saya tidak melihat di cp26mana pun, tetapi beberapa paket memilikinya, cp27jadi saya berspekulasi bahwa ini mungkin ada di paket lain.) –  tripleee 18 Mar '16 pada 8:17
+3
+Berikut cara melakukannya dengan curl, jq, dan sort ("one-liner"!):curl -s https://pypi.python.org/pypi/{PKG_NAME}/json | jq -r '.releases | keys[]' | sort -t. -k 1,1n -k 2,2n -k 3,3n –  Alan Ivey 8 Juni '16 pukul 15:33 
+2
+Ini menimbulkan ValueErrorpengecualian untuk beberapa paket yang mengikuti skema versi yang tidak terlalu ketat. Untuk memperbaikinya untuk paket-paket ini, lihat Gist ini . -  TrinitronX 7 Februari '17 pukul 17:50
+usang akan melakukan ini untuk Anda. -  Shadi 8 '19 Okt pukul 14:48
+1
+StrictVersion yang mengganggu tidak berfungsi dengan paket dengan devnamanya. –  pengguna916367 23 Jun '20 pada 10:25
+Tampilkan 2 komentar lainnya

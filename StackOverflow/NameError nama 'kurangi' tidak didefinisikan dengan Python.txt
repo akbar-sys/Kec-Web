@@ -1,0 +1,92 @@
+NameError: nama 'kurangi' tidak didefinisikan dengan Python
+Ditanyakan 9 tahun, 5 bulan yang lalu
+Aktif 8 bulan yang lalu
+Dilihat 140rb kali
+
+212
+
+
+30
+Saya menggunakan Python 3.2. Mencoba ini:
+
+xor = lambda x,y: (x+y)%2
+l = reduce(xor, [1,2,3,4])
+Dan mendapat kesalahan berikut:
+
+l = reduce(xor, [1,2,3,4])
+NameError: name 'reduce' is not defined
+Mencoba mencetak reduceke konsol interaktif - dapatkan kesalahan ini:
+
+NameError: name 'reduce' is not defined
+
+Apakah reducebenar-benar dihapus dengan Python 3.2? Jika itu masalahnya, apa alternatifnya?
+
+ular piton
+mengurangi
+python-3.2
+Bagikan
+Perbaiki pertanyaan ini
+Mengikuti
+diedit 12 Apr '16 pada 20:10
+
+Mateusz Piotrowski
+6.117 9 9 lencana emas44 44 lencana perak7171 lencana perunggu
+ditanyakan 31 Des '11 jam 16:25
+
+Sergey
+39.9k 24 24 lencana emas80 80 lencana perak122122 lencana perunggu
+3
+@JBernardo, apa alat yang tepat? -  Sergey 31 Des '11 pukul 16:35
+Tambahkan komentar
+5 Jawaban
+
+308
+
+Itu dipindahkan ke functools.
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+dijawab 31 Des '11 jam 16:27
+
+Ignacio Vazquez-Abrams
+701k 132 132 lencana emas1239 1239 lencana perak12851285 lencana perunggu
+52
+@julio.alegria: Karena Guido membencinya . -  Ignacio Vazquez-Abrams 31 Des '11 pukul 16:55
+7
+Artikel yang dirujuk dalam @IgnacioVazquez-Abrams membuat beberapa poin bagus tentang bagaimana sebagian besar kasus dapat ditulis dengan cara yang lebih mudah dibaca. Bagi saya, itu dengan menulis sum(item['key'] for item in list_of_dicts). -  connorbode 4 Mar '17 pukul 22:15
+2
+Ini harus dalam bahasa inti -  ctpenrose 10 Agustus '20 pukul 22:07
+Tambahkan komentar
+
+223
+
+Kamu bisa menambahkan
+
+from functools import reduce
+sebelum Anda menggunakan pengurangan.
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+dijawab 1 Apr '15 jam 8:59
+
+3setiap hari
+2.247 1 1 lencana emas8 8 lencana perak44 lencana perunggu
+3
+Pengguna sebelumnya telah menjawab pertanyaan dan jawabannya sama dengan jawabannya –  Kathiravan Natarajan 24 Juli '17 pukul 1:28
+Tambahkan komentar
+
+10
+
+Atau jika Anda menggunakan enam perpustakaan
+
+from six.moves import reduce
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+dijawab 10 Nov '15 jam 20:15
+
+Azd325
+4,546 5 5 lencana emas31 31 lencana perak5050 lencana perunggu
+Tambahkan komentar

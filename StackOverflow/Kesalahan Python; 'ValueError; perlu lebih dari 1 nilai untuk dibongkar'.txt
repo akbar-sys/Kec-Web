@@ -1,0 +1,94 @@
+Kesalahan Python: "ValueError: perlu lebih dari 1 nilai untuk dibongkar"
+Ditanyakan 11 tahun yang lalu
+Aktif 3 tahun, 11 bulan yang lalu
+Dilihat 281k kali
+
+47
+
+
+12
+Di Python, ketika saya menjalankan kode ini:
+
+from sys import argv
+
+script, user_name =argv
+prompt = '>'
+
+print "Hi %s, I'm the %s script." % (user_name, script)
+Saya mendapatkan kesalahan ini:
+
+Traceback (most recent call last):  
+script, user_name =argv  
+ValueError: need more than 1 value to unpack
+Apa arti kesalahan itu?
+
+ular piton
+argumen
+Bagikan
+Perbaiki pertanyaan ini
+Mengikuti
+diedit 16 Des '15 pukul 23:57
+
+Eldar Abusalimov
+21.3k 4 4 lencana emas60 60 lencana perak6666 lencana perunggu
+tanya 11 Mei '10 jam 20:16
+
+Kapten Cretaceous
+761 2 2 lencana emas7 7 lencana perak1212 lencana perunggu
+2
+Apakah Anda memanggil skrip dengan argumen? -  Michael Mrozek 11 Mei '10 pukul 20:19
+Ya, saya mencoba menulis skrip yang menerima argumen. -  Kapten Cretaceous 11 Mei '10 pukul 20:53
+Tambahkan komentar
+8 Jawaban
+
+40
+
+Mungkin Anda tidak memberikan argumen pada baris perintah. Dalam hal ini, sys.argvhanya berisi satu nilai, tetapi harus memiliki dua untuk memberikan nilai untuk keduanya user_namedan script.
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+dijawab 11 Mei '10 pukul 20:20
+
+David Z
+116k 26 26 lencana emas230 230 lencana perak268268 lencana perunggu
+Tambahkan komentar
+
+8
+
+Anda mendapatkan ''ValueError: perlu lebih dari 1 nilai untuk dibongkar'', karena Anda hanya memberikan satu nilai, skrip (yaitu ex14.py dalam kasus ini)
+
+masalahnya adalah, Anda lupa menambahkan nama setelah Anda menjalankan file .py.
+
+baris 3 dari kode Anda adalah
+
+script, user_name = argv
+skripnya adalah ex14.py, Anda lupa menambahkan nama setelahnya
+
+jadi jika nama Anda adalah michael, maka apa yang Anda masukkan ke terminal akan terlihat seperti:
+
+> python ex14.py michael
+buat perubahan ini dan kodenya berjalan dengan sempurna
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+dijawab 7 Februari '13 jam 1:24
+
+Estetikus
+133 2 2 lencana perak88 lencana perunggu
+Tambahkan komentar
+
+4
+
+Anda tidak dapat menjalankan bagian kode khusus ini di interpreter interaktif. Anda harus menyimpannya ke dalam file terlebih dahulu sehingga Anda dapat meneruskan argumennya seperti ini
+
+$ python hello.py user338690
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+dijawab 11 Mei '10 jam 20:35
+
+John La Rooy
+264k 47 47 lencana emas334 334 lencana perak476476 lencana perunggu
+Tambahkan komentar

@@ -1,0 +1,173 @@
+Kesalahan lokal Python: pengaturan lokal tidak didukung
+Ditanyakan 8 tahun, 4 bulan yang lalu
+Aktif 3 bulan lalu
+Dilihat 400rb kali
+
+354
+
+
+113
+Mengapa saya mendapatkan kesalahan berikut saat melakukan ini dengan python:
+
+>>> import locale
+>>> print str( locale.getlocale() )
+(None, None)
+>>> locale.setlocale(locale.LC_ALL, 'de_DE')
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "/usr/lib/python2.7/locale.py", line 531, in setlocale
+    return _setlocale(category, locale)
+locale.Error: unsupported locale setting
+Ini berfungsi dengan lokal lain seperti fr atau nl juga. Saya menggunakan Ubuntu 11.04.
+
+Pembaruan: Melakukan hal berikut tidak menghasilkan apa pun:
+
+dpkg-reconfigure locales
+perl: warning: Setting locale failed.
+perl: warning: Please check that your locale settings:
+    LANGUAGE = (unset),
+    LC_ALL = (unset),
+    LC_CTYPE = "UTF-8",
+    LANG = (unset)
+    are supported and installed on your system.
+perl: warning: Falling back to the standard locale ("C").
+locale: Cannot set LC_CTYPE to default locale: No such file or directory
+locale: Cannot set LC_ALL to default locale: No such file or directory
+ular piton
+lokal
+ubuntu-11.04
+Bagikan
+Perbaiki pertanyaan ini
+Mengikuti
+diedit 14 Apr '15 pada 18:57
+
+Marco Bonelli
+48.4k 17 17 lencana emas95 95 lencana perak101101 lencana perunggu
+tanya 27 Jan 13 jam 13:04
+
+juga
+11k 22 22 lencana emas77 77 lencana perak120120 lencana perunggu
+8
+Apakah Anda memiliki de_DEdaftar di locale -a? Jika tidak, Anda harus menginstalnya . -  Bakuriu 27 Jan '13 pada 21:18
+1
+Terkait: skrip bash untuk menginstal semua lokal di Ubuntu. -  rkrzr 5 Nov '13 pukul 13:36
+17
+locale.setlocale(locale.LC_ALL, 'de_DE')salah. Anda perlu locale.setlocale(locale.LC_ALL, 'de_DE.utf8'). -  Martin Thomas 10 April '14 pukul 12:51
+2
+Terkadang Anda dapat menemukan penyandian yang tersedia untuk bahasa/negara yang Anda inginkan menggunakan alias bawaan: locale.setlocale(locale.LC_ALL, locale.locale_aliases['de_DE']). -  jgray 14 Mei '14 jam 10:32
+Saya menemukan jawaban yang paling tepat di sini --> linuxpip.org/fix-python-locale-error -  Shailesh Sutar 16 Mei pukul 15:32
+Tambahkan komentar
+21 Jawaban
+
+683
+
+Jalankan perintah berikut
+
+export LC_ALL="en_US.UTF-8"
+export LC_CTYPE="en_US.UTF-8"
+sudo dpkg-reconfigure locales
+Ini akan menyelesaikan ini.
+
+Pastikan untuk mencocokkan .UTF-8bagian dengan sintaks aktual yang ditemukan di output locale -amisalnya .utf8pada beberapa sistem.
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 24 Agustus '19 pukul 18:24
+dijawab 28 Mar '16 jam 6:20
+
+Muhammad Hasan
+12.5k 6 6 lencana emas28 28 lencana perak5050 lencana perunggu
+9
+Saya tidak harus menggunakan perintah dpkg. Lagi pula, jika masalah terjadi secara lokal, maka solusi sebenarnya adalah menambahkan dua perintah pertama ke aplikasi startup Anda. -  RolandiXor 1 Agustus '16 pukul 20:32
+3
+Ini tidak berhasil untuk saya. export LC_ALL="en_US.UTF-8"gagal dengan -bash: warning: setlocale: LC_ALL: cannot change locale (en_US.UTF-8)Apa yang berhasil melakukan ini:export LC_ALL=C –  Jonathan 27 Juli '18 pukul 20:17 
+itu bekerja untuk saya juga Terima kasih Muhammad Hassan –  Damith Udayanga 10 Maret pukul 9:59
+Tambahkan komentar
+
+229
+
+Menurut tautan ini , itu diselesaikan dengan memasukkan perintah ini:
+
+ekspor LC_ALL=C
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 9 Okt 19 jam 11:46
+dijawab 9 Mei '16 jam 9:26
+
+Fatemeh Abdollahei
+2,818 1 1 lencana emas17 17 lencana perak2424 lencana perunggu
+5
+Apa artinya? - ok itu menetapkan varibal lingkungan LC_ALLke nilai 'C'- tetapi mengapa ini berhasil? -  Martin Thomas 18 Agustus '17 pukul 12:28 
+4
+Mengapa LC_ALL berfungsi --> unix.stackexchange.com/questions/87745/what-does-lc-all-c-do –  Ferhat 10 Juni '18 pukul 6:22
+Saya mencari dan mencoba ini setiap kali saya mengganti komputer dan ini berfungsi setiap saat sementara metode lain tidak. -  Min Ki Jo 22 Jan '19 pukul 20:39
+Tambahkan komentar
+
+211
+
+Anda mungkin tidak memiliki de_DElokal yang tersedia.
+
+Anda dapat melihat daftar lokal yang tersedia dengan locale -aperintah. Misalnya, di mesin saya:
+
+$ locale -a
+C
+C.UTF-8
+en_AG
+en_AG.utf8
+en_AU.utf8
+en_BW.utf8
+en_CA.utf8
+en_DK.utf8
+en_GB.utf8
+en_HK.utf8
+en_IE.utf8
+en_IN
+en_IN.utf8
+en_NG
+en_NG.utf8
+en_NZ.utf8
+en_PH.utf8
+en_SG.utf8
+en_US.utf8
+en_ZA.utf8
+en_ZM
+en_ZM.utf8
+en_ZW.utf8
+it_CH.utf8
+it_IT.utf8
+POSIX
+Perhatikan bahwa jika Anda ingin menyetel lokal ke it_ITAnda juga harus menentukan .utf8:
+
+>>> import locale
+>>> locale.setlocale(locale.LC_ALL, 'it_IT')   # error!
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "/usr/lib/python2.7/locale.py", line 539, in setlocale
+    return _setlocale(category, locale)
+locale.Error: unsupported locale setting
+>>> locale.setlocale(locale.LC_ALL, 'it_IT.utf8')
+'it_IT.utf8'
+Untuk menginstal penggunaan lokal baru:
+
+sudo apt-get install language-pack-id
+di mana idkode bahasanya (diambil dari sini )
+
+Setelah Anda menginstal lokal, Anda harus mengikuti saran Julien Palard dan mengkonfigurasi ulang lokal dengan:
+
+sudo dpkg-reconfigure locales
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 13 Apr '17 jam 12:22
+
+komunitas ♦
+1 11 lencana perak
+dijawab 27 Jan '13 jam 14:06
+
+Bakuriu
+85.5k 18 18 lencana emas168 168 lencana perak202202 lencana perunggu
+Itu tidak berfungsi di wadah buruh pelabuhan Debian saya. Tapi ini berhasil. stackoverflow.com/questions/28405902/… –  Kris 20 April '20 pukul 17:50
+Tambahkan komentar

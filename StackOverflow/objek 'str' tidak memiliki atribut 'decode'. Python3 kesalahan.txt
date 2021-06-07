@@ -1,0 +1,116 @@
+objek 'str' tidak memiliki atribut 'decode'. Python3 kesalahan?
+Ditanyakan 6 tahun, 3 bulan yang lalu
+Aktif 2 bulan lalu
+Dilihat 529rb kali
+
+245
+
+
+36
+Ini kode saya:
+
+import imaplib
+from email.parser import HeaderParser
+
+conn = imaplib.IMAP4_SSL('imap.gmail.com')
+conn.login('example@gmail.com', 'password')
+conn.select()
+conn.search(None, 'ALL')
+data = conn.fetch('1', '(BODY[HEADER])')
+header_data = data[1][0][1].decode('utf-8')
+pada titik ini saya mendapatkan pesan kesalahan
+
+AttributeError: 'str' object has no attribute 'decode'
+Python 3 tidak memiliki decode lagi, benar? bagaimana saya bisa memperbaiki ini?
+
+Juga, di:
+
+data = conn.fetch('1', '(BODY[HEADER])')
+Saya hanya memilih email pertama. Bagaimana cara memilih semua?
+
+ular piton
+python-3.x
+imaplib
+Bagikan
+Perbaiki pertanyaan ini
+Mengikuti
+diedit 9 Februari '18 pukul 10:13
+
+Martijn Pieters ♦
+890k 245 245 lencana emas3515 3515 lencana perak30013001 lencana perunggu
+ditanyakan 18 Februari '15 pukul 12:20
+pengguna4530588
+Tambahkan komentar
+11 Jawaban
+
+227
+
+Anda mencoba untuk memecahkan kode objek yang sudah diterjemahkan . Anda memiliki str, tidak perlu lagi mendekode dari UTF-8.
+
+Cukup jatuhkan .decode('utf-8')bagiannya:
+
+header_data = data[1][0][1]
+Adapun fetch()panggilan Anda, Anda secara eksplisit meminta hanya pesan pertama. Gunakan rentang jika Anda ingin mengambil lebih banyak pesan. Lihat dokumentasi :
+
+The message_set pilihan untuk perintah di bawah ini adalah string menentukan satu atau lebih pesan yang akan ditindaklanjuti. Ini mungkin nomor pesan sederhana ( '1'), rentang nomor pesan ( '2:4'), atau sekelompok rentang yang tidak bersebelahan yang dipisahkan dengan koma ( '1:3,6:9'). Rentang dapat berisi tanda bintang untuk menunjukkan batas atas tak terbatas ( '3:*').
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 18 Februari '15 pukul 12:50
+dijawab 18 Feb '15 jam 12:41
+
+Martijn Pieters ♦
+890k 245 245 lencana emas3515 3515 lencana perak30013001 lencana perunggu
+8
+Apakah ada cara sederhana untuk melakukan ini secara kondisional? (Saya hanya ingin memecahkan kode jika pesan dikodekan.) –  devinbost 21 Mar '18 pukul 20:56 
+7
+@devinbost: di Python 3? Uji jenis objek atau decodeatributnya, atau tangkap saja pengecualiannya. try: data = data.decode('...') except AttributeError: pass. -  Martijn Pieters ♦ 22 Mar '18 pukul 7:46
+2
+@devinbost: namun, Anda biasanya lebih baik melakukan decoding lebih dekat ke sumber data Anda, di mana Anda biasanya tahu persis apa yang Anda miliki. -  Martijn Pieters ♦ 22 Mar '18 pukul 7:46
+Tambahkan komentar
+
+48
+
+Gunakan dengan Metode ini:
+
+str.encode().decode()
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+dijawab 27 Mar '17 pukul 23:08
+
+Alireza
+670 6 6 lencana perak99 lencana perunggu
+2
+bytearray(str, 'encoding').decode('another_encoding')akan melakukan pekerjaan jika Anda perlu memecahkan kode idnaatau penyandian lainnya -  Alex 11 Juli '17 pukul 10:41
+35
+Ini tidak berguna. Anda menyandikan ke UTF-8, lalu mendekode byte yang dihasilkan sebagai UTF-8, berakhir di tempat Anda memulai. Anda menjaga CPU tetap hangat tanpa manfaat lain. -  Martijn Pieters ♦ 9 Februari '18 pukul 10:10 
+2
+@MartijnPieters "berakhir di tempat Anda memulai" - tidak jika Anda memiliki urutan pelarian dalam string Anda, misalnya: >>> '\u0159'.encode().decode() 'ř' –  Petrus 21 Mar '18 pukul 15:47
+1
+@Peter: tidak, Anda tidak perlu encoding atau decoding untuk itu. '\u0159'mencetak output yang sama persis. Anda membingungkan sintaks literal string dengan representasi kanonik dari nilai. -  Martijn Pieters ♦ 21 Mar '18 pukul 16:25 
+2
+Anda dapat langsung menggunakan, Tidak perlu encode dan kemudian decode lagi. -  Aditya 11 Juli '18 pukul 5:32
+Tambahkan komentar
+
+44
+
+Dimulai dengan Python 3, semua string adalah objek unicode.
+
+  a = 'Happy New Year' # Python 3
+  b = unicode('Happy New Year') # Python 2
+Petunjuk di atas adalah sama. Jadi saya pikir Anda harus menghapus .decode('utf-8')bagian itu karena Anda sudah memiliki objek unicode.
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 26 Februari pukul 22:05
+
+Mathieu Rollet
+852 9 9 lencana perak2020 lencana perunggu
+dijawab 18 Feb '15 jam 12:44
+
+Neo Ko
+1.185 13 13 lencana perak2424 lencana perunggu
+Tambahkan komentar

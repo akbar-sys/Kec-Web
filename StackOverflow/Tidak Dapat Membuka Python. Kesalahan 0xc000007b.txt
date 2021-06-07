@@ -1,0 +1,90 @@
+Tidak Dapat Membuka Python. Kesalahan 0xc000007b
+Ditanyakan 7 tahun, 5 bulan yang lalu
+Aktif 10 bulan yang lalu
+Dilihat 32rb kali
+
+23
+
+
+1
+Saya baru-baru ini belajar Python 3. Saya tidak punya masalah di netbook saya (32bit Windows 7) saya dengan membuat program sederhana kecil. Ketika saya menginstalnya di netbook saya, saya tidak punya masalah, tetapi sekarang setelah saya masuk ke dalamnya, saya ingin menginstalnya di desktop saya dan saya memilikinya. Desktop saya adalah OS 64 bit yang menjalankan Windows 7. Seperti yang saya lakukan dengan netbook saya, saya mengunduh Python dan menginstal edisi 64 bit.
+
+Setelah menginstalnya, saya membuka Python CLI dan GUI dan tidak berhasil. Itu memberi saya kesalahan ini.
+
+"The application was unable to start correctly (0xc000007b). Click OK to close the application"
+Saya juga mencoba menginstal ulang, tetapi tidak berhasil.
+
+Saya menduga .dll yang hilang tetapi saya tidak sepenuhnya yakin. Adakah yang tahu apa yang mencegah saya membuka Python dan bagaimana cara memperbaikinya?. Saya ingin melanjutkan pekerjaan saya sesegera mungkin.
+
+ular piton
+jendela
+python-3.x
+Bagikan
+Mengikuti
+diedit 18 Des 13 ' 11:04
+
+m01
+7.775 5 5 lencana emas31 31 lencana perak5555 lencana perunggu
+tanya 18 Des '13 jam 5:51
+
+pengguna3113898
+331 1 1 lencana emas2 2 lencana perak33 lencana perunggu
+6
+Python bergantung pada pustaka runtime C++; Anda dapat mencoba jika menginstal Microsoft Visual C++ 2010 Redistributable Package (x64) membantu. -  Janne Karila 18 Des '13 pada 7:04
+1
+Perhatikan bahwa Anda juga dapat menginstal versi 32-bit. -  Armin Rigo 18 Des '13 jam 9:47
+5
+@JanneKarila Terima kasih. Menginstal edisi 2015 berhasil bagi saya dengan python 3.5.1. -  Nol3 6 Januari '16 pada 1:35
+1
+@ Zero3 Bagi saya juga! Sepertinya dependensi Python adalah pustaka runtime C++ dan SP1 untuk Microsoft Windows (KB976932). -  Ricky Boyce 10 Mei '17 pukul 2:21 
+1
+Silakan pilih jawaban jika mereka bekerja untuk masalah Anda, terima kasih! -  Efren 8 Mei '18 jam 3:15
+Tambahkan komentar
+12 Jawaban
+
+9
+
+Itu adalah NTSTATUSkode kesalahan untuk STATUS_INVALID_IMAGE_FORMAT. Hampir selalu itu berarti bahwa yang dimuat mencoba untuk menghubungkan DLL 32 bit ke dalam proses 64 bit, atau sebaliknya.
+
+Jika Anda ingin mencoba men-debug ini maka alat pilihannya adalah Dependency Walker. Anda membuka file yang dapat dieksekusi python.exe di Dependency Walker dan menggunakan menu profil untuk memulainya dengan mencatat peristiwa pemuatan. Di suatu tempat di sepanjang jalan akan ada kegagalan dan Anda akan dapat melihat modul mana yang menyebabkan kegagalan itu. Itu diharapkan akan menunjukkan jalan menuju resolusi.
+
+Namun, mencoba men-debug ini mungkin membuang-buang waktu. Mungkin akan lebih baik untuk menghapus instalasi yang ada, dan mencoba menginstal ulang. Mungkin memilih distribusi Python yang berbeda.
+
+Saya perhatikan bahwa Anda telah memilih versi 64 bit. Sekarang, dukungan untuk modul ekstensi 64 bit tidak sekuat pada Python 64 bit seperti pada Python 32 bit. Memang ada, tetapi modul mereka bisa lebih sulit didapat dan dipasang. Anda mungkin mempertimbangkan untuk menginstal Python 32 bit di lain waktu.
+
+Bagikan
+Mengikuti
+dijawab 18 Des '13 jam 12:27
+
+David Heffernan
+573k 40 40 lencana emas974 974 lencana perak13891389 lencana perunggu
+1
+Jika masalah yang sama masih berlanjut, coba unduh biner yang diperlukan dari python.org/downloads/windows dan tambahkan variabel lingkungan PYTHON dengan jalur folder yang diunduh –  pengembang 24 Nov '16 pukul 3:00
+Tambahkan komentar
+
+6
+
+Harap pastikan bahwa Python3.dll adalah versi yang sama dan arsitektur yang sama (32/64) dengan python.exe. Saya memperbaiki kesalahan ini dengan menggantinya dengan versi 32bit.
+
+Bagikan
+Mengikuti
+dijawab 6 Jan '16 jam 10:00
+
+Kuddusi iftçibaşı
+61 1 1 lencana perak33 lencana perunggu
+Bagaimana Anda memeriksa versi dan arsitektur file .dll? -  mantri 8 Agustus '20 pukul 3:42
+Tambahkan komentar
+
+3
+
+anda harus menghapus jalur python lama di "Variabel Lingkungan" dan nikmati ;)
+
+Bagikan
+Mengikuti
+dijawab 02 Mar '19 pukul 13:49
+
+Mohammad Amin Eskandari
+49 66 lencana perunggu
+1
+Bekerja untuk saya dengan menghapus jalur lama dan menginstal ulang. -  nilakantha singh deo 17 Februari '20 pukul 18:45
+Tambahkan komentar

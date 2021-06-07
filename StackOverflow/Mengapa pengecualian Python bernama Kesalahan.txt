@@ -1,0 +1,100 @@
+Mengapa pengecualian Python bernama "Kesalahan"?
+Ditanyakan 11 tahun yang lalu
+Aktif 1 tahun, 9 bulan yang lalu
+Dilihat 16rb kali
+
+84
+
+
+14
+Mengapa pengecualian Python bernama "Kesalahan" (misalnya ZeroDivisionError, NameError, TypeError) dan bukan "Pengecualian" (misalnya ZeroDivisionException, NameException, TypeException).
+
+Saya berasal dari latar belakang Java dan mulai belajar Python baru-baru ini, sehingga ini membingungkan karena di Java ada perbedaan antara kesalahan dan pengecualian.
+
+Apakah ada perbedaan dalam Python juga atau tidak?
+
+Jawa
+ular piton
+pengecualian
+Bagikan
+Mengikuti
+diedit 15 Juli '15 pukul 14:57
+
+Mark Amery
+111k 58 58 lencana emas354 354 lencana perak403403 lencana perunggu
+ditanyakan 25 Mei 10 jam 10:36
+
+Elena
+849 1 1 lencana emas6 6 lencana perak33 lencana perunggu
+Tambahkan komentar
+6 Jawaban
+
+97
+
+Anda tidak memberi nama setiap kelas dengan nama 'Kelas' dan setiap variabel dengan nama '_variabel'. Dengan cara yang sama Anda tidak memberi nama pengecualian menggunakan kata 'Pengecualian'. Sebuah nama harus mengatakan sesuatu tentang arti suatu objek. 'Kesalahan' adalah arti dari kebanyakan pengecualian.
+
+Tidak semua Pengecualian adalah Kesalahan. SystemExit, KeyboardInterrupt, StopIteration, GeneratorExitadalah semua pengecualian dan bukan kesalahan. Kata 'Kesalahan' dalam kesalahan yang sebenarnya menunjukkan perbedaan.
+
+'Kesalahan' lebih pendek dari 'Pengecualian'. Itu dapat menyimpan beberapa karakter dalam lebar kode tanpa kehilangan makna. Itu membuat beberapa perbedaan.
+
+Bagikan
+Mengikuti
+diedit 12 Agustus '19 pukul 13:50
+
+z33k
+2.121 2 2 lencana emas21 21 lencana perak3131 lencana perunggu
+dijawab 25 Mei '10 jam 10:58
+
+Jacek Konieczny
+7.438 1 1 lencana emas21 21 lencana perak3535 lencana perunggu
+2
+Tidak semua Pengecualian adalah Kesalahan : Memang, ada sejumlah pengecualian yang berasal dari kelas pengecualian bernama Warning. Silakan lihat jawaban saya . -  DavidRR 10 Mar '15 pada 18:52 
+1
+Ini adalah visualisasi yang bagus docs.python.org/2/library/exceptions.html#exception-hierarchy –  Jason Capriotti Apr 12 '16 pada 20:43
+1
+Visualisasi terbaru untuk Python3 ada di sini: docs.python.org/3.6/library/exceptions.html#exception-hierarchy –  Sebastian Jylanki 5 Okt '17 jam 10:53
+Tambahkan komentar
+
+50
+
+Saya percaya konvensi ini berasal dari PEP 8 - Panduan Gaya untuk Kode Python :
+
+Nama Pengecualian
+Karena pengecualian harus berupa kelas, konvensi penamaan kelas berlaku di sini. Namun, Anda harus menggunakan akhiran "Error" pada nama pengecualian Anda (jika pengecualian sebenarnya adalah kesalahan).
+
+Bagikan
+Mengikuti
+diedit 15 Juli '15 pukul 14:59
+
+Mark Amery
+111k 58 58 lencana emas354 354 lencana perak403403 lencana perunggu
+dijawab 25 Mei '10 pukul 17:20
+
+daotoad
+25.7k 7 7 lencana emas54 54 lencana perak9999 lencana perunggu
+Tambahkan komentar
+
+9
+
+Python cukup mirip dengan Java dalam hal ini. Tapi Pengecualian Python harus dibandingkan dengan Throwable Java.
+
+Karena Throwables datang dalam semua jenis rasa - Error, RuntimeException dan (dicentang) Exception - begitu juga Python (meskipun tidak ada pengecualian yang dicentang).
+
+Sedangkan untuk bahasanya, Error adalah luar biasa, sehingga hierarki pewarisan tidak aneh.
+
+Saya tidak terlalu suka nama Pengecualian. Pengecualian tidak hanya digunakan untuk keadaan luar biasa (seperti semoga Kesalahan) tetapi juga untuk keluar dari aliran kontrol. Karena itulah yang dilakukan Pengecualian; itu melompat keluar dari aliran kontrol normal ke titik yang ditandai. Sedikit seperti goto, tapi lebih halus.
+
+Yang mengatakan, setiap kali Anda memiliki situasi di mana tidak ada nilai pengembalian yang sesuai dapat ditemukan, Anda cenderung menggunakan Pengecualian. Baik di Python seperti di Jawa.
+
+Bagikan
+Mengikuti
+diedit 15 Juli '15 pada 15:03
+
+Mark Amery
+111k 58 58 lencana emas354 354 lencana perak403403 lencana perunggu
+dijawab 25 Mei '10 pukul 11:04
+
+ekstraneon
+22k 2 2 lencana emas42 42 lencana perak4949 lencana perunggu
+-1; Saya tidak merasa ini menawarkan wawasan yang berguna. Anda berbicara tentang 'keadaan luar biasa' tanpa mendefinisikannya dengan jelas, Anda memberikan deskripsi tentang cara kerja pengecualian ("melompat keluar dari aliran kontrol normal ke titik yang ditandai") yang tidak terlalu akurat, Anda menggunakan perbedaan antara Kesalahan dan RuntimeException di Java seolah-olah ada perbedaan serupa di Python (tidak), dan Anda tidak pernah benar-benar menjawab pertanyaan mengapa pengecualian Python sering ada Errordalam nama mereka. -  Mark Amery 05 Juli '15 pukul 15:10 
+Tambahkan komentar

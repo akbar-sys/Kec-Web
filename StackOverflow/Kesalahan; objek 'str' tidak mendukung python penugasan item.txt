@@ -1,0 +1,124 @@
+Kesalahan: objek 'str' tidak mendukung python penugasan item
+Ditanyakan 6 tahun, 10 bulan yang lalu
+Aktif 3 tahun, 5 bulan lalu
+Dilihat 28rb kali
+
+-1
+
+
+Kesalahan: objek 'str' tidak mendukung python penugasan item
+
+dict=['A', 'a','B', 'b','C', 'c','D', 'd','E', 'e','F', 'f','G', 'g','H', 'h','I',       'i','J', 'j','K', 'k','L', 'l','M', 'm','N', 'n','P', 'o','P', 'p','Q', 'q','R', 'r','S',                   's','T', 't','U', 'u','V', 'v','W', 'w','X', 'x','Y', 'y','Z' 'z']
+
+def cript(s):
+    for i in range(0,len(s)):
+        a=dict.index(s[i])
+        if a<26:
+            s[i]=dict[a+26]
+        else:
+            s[i]=dict[a-26]
+    return s
+
+print cript('Hello')
+Baris kesalahan 6
+
+    s[i]= dict[a+26]
+TypeError: 'str' object does not support item assignment python
+ular piton
+python-2.7
+Bagikan
+Perbaiki pertanyaan ini
+Mengikuti
+diedit 22 Juli '14 pukul 16:27
+
+Martijn Pieters ♦
+891k 245 245 lencana emas3523 3523 lencana perak30053005 lencana perunggu
+tanya 22 Jul '14 jam 16:25
+
+pengguna3510057
+91 1 1 lencana emas1 1 lencana perak33 lencana perunggu
+1
+Ini persis seperti yang dikatakan. Anda tidak diperbolehkan mengubah karakter di tengah string dengan Python. -  Pertahanan Suara 22 Juli '14 pukul 16:26
+3
+Ini tidak terkait dengan masalah Anda, tetapi menggunakan kembali nama bawaan untuk objek lain merupakan ide yang sangat buruk. Dalam kode Anda, dictadalah contoh daftar, yang mungkin sangat membingungkan di masa depan ketika Anda mencoba membuat kamus yang sebenarnya. -  hitam 22 Juli '14 pukul 16:29 
+Tambahkan komentar
+3 Jawaban
+
+4
+
+Python tidak mengizinkan Anda menukar karakter dalam string dengan karakter lain; string tidak dapat diubah. Yang perlu Anda lakukan adalah membuat string yang sama sekali berbeda dan mengembalikannya.
+
+dict=['A', 'a','B', 'b','C', 'c','D', 'd','E', 'e','F', 'f','G', 'g','H', 'h','I', 'i','J', 'j','K', 'k','L', 'l','M', 'm','N', 'n','P', 'o','P', 'p','Q', 'q','R', 'r','S', 's','T', 't','U', 'u','V', 'v','W', 'w','X', 'x','Y', 'y','Z' 'z']
+
+def cript(s):
+    crypt_s = ""
+    for i in range(0,len(s)):
+        a=dict.index(s[i])
+        if a<26:
+            crypt_s += dict[a+26]
+        else:
+            crypt_s += dict[a-26]
+    return crypt_s
+
+print cript('Hello')
+Tentu saja, mungkin ada masalah lain dengan kode, tetapi itu akan menyelesaikan pesan kesalahan khusus itu.
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+dijawab 22 Jul '14 jam 16:30
+
+Pertahanan Suara
+6.010 1 1 lencana emas24 24 lencana perak3939 lencana perunggu
+Tambahkan komentar
+
+2
+
+String adalah objek yang tidak dapat diubah, artinya tidak dapat dimodifikasi di tempatnya (Anda harus mengembalikan string baru dan menetapkannya kembali).
+
+s[i] = dict[a + 26] 
+sedang mencoba untuk menetapkan kembali nilai dalam string
+
+Berikut ini adalah contoh yang lebih mudah untuk dilihat
+
+>>> astring = "Hello"
+>>> astring[0] = "a"
+
+Traceback (most recent call last):
+  File "<pyshell#1>", line 1, in <module>
+    astring[0] = "a"
+TypeError: 'str' object does not support item assignment
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+dijawab 22 Jul '14 jam 16:27
+
+Dan Oberlam
+2.277 8 8 lencana emas30 30 lencana perak4848 lencana perunggu
+Tambahkan komentar
+
+0
+
+def game():
+    list = ["pomme", "anniversaire", "table", "travail", "amies", "enfants"]
+    ran = random.randint(0, (len(list)-1)/2)
+    mot = list[ran]
+    length = len(mot)
+    for x in range(0, length-1):
+        if length % 2 ==0:
+            a = int(random.randint(-length/2, length/2))
+        else:
+            a = int(random.randint(-(length-1)/2, (length-1)/2))
+        mot[x] = mot[x+a]
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 8 Jan '18 pukul 18:56
+
+Barbaros zhan
+39.2k 9 9 lencana emas21 21 lencana perak4545 lencana perunggu
+dijawab 8 Jan '18 jam 18:45
+
+Umar Tahri
+1 22 lencana perunggu
+Tambahkan komentar

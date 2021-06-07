@@ -1,0 +1,227 @@
+Cara yang tepat untuk mendeklarasikan pengecualian khusus dalam Python modern?
+Ditanyakan 11 tahun, 9 bulan yang lalu
+Aktif 2 bulan lalu
+Dilihat 760rb kali
+
+1465
+
+
+329
+Apa cara yang tepat untuk mendeklarasikan kelas pengecualian khusus dengan Python modern? Tujuan utama saya adalah mengikuti standar apa pun yang dimiliki kelas pengecualian lain, sehingga (misalnya) setiap string tambahan yang saya sertakan dalam pengecualian dicetak oleh alat apa pun yang menangkap pengecualian.
+
+Yang saya maksud dengan "Python modern" adalah sesuatu yang akan berjalan di Python 2.5 tetapi 'benar' untuk cara Python 2.6 dan Python 3.* melakukan sesuatu. Dan dengan "kustom" yang saya maksud adalah objek Pengecualian yang dapat menyertakan data tambahan tentang penyebab kesalahan: string, mungkin juga beberapa objek arbitrer lain yang relevan dengan pengecualian.
+
+Saya tersandung oleh peringatan penghentian berikut di Python 2.6.2:
+
+>>> class MyError(Exception):
+...     def __init__(self, message):
+...         self.message = message
+... 
+>>> MyError("foo")
+_sandbox.py:3: DeprecationWarning: BaseException.message has been deprecated as of Python 2.6
+Tampaknya gila BaseExceptionmemiliki arti khusus untuk atribut bernama message. Saya mengumpulkan dari PEP-352 bahwa atribut memang memiliki arti khusus dalam 2.5 yang mereka coba untuk tidak digunakan lagi, jadi saya kira nama itu (dan yang itu saja) sekarang dilarang? Ugh.
+
+Saya juga secara samar-samar menyadari bahwa Exceptionmemiliki beberapa parameter ajaib args, tetapi saya tidak pernah tahu bagaimana menggunakannya. Saya juga tidak yakin ini cara yang tepat untuk melakukan sesuatu ke depan; banyak diskusi yang saya temukan online menyarankan mereka mencoba menyingkirkan args dengan Python 3.
+
+Pembaruan: dua jawaban menyarankan penggantian __init__, dan __str__/ __unicode__/ __repr__. Sepertinya banyak mengetik, apakah perlu?
+
+ular piton
+pengecualian
+pengecualian khusus
+Bagikan
+Perbaiki pertanyaan ini
+Mengikuti
+diedit 21 Januari '19 pukul 14:50
+
+Marco
+700 7 7 lencana perak1414 lencana perunggu
+ditanyakan pada 23 Agustus '09 pada 21:29
+
+Nelson
+22.4k 4 4 lencana emas32 32 lencana perak3030 lencana perunggu
+9
+Saya percaya ini adalah salah satu kasus di mana Python tidak mengikuti salah satu aforismenya sendiri:There should be one-- and preferably only one --obvious way to do it. –  Anakhand 29 Juni '20 pukul 12:07
+Tambahkan komentar
+11 Jawaban
+
+1516
+
++50
+Mungkin saya melewatkan pertanyaan itu, tetapi mengapa tidak:
+
+class MyException(Exception):
+    pass
+Untuk menimpa sesuatu (atau memberikan argumen tambahan), lakukan ini:
+
+class ValidationError(Exception):
+    def __init__(self, message, errors):            
+        # Call the base class constructor with the parameters it needs
+        super().__init__(message)
+            
+        # Now for your custom code...
+        self.errors = errors
+Dengan begitu Anda bisa meneruskan pesan kesalahan dict ke param kedua, dan melakukannya nanti dengan e.errors.
+
+Di Python 2, Anda harus menggunakan bentuk yang sedikit lebih kompleks ini dari super():
+
+super(ValidationError, self).__init__(message)
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 25 Maret pukul 18:51
+
+Nico Schlömer
+37.2k 21 21 lencana emas139 139 lencana perak189189 lencana perunggu
+menjawab 23 Agustus '09 pada 21:55
+
+gahooa
+115k 12 12 lencana emas89 89 lencana perak9595 lencana perunggu
+49
+Namun pengecualian yang didefinisikan seperti ini tidak dapat dipilih; lihat pembahasannya di sini stackoverflow.com/questions/16244923/… -  jiakai 1 Agustus '17 pukul 2:54
+123
+@jiakai berarti "picklable". : - ) -  Robino 15 Sep '17 pukul 13:39 
+3
+Mengikuti dokumentasi python untuk pengecualian yang ditentukan pengguna, nama yang disebutkan dalam fungsi __init__ salah. Alih-alih (diri, pesan, kesalahan) itu adalah (diri, ekspresi, pesan). Ekspresi atribut adalah ekspresi input di mana kesalahan terjadi dan pesan adalah penjelasan dari kesalahan. -  ddleon 27 Februari '20 pada 15:13 
+5
+Itu salah paham, @ddleon. Contoh dalam dokumen yang Anda maksud adalah untuk kasus penggunaan tertentu. Tidak ada arti penting bagi nama argumen konstruktor subkelas (atau nomornya). -  asthasr 22 April '20 pukul 21:15
+Tambahkan komentar
+
+564
+
+Dengan Pengecualian Python modern, Anda tidak perlu penyalahgunaan .message, atau menimpa .__str__()atau .__repr__()atau apapun itu. Jika yang Anda inginkan hanyalah pesan informatif saat pengecualian Anda muncul, lakukan ini:
+
+class MyException(Exception):
+    pass
+
+raise MyException("My hovercraft is full of eels")
+Itu akan memberikan traceback yang diakhiri dengan MyException: My hovercraft is full of eels.
+
+Jika Anda menginginkan lebih banyak fleksibilitas dari pengecualian, Anda dapat memberikan kamus sebagai argumen:
+
+raise MyException({"message":"My hovercraft is full of animals", "animal":"eels"})
+Namun, untuk mendapatkan detail tersebut dalam satu exceptblok sedikit lebih rumit. Detail disimpan dalam argsatribut, yang merupakan daftar. Anda perlu melakukan sesuatu seperti ini:
+
+try:
+    raise MyException({"message":"My hovercraft is full of animals", "animal":"eels"})
+except MyException as e:
+    details = e.args[0]
+    print(details["animal"])
+Masih dimungkinkan untuk meneruskan beberapa item ke pengecualian dan mengaksesnya melalui indeks Tuple, tetapi ini sangat tidak disarankan (dan bahkan dimaksudkan untuk dihentikan beberapa waktu lalu). Jika Anda membutuhkan lebih dari satu informasi dan metode di atas tidak cukup untuk Anda, maka Anda harus membuat subkelas Exceptionseperti yang dijelaskan dalam tutorial .
+
+class MyError(Exception):
+    def __init__(self, message, animal):
+        self.message = message
+        self.animal = animal
+    def __str__(self):
+        return self.message
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 10 Mei '18 jam 8:02
+dijawab 22 Apr '12 pukul 18:18
+
+frknstn
+5.837 1 1 lencana emas14 14 lencana perak1818 lencana perunggu
+2
+"tapi ini akan ditinggalkan di masa depan" - apakah ini masih dimaksudkan untuk dihentikan? Python 3.7 tampaknya masih dengan senang hati menerima Exception(foo, bar, qux). -  mtraceur 20 Apr '18 pukul 22:36 
+Belum ada pekerjaan baru-baru ini untuk mencabutnya sejak upaya terakhir gagal karena kesulitan transisi, tetapi penggunaan itu masih tidak disarankan. Saya akan memperbarui jawaban saya untuk mencerminkan hal itu. -  frknstn 2 Mei '18 pukul 8:20
+@frnknstn, mengapa itu berkecil hati? Sepertinya idiom yang bagus untuk saya. -  neves 8 Mei '18 pukul 17:48
+3
+@neves sebagai permulaan, menggunakan tupel untuk menyimpan informasi pengecualian tidak ada gunanya menggunakan kamus untuk melakukan hal yang sama. Jika Anda tertarik dengan alasan di balik perubahan pengecualian, lihat PEP352 –  frknstn 10 '18 Mei pukul 8:09
+3
+Bagian yang relevan dari PEP352 adalah "Ide yang Dicabut" . -  kekuatan bebas 17 April '19 pukul 16:25
+Tambahkan komentar
+
+222
+
+"Cara yang tepat untuk mendeklarasikan pengecualian khusus dengan Python modern?"
+Ini baik-baik saja, kecuali pengecualian Anda benar-benar jenis pengecualian yang lebih spesifik:
+
+class MyException(Exception):
+    pass
+Atau lebih baik (mungkin sempurna), daripada passmemberikan docstring:
+
+class MyException(Exception):
+    """Raise for my specific kind of exception"""
+Subkelas Pengecualian Subkelas
+Dari dokumen
+
+Exception
+
+Semua pengecualian built-in, non-sistem-keluar berasal dari kelas ini. Semua pengecualian yang ditentukan pengguna juga harus diturunkan dari kelas ini.
+
+Itu berarti bahwa jika pengecualian Anda adalah jenis pengecualian yang lebih spesifik, subkelas pengecualian itu alih-alih generik Exception(dan hasilnya adalah Anda masih berasal dari Exceptionseperti yang direkomendasikan oleh dokumen). Juga, Anda setidaknya dapat memberikan docstring (dan tidak dipaksa untuk menggunakan passkata kunci):
+
+class MyAppValueError(ValueError):
+    '''Raise when my specific value is wrong'''
+Atur atribut yang Anda buat sendiri dengan custom __init__. Hindari memberikan dict sebagai argumen posisi, pengguna kode Anda di masa mendatang akan berterima kasih. Jika Anda menggunakan atribut pesan yang tidak digunakan lagi, menetapkannya sendiri akan menghindari DeprecationWarning:
+
+class MyAppValueError(ValueError):
+    '''Raise when a specific subset of values in context of app is wrong'''
+    def __init__(self, message, foo, *args):
+        self.message = message # without this you may get DeprecationWarning
+        # Special attribute you desire with your Error, 
+        # perhaps the value that caused the error?:
+        self.foo = foo         
+        # allow users initialize misc. arguments as any other builtin Error
+        super(MyAppValueError, self).__init__(message, foo, *args) 
+Tidak perlu menulis sendiri __str__atau __repr__. Yang builtin sangat bagus, dan warisan kooperatif Anda memastikan bahwa Anda menggunakannya.
+
+Kritik atas jawaban teratas
+Mungkin saya melewatkan pertanyaan itu, tetapi mengapa tidak:
+
+class MyException(Exception):
+    pass
+Sekali lagi, masalah dengan di atas adalah bahwa untuk menangkapnya, Anda harus menamainya secara khusus (mengimpornya jika dibuat di tempat lain) atau menangkap Pengecualian, (tetapi Anda mungkin tidak siap untuk menangani semua jenis Pengecualian, dan Anda hanya boleh menangkap pengecualian yang siap Anda tangani). Kritik serupa dengan di bawah ini, tetapi selain itu itu bukan cara untuk menginisialisasi melalui super, dan Anda akan mendapatkan DeprecationWarningjika Anda mengakses atribut pesan:
+
+Sunting: untuk menimpa sesuatu (atau memberikan argumen tambahan), lakukan ini:
+
+class ValidationError(Exception):
+    def __init__(self, message, errors):
+
+        # Call the base class constructor with the parameters it needs
+        super(ValidationError, self).__init__(message)
+
+        # Now for your custom code...
+        self.errors = errors
+Dengan begitu Anda bisa meneruskan pesan kesalahan dict ke param kedua, dan melakukannya nanti dengan e.errors
+
+Ini juga membutuhkan tepat dua argumen untuk diteruskan (selain dari self.) Tidak lebih, tidak kurang. Itu kendala menarik yang mungkin tidak dihargai oleh pengguna masa depan.
+
+Untuk menjadi langsung - itu melanggar substitusi Liskov .
+
+Saya akan menunjukkan kedua kesalahan:
+
+>>> ValidationError('foo', 'bar', 'baz').message
+
+Traceback (most recent call last):
+  File "<pyshell#10>", line 1, in <module>
+    ValidationError('foo', 'bar', 'baz').message
+TypeError: __init__() takes exactly 3 arguments (4 given)
+
+>>> ValidationError('foo', 'bar').message
+__main__:1: DeprecationWarning: BaseException.message has been deprecated as of Python 2.6
+'foo'
+Dibandingkan dengan:
+
+>>> MyAppValueError('foo', 'FOO', 'bar').message
+'foo'
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 23 Februari '17 pukul 19:04
+dijawab 14 Nov '14 pada 21:09
+
+Aaron Balai ♦
+292k 75 75 lencana emas369 369 lencana perak312312 lencana perunggu
+3
+Halo dari 2018! BaseException.messagehilang di Python 3, jadi kritik hanya berlaku untuk versi lama, bukan? -  Koso 3 Jan '18 pukul 18:21
+8
+@Kos Kritik tentang Liskov Substitutability masih berlaku. Semantik argumen pertama sebagai "pesan" juga dapat dipertanyakan, tetapi saya rasa saya tidak akan memperdebatkannya. Saya akan memberikan ini lebih dari melihat ketika saya memiliki lebih banyak waktu luang. -  Aaron Balai ♦ 3 Januari '18 pukul 19:02
+2
+@ostergaard Tidak dapat menjawab secara lengkap sekarang, tetapi singkatnya, pengguna mendapatkan opsi tambahan untuk menangkap ValueError. Ini masuk akal jika itu dalam kategori Kesalahan Nilai. Jika itu tidak dalam kategori Kesalahan Nilai, saya akan menentangnya pada semantik. Ada ruang untuk beberapa nuansa dan alasan di pihak programmer, tapi saya lebih suka kekhususan bila berlaku. Saya akan memperbarui jawaban saya untuk mengatasi masalah ini dengan lebih baik dalam waktu dekat. -  Aaron Balai ♦ 16 Sep '18 pukul 21:17
+2
+Saya tidak melihat banyak akal dalam mengikuti prinsip substitusi Liskov dengan pengecualian khusus. Anda memunculkan pengecualian khusus untuk menunjukkan kondisi tertentu. Mengapa Anda perlu mengganti turunan dari kelas pengecualian dasar dengan turunan dari kelas pengecualian turunan? -  Eugene Yarmash 28 Februari '20 pukul 15:34
+2
+@AaronHall Saya tidak pernah membutuhkan ini dalam praktik. Bagaimanapun, saya kira contoh Anda juga melanggar LSP: jika kode Anda menggunakan raise ValueError(msg), Anda tidak dapat mengganti ini dengan raise ValidationError(msg)karena yang terakhir memerlukan satu parameter lagi. -  Eugene Yarmash 28 Februari '20 pukul 18:02 
+Tampilkan 7 komentar lainnya

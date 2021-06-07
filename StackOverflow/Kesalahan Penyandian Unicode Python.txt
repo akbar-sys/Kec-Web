@@ -1,0 +1,129 @@
+Kesalahan Penyandian Unicode Python
+Ditanyakan 10 tahun, 10 bulan yang lalu
+Aktif 6 bulan yang lalu
+Dilihat 251rb kali
+
+111
+
+
+46
+Saya sedang membaca dan menguraikan file Amazon XML dan sementara file XML menunjukkan ' , ketika saya mencoba untuk mencetaknya saya mendapatkan kesalahan berikut:
+
+'ascii' codec can't encode character u'\u2019' in position 16: ordinal not in range(128) 
+Dari apa yang saya baca online sejauh ini, kesalahannya berasal dari fakta bahwa file XML ada di UTF-8, tetapi Python ingin menanganinya sebagai karakter yang disandikan ASCII. Apakah ada cara sederhana untuk menghilangkan kesalahan dan membuat program saya mencetak XML saat dibaca?
+
+ular piton
+kode tunggal
+ascii
+menyandi
+Bagikan
+Mengikuti
+diedit 27 Apr '12 pada 4:17
+
+juliomalegria
+21.1k 12 12 lencana emas64 64 lencana perak8787 lencana perunggu
+tanya 11 Juli '10 jam 19:00
+
+Alex B
+1.145 2 2 lencana emas8 8 lencana perak55 lencana perunggu
+Saya baru saja datang ke SO untuk memposting pertanyaan ini. Apakah ada cara mudah untuk membersihkan string unicode()? -  Nick Heiner 11 Juli '10 pukul 19:02
+Silakan periksa juga jawaban ini untuk pertanyaan terkait: "Python UnicodeDecodeError - Apakah saya salah memahami penyandian?" -  tzot 11 Juli '10 pukul 22:39
+Tambahkan komentar
+9 Jawaban
+
+199
+
+Kemungkinan, masalah Anda adalah Anda menguraikannya dengan baik, dan sekarang Anda mencoba mencetak konten XML dan Anda tidak bisa karena ada beberapa karakter Unicode asing. Cobalah untuk menyandikan string unicode Anda sebagai ascii terlebih dahulu:
+
+unicodeData.encode('ascii', 'ignore')
+bagian 'abaikan' akan memintanya untuk melewatkan karakter tersebut. Dari dokumen python:
+
+>>> # Python 2: u = unichr(40960) + u'abcd' + unichr(1972)
+>>> u = chr(40960) + u'abcd' + chr(1972)
+>>> u.encode('utf-8')
+'\xea\x80\x80abcd\xde\xb4'
+>>> u.encode('ascii')
+Traceback (most recent call last):
+  File "<stdin>", line 1, in ?
+UnicodeEncodeError: 'ascii' codec can't encode character '\ua000' in position 0: ordinal not in range(128)
+>>> u.encode('ascii', 'ignore')
+'abcd'
+>>> u.encode('ascii', 'replace')
+'?abcd?'
+>>> u.encode('ascii', 'xmlcharrefreplace')
+'&#40960;abcd&#1972;'
+Anda mungkin ingin membaca artikel ini: http://www.joelonsoftware.com/articles/Unicode.html , yang menurut saya sangat berguna sebagai tutorial dasar tentang apa yang terjadi. Setelah membaca, Anda akan berhenti merasa seperti Anda hanya menebak perintah apa yang akan digunakan (atau setidaknya yang terjadi pada saya).
+
+Bagikan
+Mengikuti
+diedit 28 Nov '20 pada 0:15
+
+Mike T
+34.5k 15 15 lencana emas128 128 lencana perak169169 lencana perunggu
+dijawab 11 Juli '10 pukul 19:10
+
+Scott Stafford
+40.2k 22 22 lencana emas116 116 lencana perak164164 lencana perunggu
+1
+Saya mencoba untuk membuat string berikut aman: ' foo "bar bar" df' (perhatikan tanda kutip keriting), tetapi hal di atas masih gagal untuk saya. -  Nick Heiner 11 Juli '10 pukul 19:26 
+@Rosarch: Gagal bagaimana? kesalahan yang sama? Dan aturan penanganan kesalahan mana yang Anda gunakan? -  Scott Stafford 11 Juli '10 pukul 20:17
+@Rosarch, masalah Anda mungkin lebih awal. Coba kode ini: # - - coding: latin-1 - - u = u' foo “bar bar” df' print u.encode('ascii', 'ignore') Bagi Anda, itu mungkin mengubah string Anda menjadi unicode yang diberikan pengkodean yang Anda tentukan untuk skrip python yang menimbulkan kesalahan. -  Scott Stafford 11 Juli '10 pukul 20:48
+Saya melanjutkan dan membuat masalah saya menjadi pertanyaannya sendiri: https://stackoverflow.com/questions/3224427/… –  Nick Heiner 11 Juli '10 pukul 21:12
+1
+.encode('ascii', 'ignore')kehilangan data yang tidak perlu bahkan jika lingkungan OP dapat mendukung karakter non-ascii (kebanyakan kasus) –  jfs 29 Juni '15 pukul 7:52 
+Tampilkan 1 komentar lagi
+
+16
+
+Solusi yang lebih baik:
+
+if type(value) == str:
+    # Ignore errors even if the string is not proper UTF-8 or has
+    # broken marker bytes.
+    # Python built-in function unicode() can do this.
+    value = unicode(value, "utf-8", errors="ignore")
+else:
+    # Assume the value object has proper __unicode__() method
+    value = unicode(value)
+Jika Anda ingin membaca lebih lanjut tentang alasannya:
+
+http://docs.plone.org/manage/troubleshooting/unicode.html#id1
+
+Bagikan
+Mengikuti
+diedit 14 Februari '15 pada 0:12
+
+twasbrilig
+12.3k 7 7 lencana emas37 37 lencana perak6161 lencana perunggu
+dijawab 9 Jan '14 jam 20:24
+
+Paxwell
+658 10 10 lencana perak1717 lencana perunggu
+3
+Itu tidak membantu dengan masalah OP: "tidak dapat menyandikan karakter u'\u2019'" . u'\u2019sudah Unicode. -  jfs 29 Juni '15 pukul 7:49 
+Tambahkan komentar
+
+7
+
+Jangan hardcode pengkodean karakter lingkungan Anda di dalam skrip Anda; cetak teks Unicode secara langsung sebagai gantinya:
+
+assert isinstance(text, unicode) # or str on Python 3
+print(text)
+Jika output Anda dialihkan ke file (atau pipa); anda dapat menggunakan PYTHONIOENCODINGenvvar, untuk menentukan pengkodean karakter:
+
+$ PYTHONIOENCODING=utf-8 python your_script.py >output.utf8
+Jika tidak, python your_script.pyharus berfungsi apa adanya -- pengaturan lokal Anda digunakan untuk menyandikan teks (pada pemeriksaan POSIX: LC_ALL, LC_CTYPE, LANGenvvars -- setel LANGke lokal utf-8 jika perlu).
+
+Untuk mencetak Unicode di Windows, lihat jawaban ini yang menunjukkan cara mencetak Unicode ke konsol Windows, ke file, atau menggunakan IDLE .
+
+Bagikan
+Mengikuti
+diedit 23 Mei '17 pukul 12:10
+
+komunitas ♦
+1 11 lencana perak
+dijawab 29 Jun '15 jam 7:46
+
+jfs
+347k 153 153 lencana emas868 868 lencana perak15181518 lencana perunggu
+Tambahkan komentar

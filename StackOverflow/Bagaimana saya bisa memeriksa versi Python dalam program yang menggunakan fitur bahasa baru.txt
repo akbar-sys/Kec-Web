@@ -1,0 +1,165 @@
+Bagaimana saya bisa memeriksa versi Python dalam program yang menggunakan fitur bahasa baru?
+Ditanyakan 12 tahun, 4 bulan yang lalu
+Aktif 2 tahun, 5 bulan lalu
+Dilihat 260rb kali
+
+242
+
+
+59
+Jika saya memiliki skrip Python yang membutuhkan setidaknya versi Python tertentu, apa cara yang benar untuk gagal dengan anggun ketika versi Python yang lebih lama digunakan untuk meluncurkan skrip?
+
+Bagaimana cara mendapatkan kontrol cukup awal untuk mengeluarkan pesan kesalahan dan keluar?
+
+Sebagai contoh, saya memiliki program yang menggunakan operator ternery (baru di 2.5) dan blok "dengan" (baru di 2.6). Saya menulis rutin pemeriksa versi penerjemah kecil sederhana yang merupakan hal pertama yang akan dipanggil skrip ... kecuali itu tidak sampai sejauh itu. Alih-alih, skrip gagal selama kompilasi python, bahkan sebelum rutinitas saya dipanggil. Dengan demikian, pengguna skrip melihat beberapa jejak balik kesalahan sinaks yang sangat tidak jelas - yang cukup membutuhkan seorang ahli untuk menyimpulkan bahwa ini hanyalah kasus menjalankan versi Python yang salah.
+
+Saya tahu cara memeriksa versi Python. Masalahnya adalah beberapa sintaks ilegal di versi Python yang lebih lama. Pertimbangkan program ini:
+
+import sys
+if sys.version_info < (2, 4):
+    raise "must use python 2.5 or greater"
+else:
+    # syntax error in 2.4, ok in 2.5
+    x = 1 if True else 2
+    print x
+Saat dijalankan di bawah 2.4, saya ingin hasil ini
+
+$ ~/bin/python2.4 tern.py 
+must use python 2.5 or greater
+dan bukan hasil ini:
+
+$ ~/bin/python2.4 tern.py 
+  File "tern.py", line 5
+    x = 1 if True else 2
+           ^
+SyntaxError: invalid syntax
+(Menyalurkan untuk rekan kerja.)
+
+ular piton
+Versi: kapan
+Bagikan
+Mengikuti
+diedit 28 Agustus '14 pukul 19:19
+
+Martin Thomas
+92k 114 114 lencana emas489 489 lencana perak768768 lencana perunggu
+tanya 15 Jan '09 jam 8:45
+
+Mark Harrison
+268k 112 112 lencana emas308 308 lencana perak434434 lencana perunggu
+3
+"periksa versi python. Masalahnya adalah beberapa sintaks ilegal di versi python yang lebih lama." Saya tidak mengerti bagaimana ini menjadi masalah. Jika Anda dapat memeriksa versinya, Anda dapat menghindari kesalahan sintaksis. Bagaimana pemeriksaan versi tidak berlaku untuk sintaks? Bisakah Anda memperjelas pertanyaan Anda? -  S.Lott 15 Jan '09 pukul 11:55
+4
+@S.Lott Tidak, Anda tidak salah, hanya saja kesulitannya adalah memasukkan kode di suatu tempat di mana kode itu juga tidak akan dibaca (diuraikan) dan juga tidak dieksekusi - ini tidak segera terlihat seperti yang ditunjukkan oleh jawaban. -  Brendan 30 Juni '11 pada 0:04
+7
+S.Lott, Anda tidak dapat menjalankan pengujian di python versi lama karena tidak dapat dikompilasi. Sebagai gantinya, Anda mendapatkan kesalahan sintaks umum. Coba kode contoh dengan juru bahasa 2.4 dan Anda akan melihat bahwa Anda tidak dapat mengikuti uji versi. -  Mark Harrison 30 Jun '11 pada 6:07 
+7
+@S.Lott Yah itu tergantung pada apa yang Anda anggap sepele - secara pribadi saya tidak akan mempertimbangkan untuk membuat file terpisah untuk versi Python yang berbeda atau memunculkan proses tambahan yang sepele. Saya akan mengatakan pertanyaan ini berharga, terutama ketika Anda menganggap Python penuh dengan trik yang rapi dan sering mengejutkan - Saya datang ke sini dari Google ingin tahu apakah ada jawaban yang rapi -  Brendan 30 Juni '11 pukul 11:28 
+7
+Saya pikir kita telah mencapai akhir dari diskusi ini. Saya mengajukan pertanyaan tentang sesuatu yang saya tidak tahu bagaimana melakukannya, dan mendapat jawaban yang memberi tahu saya bagaimana melakukannya. Saya tidak mengusulkan apa pun, saya hanya menerima jawaban orip yang bekerja dengan baik untuk saya (sebenarnya rekan kerja yang saya salurkan). Viva Le Stack Meluap! -  Mark Harrison 05 Juli '11 pukul 22:59
+Tampilkan 10 komentar lainnya
+18 Jawaban
+
+113
+
+Anda dapat menguji menggunakan eval:
+
+try:
+  eval("1 if True else 2")
+except SyntaxError:
+  # doesn't have ternary
+Juga, with adalah tersedia dalam Python 2.5, hanya menambahkan from __future__ import with_statement.
+
+EDIT: untuk mendapatkan kontrol cukup awal, Anda dapat membaginya menjadi .pyfile yang berbeda dan memeriksa kompatibilitas di file utama sebelum mengimpor (misalnya __init__.pydalam satu paket):
+
+# __init__.py
+
+# Check compatibility
+try:
+  eval("1 if True else 2")
+except SyntaxError:
+  raise ImportError("requires ternary support")
+
+# import from another module
+from impl import *
+Bagikan
+Mengikuti
+diedit 31 Mei '17 pukul 15:35
+
+martineau
+99.4k 22 22 lencana emas140 140 lencana perak249249 lencana perunggu
+dijawab 15 Jan '09 jam 8:50
+
+orip
+66.1k 20 20 lencana emas112 112 lencana perak144144 lencana perunggu
+10
+ini adalah jawaban yang fantastis. masalah utama dari pertanyaan yang perlu ditangani adalah bahwa sebuah program harus benar secara sintaksis untuk versi python itu bahkan untuk mulai dijalankan, jadi menggunakan sintaks baru menghalangi program untuk memulai versi penerjemah yang lebih lama. eval bekerja di sekitar itu -  Autoplektik 15 Jan '09 jam 8:59
+7
+Jika paket sedang diinstal oleh setuptools, kompilasi byte file sumber akan gagal. Juga, semua perubahan untuk menghasilkan pesan kesalahan run-time tampak sedikit sia-sia -- mengapa tidak mendokumentasikan persyaratan saja dan membiarkannya begitu saja? -  John Machin 14 Sep '09 pukul 23:50
+2
+Perhatikan bahwa jika mencoba memeriksa ekspresi, alih-alih pernyataan sederhana, Anda harus menggunakan execalih-alih eval. Saya menemukan ini ketika mencoba menulis fungsi yang akan dicetak ke stderr di py2k dan py3k. -  Xiong Chiamiov 19 Nov '10 jam 9:52
+2
+Saya pikir versi yang lebih bersih dari solusi ini adalah dengan meletakkan "cek" Anda di modul terpisah dan mengimpornya (bungkus importstasiun dengan coba/kecuali). Perhatikan bahwa Anda mungkin perlu memeriksa hal-hal lain selain SyntaxErrorjuga (mis. fungsi bawaan atau tambahan ke pustaka standar) –  Steven 13 Sep '11 pukul 10:15
+Tambahkan komentar
+
+104
+
+Miliki pembungkus di sekitar program Anda yang melakukan hal berikut.
+
+import sys
+
+req_version = (2,5)
+cur_version = sys.version_info
+
+if cur_version >= req_version:
+   import myApp
+   myApp.run()
+else:
+   print "Your Python interpreter is too old. Please consider upgrading."
+Anda juga dapat mempertimbangkan untuk menggunakan sys.version(), jika Anda berencana untuk bertemu orang-orang yang menggunakan juru bahasa Python pra-2.0, tetapi kemudian Anda memiliki beberapa ekspresi reguler yang harus dilakukan.
+
+Dan mungkin ada cara yang lebih elegan untuk melakukan ini.
+
+Bagikan
+Mengikuti
+diedit 12 Jul '12 pukul 17:45
+
+Peter Mortensen
+28.3k 21 21 lencana emas95 95 lencana perak123123 lencana perunggu
+dijawab 15 Jan '09 jam 9:26
+
+Ed Carrel
+3.834 1 1 lencana emas23 23 lencana perak1717 lencana perunggu
+7
+FYI, "cur_version >= req_version" harus berfungsi sebagai persyaratan. -  orip 05 Agustus '09 pukul 14:55
+4
+sys.version_infobukan fungsi. -  nh2 6 Agustus '11 pukul 22:23
+3
+Menempatkan kode di dalam kondisi sukses seperti itu adalah praktik yang sangat buruk karena merupakan lekukan dan penambahan logika yang tidak perlu. Lakukan saja: if sys.version_info[:2] < req_version: print "old"; sys.exit() - dan jika tidak lanjutkan seperti biasa. -  timss 10 Apr '13 pada 2:31
+1
+Ini seperti yang dikatakan Tim Peters dalam "The Zen of Python": "Flat lebih baik daripada bersarang." (Anda dapat melihat ini dengan mengetik "import ini" dengan python) –  Christopher Shroba 27 Okt '15 pukul 22:55
+1
+@ChristopherShroba Terima kasih untuk import this. Pengalihan yang indah. -  Samuel Harmer 22 Des '17 jam 8:52
+Tambahkan komentar
+
+33
+
+Mencoba
+
+platform impor
+platform.python_version()
+Harus memberi Anda string seperti "2.3.1". Jika ini tidak persis seperti yang Anda inginkan, ada banyak data yang tersedia melalui "platform" build-in. Apa yang Anda inginkan harus ada di suatu tempat.
+
+Bagikan
+Mengikuti
+diedit 15 Jan '09 jam 9:08
+dijawab 15 Jan '09 jam 8:55
+
+James Anderson
+26.2k 7 7 lencana emas45 45 lencana perak7676 lencana perunggu
+5
+-1: Ini tidak berfungsi, seperti yang dijelaskan dalam pertanyaan yang diperbarui. Jika Anda menggunakan sintaks apa pun dari versi Python yang lebih baru maka file Anda tidak akan dikompilasi, dan jika tidak dikompilasi, file tidak dapat dijalankan dan periksa versinya! -  Scott Griffiths 8 Apr '12 pukul 14:32
+1
+@ScottGriffiths Jalankan print(platform.python_version())alih-alih platform.python_version()! -  Suriyaa 16 Nov '16 pukul 13:25
+@ScottGriffiths Juga periksa jawaban saya: stackoverflow.com/a/40633458/5157221 . -  Suriyaa 16 Nov '16 pukul 13:32
+Tambahkan komentar

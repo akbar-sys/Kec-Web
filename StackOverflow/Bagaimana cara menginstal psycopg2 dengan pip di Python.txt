@@ -1,0 +1,189 @@
+Bagaimana cara menginstal psycopg2 dengan "pip" di Python?
+Ditanyakan 10 tahun, 2 bulan yang lalu
+Aktif 4 hari yang lalu
+Dilihat 435rb kali
+
+563
+
+
+181
+Saya menggunakan virtualenvdan saya perlu menginstal "psycopg2".
+
+Saya telah melakukan hal berikut:
+
+pip install http://pypi.python.org/packages/source/p/psycopg2/psycopg2-2.4.tar.gz#md5=24f4368e2cfdc1a2b03282ddda814160
+Dan saya memiliki pesan berikut:
+
+Downloading/unpacking http://pypi.python.org/packages/source/p/psycopg2/psycopg2
+-2.4.tar.gz#md5=24f4368e2cfdc1a2b03282ddda814160
+  Downloading psycopg2-2.4.tar.gz (607Kb): 607Kb downloaded
+  Running setup.py egg_info for package from http://pypi.python.org/packages/sou
+rce/p/psycopg2/psycopg2-2.4.tar.gz#md5=24f4368e2cfdc1a2b03282ddda814160
+    Error: pg_config executable not found.
+
+    Please add the directory containing pg_config to the PATH
+    or specify the full executable path with the option:
+
+        python setup.py build_ext --pg-config /path/to/pg_config build ...
+
+    or with the pg_config option in 'setup.cfg'.
+    Complete output from command python setup.py egg_info:
+    running egg_info
+
+creating pip-egg-info\psycopg2.egg-info
+
+writing pip-egg-info\psycopg2.egg-info\PKG-INFO
+
+writing top-level names to pip-egg-info\psycopg2.egg-info\top_level.txt
+
+writing dependency_links to pip-egg-info\psycopg2.egg-info\dependency_links.txt
+
+writing manifest file 'pip-egg-info\psycopg2.egg-info\SOURCES.txt'
+
+warning: manifest_maker: standard file '-c' not found
+
+Error: pg_config executable not found.
+
+
+
+Please add the directory containing pg_config to the PATH
+
+or specify the full executable path with the option:
+
+
+
+    python setup.py build_ext --pg-config /path/to/pg_config build ...
+
+
+
+or with the pg_config option in 'setup.cfg'.
+
+----------------------------------------
+Command python setup.py egg_info failed with error code 1
+Storing complete log in C:\Documents and Settings\anlopes\Application Data\pip\p
+ip.log
+Pertanyaan saya, saya hanya perlu melakukan ini agar psycopg2 berfungsi?
+
+python setup.py build_ext --pg-config /path/to/pg_config build ...
+ular piton
+virtualenv
+psycopg2
+pip
+Bagikan
+Mengikuti
+diedit 14 Des '15 pukul 18:48
+
+kasravnd
+94.7k 16 16 lencana emas137 137 lencana perak166166 lencana perunggu
+tanya 24 Mar '11 jam 14:33
+
+Andre
+21.5k 41 41 lencana emas110 110 lencana perak172172 lencana perunggu
+3
+Apakah berhasil ketika Anda mencoba python setup.py build_ext --pg-config /path/to/pg_config build ... ?? -  lajarre 12 Okt '12 jam 9:25
+2
+Untuk python 3.4 atau python 3.5, Anda harus menginstal paket dev versi yang sesuai seperti sudo apt install libpq-dev python3.4-devatausudo apt install libpq-dev python3.5-dev –  Avinash Raj 1 Januari '17 pukul 3:15 
+Tambahkan komentar
+33 Jawaban
+1
+2
+Lanjut
+
+929
+
+Catatan : Sejak beberapa waktu lalu, ada roda biner untuk Windows di PyPI, jadi ini seharusnya tidak lagi menjadi masalah bagi pengguna Windows. Di bawah ini adalah solusi untuk Linux, pengguna Mac, karena banyak dari mereka menemukan posting ini melalui pencarian web.
+
+Pilihan 1
+Instal psycopg2-binarypaket PyPI sebagai gantinya, ia memiliki roda Python untuk Linux dan Mac OS.
+
+pip install psycopg2-binary
+pilihan 2
+Instal prasyarat untuk membangun psycopg2paket dari sumber:
+
+Debian/Ubuntu
+Python 3
+sudo apt install libpq-dev python3-dev
+Anda mungkin perlu menginstal python3.8-devatau serupa untuk misalnya Python 3.8.
+
+Python 2 1
+sudo apt install libpq-dev python-dev
+Jika itu tidak cukup, coba
+
+sudo apt install build-essential
+atau
+
+sudo apt install postgresql-server-dev-all
+juga sebelum menginstal psycopg2 lagi.
+
+CentOS 6
+Lihat jawaban Banjar
+
+1 Benarkah? Ini tahun 2021
+
+Bagikan
+Mengikuti
+diedit 19 Mei pukul 12:23
+dijawab 27 Mar '11 pada 15:25
+
+joar
+11.9k 1 1 lencana emas26 26 lencana perak5151 lencana perunggu
+7
+11.04: kesalahan yang berbeda, solusi yang sama. Sembah untuk versi dev! -  saya159 17 Desember '11 pukul 17:09
+5
+@I159 - *-devPaket berisi file yang diperlukan untuk mengkompilasi aplikasi dari sumber yang menggunakan fungsi yang disediakan oleh perpustakaan (seperti psycopg2menggunakan libpqdan pythonperpustakaan, antara lain). -  joar 19 Des '11 jam 9:17 
+21
+Saya menggunakan Ubuntu 12.04 LTS, dan saya juga harussudo apt-get install postgresql-server-dev-all –  caleb 6 Juni '12 pukul 19:38
+5
+Bisakah seseorang tolong jelaskan mengapa tidak hanya direktori yang berisi pg_config ke PATH (atau gunakan --pg-config)? -  lajarre 11 Okt '12 pukul 11:56
+6
+Jika Anda berada di sini karena mengalami masalah saat menginstal psycopg2 ke dalam wadah python 3 Celery dari Dockerhub, Anda juga perlu menginstal build-essential dengansudo apt-get install -y build-essential –  derrend 20 Sep '15 pukul 10:38
+Tampilkan 14 komentar lainnya
+
+119
+
+Di CentOS, Anda memerlukan paket dev postgres:
+
+sudo yum install python-devel postgresql-devel
+Itulah solusi pada CentOS 6 setidaknya.
+
+Bagikan
+Mengikuti
+diedit 23 Jun '14 pada 9:21
+
+andomar
+217k 41 41 lencana emas352 352 lencana perak379379 lencana perunggu
+dijawab 31 Okt '12 jam 13:03
+
+Banjar
+7.457 4 4 lencana emas42 42 lencana perak6161 lencana perunggu
+1
+Ini bukan hanya CentOS, saya pikir. psycopg memiliki dependensi asli, jadi untuk membangun dari sumber (yang dilakukan pip), pustaka pengembangan PostgreSQL harus ada di sana. (Header C, mungkin? Saya tidak tahu banyak tentang kompilasi kode asli.) –  jpmc26 1 Juni '13 pukul 20:37
+4
+Saya setuju bahwa ini memecahkan masalah pada CentOS 6. Saya ingin menambahkan bahwa saya memang harus menambahkan /usr/pgsql-9.3/bin ke $PATH. Berikut adalah posting yang memberikan contoh bagaimana melakukannya. serverfault.com/questions/102932/… –  Ryder Brooks 28 Februari '14 pukul 00:41
+Untuk CentOS 7 dan Python 3.4 saya harus menginstal "python34-devel". Jawaban saya untuk pertanyaan terkait: https://stackoverflow.com/a/42370489/26219 –  Mark Edington 21 Februari '17 pukul 14:52
+Bekerja pada AWS EC2, dengan 64bit Amazon Linux/2.5.1 berbasis RHEL –  Ben Wheeler 8 Sep '17 pukul 19:33
+Untuk Python3 di Fedora gunakan sudo yum install python36-devel(ganti 36 dengan versi Python 3) Anda. -  LoMaPh Apr 6 '19 di 0:35
+Tambahkan komentar
+
+89
+
+Di Mac Mavericks dengan Postgres.app versi 9.3.2.0 RC2 saya perlu menggunakan kode berikut setelah menginstal Postgres:
+
+sudo PATH=$PATH:/Applications/Postgres.app/Contents/Versions/9.3/bin pip install psycopg2
+
+Bagikan
+Mengikuti
+dijawab 22 Des '13 jam 1:51
+
+metasequoia
+6.096 5 5 lencana emas37 37 lencana perak5454 lencana perunggu
+sudo PATH=$PATH:/Applications/Postgres93.app/Contents/MacOS/bin pip install psycopg2 [per 5 April 2014] –  pengguna798719 Apr 5 '14 jam 18:42 
+2
+jika Anda menggunakan virtualenv Anda tidak perlu 'Sudo' jadi aktifkan virtualenv Anda dan jalankan 'PATH=$PATH:/Applications/Postgres.app/Contents/Versions/9.3/bin pip install psycopg2' –  elin3t 15 Sep '14 pukul 19:00
+3
+Kasus saya OS X Ver 10.9.4: Sudo PATH=$PATH:/Library/PostgreSQL/9.2/bin pip install psycopg2 –  emeca 28 Sep '14 pukul 11:36
+3
+Ya, ini bekerja untuk saya juga. Setelah menginstal PostgreSQL, saya harus mengatur jalur saya dengan melakukan PATH=$PATH:/Library/PostgreSQL/9.4/bin pip install psycopg2. -  iamfrancisyo 26 Jan '15 pada 7:47 
+5
+Gunakan versi terbaru: PATH=$PATH:/Applications/Postgres.app/Contents/Versions/latest/bin pip install psycopg2 –  Diego Sarmiento Sep 7 '16 pada 21:01
+Tampilkan 3 komentar lainnya

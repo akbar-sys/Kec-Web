@@ -1,0 +1,186 @@
+Cara membuat kelas JSON serializable
+Ditanyakan 10 tahun, 8 bulan yang lalu
+Aktif 10 hari yang lalu
+Dilihat 915rb kali
+
+997
+
+
+227
+Bagaimana cara membuat kelas Python serializable?
+
+Kelas sederhana:
+
+class FileItem:
+    def __init__(self, fname):
+        self.fname = fname
+Apa yang harus saya lakukan untuk bisa mendapatkan output dari:
+
+>>> import json
+
+>>> my_file = FileItem('/foo/bar')
+>>> json.dumps(my_file)
+TypeError: Object of type 'FileItem' is not JSON serializable
+Tanpa kesalahan
+
+ular piton
+json
+serialisasi
+Bagikan
+Mengikuti
+diedit 12 Nov '19 jam 5:12
+
+FraggaMuffin
+3.026 2 2 lencana emas17 17 lencana perak2424 lencana perunggu
+ditanyakan 22 Sep '10 pukul 11:52
+
+Sergey
+15.3k 13 13 lencana emas33 33 lencana perak5757 lencana perunggu
+93
+Sangat disayangkan bahwa semua jawaban tampaknya menjawab pertanyaan "Bagaimana cara membuat serial kelas?" daripada pertanyaan tindakan "Bagaimana cara membuat kelas menjadi serial?" Jawaban-jawaban ini mengasumsikan bahwa Anda melakukan serialisasi sendiri, daripada meneruskan objek ke beberapa modul lain yang membuat serialisasi itu. -  Kyle Delaney 17 Okt '19 pukul 23:59
+Jika Anda menggunakan Python3.5+, Anda bisa menggunakan jsons. Ini akan mengonversi objek Anda (dan semua atributnya secara rekursif ) menjadi dict. import jsonslihat jawaban di bawah - ini berfungsi dengan baik -  tswaehn 2 April '20 pukul 13:07 
+6
+@KyleDelaney Saya benar-benar berharap untuk antarmuka/metode ajaib yang dapat saya terapkan untuk menjadi dapat diserialisasi juga. Saya kira saya harus mengimplementasikan .to_dict()fungsi atau sesuatu yang dapat dipanggil pada objek sebelum diteruskan ke modul yang mencoba membuat serialisasi. -  Feliks B. 1 Sep '20 pada 19:09
+lihat stackoverflow.com/a/63718624/1497139 untuk memulai mixin JSONAble –  Wolfgang Fahl 3 Sep '20 pada 7:17
+@FelixB. Anda dapat menggunakan varsfungsi bawaan dalam kombinasi dengan json.dumps(lihat jawaban saya stackoverflow.com/a/64469761/1587520 ) –  pengguna1587520 23 Nov '20 pukul 15:47 
+Tambahkan komentar
+34 Jawaban
+1
+2
+Lanjut
+
+632
+
+Apakah Anda memiliki gambaran tentang output yang diharapkan? Misalnya, apakah ini akan berhasil?
+
+>>> f  = FileItem("/foo/bar")
+>>> magic(f)
+'{"fname": "/foo/bar"}'
+Dalam hal ini Anda cukup menelepon json.dumps(f.__dict__).
+
+Jika Anda ingin hasil yang lebih disesuaikan maka Anda harus membuat subkelas JSONEncoderdan mengimplementasikan serialisasi kustom Anda sendiri.
+
+Untuk contoh sepele, lihat di bawah.
+
+>>> from json import JSONEncoder
+>>> class MyEncoder(JSONEncoder):
+        def default(self, o):
+            return o.__dict__    
+
+>>> MyEncoder().encode(f)
+'{"fname": "/foo/bar"}'
+Kemudian Anda meneruskan kelas ini ke dalam json.dumps()metode sebagai clskwarg:
+
+json.dumps(cls=MyEncoder)
+Jika Anda juga ingin memecahkan kode maka Anda harus menyediakan kustom object_hookke JSONDecoderkelas. Sebagai contoh:
+
+>>> def from_json(json_object):
+        if 'fname' in json_object:
+            return FileItem(json_object['fname'])
+>>> f = JSONDecoder(object_hook = from_json).decode('{"fname": "/foo/bar"}')
+>>> f
+<__main__.FileItem object at 0x9337fac>
+>>> 
+Bagikan
+Mengikuti
+diedit 13 Juni '20 pukul 22:00
+
+mkrieger1
+10.8k 4 4 lencana emas39 39 lencana perak4747 lencana perunggu
+dijawab 22 Sep '10 jam 12:02
+
+Manoj Govindan
+64.4k 21 21 lencana emas123 123 lencana perak132132 lencana perunggu
+50
+Menggunakan __dict__tidak akan berfungsi dalam semua kasus. Jika atribut belum disetel setelah objek dibuat, __dict__mungkin tidak terisi penuh. Dalam contoh di atas, Anda baik-baik saja, tetapi jika Anda memiliki atribut kelas yang juga ingin Anda enkode, atribut tersebut tidak akan dicantumkan __dict__kecuali jika atribut tersebut telah dimodifikasi dalam __init__panggilan kelas atau dengan cara lain setelah objek diinstansiasi. -  Kris Hardy 29 Des '11 pukul 16:41 
+10
++1, tetapi from_json()fungsi yang digunakan sebagai kait objek harus memiliki else: return json_objectpernyataan, sehingga dapat menangani objek umum juga. -  jogojapan 19 Mar '13 pukul 7:51
+10
+@KrisHardy __dict__juga tidak berfungsi jika Anda menggunakan __slots__kelas gaya baru. -  badp 13 Des '13 pukul 17:53 
+12
+Anda dapat menggunakan kustom JSONEncoderseperti di atas untuk membuat protokol kustom, seperti memeriksa keberadaan __json_serializable__metode dan memanggilnya untuk mendapatkan representasi objek serial JSON. Ini akan sesuai dengan pola Python lainnya, seperti __getitem__, __str__, __eq__, dan __len__. -  jpmc26 15 Juli '15 pukul 05:53
+6
+__dict__juga tidak akan bekerja secara rekursif, misalnya, jika atribut objek Anda adalah objek lain. -  Neel 10 April '18 pukul 19:12
+Tampilkan 3 komentar lainnya
+
+723
+
++50
+Berikut adalah solusi sederhana untuk fitur sederhana:
+
+.toJSON() metode
+Alih-alih kelas serial JSON, terapkan metode serializer:
+
+import json
+
+class Object:
+    def toJSON(self):
+        return json.dumps(self, default=lambda o: o.__dict__, 
+            sort_keys=True, indent=4)
+Jadi, Anda cukup memanggilnya untuk membuat serial:
+
+me = Object()
+me.name = "Onur"
+me.age = 35
+me.dog = Object()
+me.dog.name = "Apollo"
+
+print(me.toJSON())
+akan mengeluarkan:
+
+{
+    "age": 35,
+    "dog": {
+        "name": "Apollo"
+    },
+    "name": "Onur"
+}
+Bagikan
+Mengikuti
+diedit 7 Mei pukul 0:31
+dijawab 21 Mar '13 jam 2:26
+
+Onur Yıldırım
+27.9k 11 11 lencana emas78 78 lencana perak9696 lencana perunggu
+108
+Sangat terbatas. Jika Anda memiliki dict {"foo":"bar","baz":"bat"}, itu akan membuat serial ke JSON dengan mudah. Jika sebaliknya Anda memiliki {"foo":"bar","baz":MyObject()}, maka Anda tidak bisa. Situasi yang ideal adalah bahwa objek bersarang diserialisasikan ke JSON secara rekursif, tidak secara eksplisit. -  Mark E. Haase 22 Agustus '13 pukul 18:51
+35
+Ini masih akan bekerja. Anda hilang o.__dict___. Coba contoh Anda sendiri:class MyObject(): def __init__(self): self.prop = 1 j = json.dumps({ "foo": "bar", "baz": MyObject() }, default=lambda o: o.__dict__) –  Onur Yıldırım 22 Agustus '13 pukul 22:56 
+15
+Apakah solusi ini dapat dibalik? Yaitu Apakah mudah untuk merekonstruksi objek dari json? -  Jorge Leitao 26 April '15 pukul 18:20
+3
+@JCLeitão Tidak. Anda bisa memiliki dua kelas berbeda dengan bidang yang sama. Objek a dan b dari kelas itu (mungkin dengan properti yang sama) akan memiliki a.__dict__/ b.__dict__. -  Martin Thomas 16 Juni '15 pukul 12:30
+7
+Ini tidak berfungsi dengan datetime.datetimeinstans. Itu melempar kesalahan berikut:'datetime.datetime' object has no attribute '__dict__' -  Jari Bruno 17 Juni '15 pukul 12:43
+Tampilkan 7 komentar lainnya
+
+198
+
+Untuk kelas yang lebih kompleks, Anda dapat mempertimbangkan alat jsonpickle :
+
+jsonpickle adalah pustaka Python untuk serialisasi dan deserialisasi objek Python kompleks ke dan dari JSON.
+
+Pustaka Python standar untuk menyandikan Python ke JSON, seperti json stdlib, simplejson, dan demjson, hanya dapat menangani primitif Python yang memiliki padanan JSON langsung (mis. dicts, list, strings, ints, dll.). jsonpickle dibangun di atas pustaka ini dan memungkinkan struktur data yang lebih kompleks untuk diserialkan ke JSON. jsonpickle sangat dapat dikonfigurasi dan diperpanjang-memungkinkan pengguna untuk memilih backend JSON dan menambahkan backend tambahan.
+
+(tautan ke jsonpickle di PyPi)
+
+Bagikan
+Mengikuti
+diedit 16 April pukul 12:39
+
+mrnom
+5 1 1 lencana perak33 lencana perunggu
+dijawab 23 Des '11 jam 9:11
+
+tokek
+15.3k 9 9 lencana emas46 46 lencana perak6868 lencana perunggu
+41
+Berasal dari C #, inilah yang saya harapkan. Satu liner sederhana dan tidak mengacaukan kelas. -  Jerther 13 Des '15 pukul 22:34
+2
+jsonpickle luar biasa. Ini bekerja dengan sempurna untuk objek besar, kompleks, berantakan dengan banyak level kelas –  wisbucky 4 Mar '16 pada 18:23
+apakah ada contoh cara yang tepat untuk menyimpan ini ke file? Dokumentasi hanya menunjukkan cara menyandikan dan mendekode jsonpickleobjek. Juga, ini tidak dapat memecahkan kode dict dari dicts yang berisi kerangka data pandas. -  pengguna5359531 16 Agustus '16 pukul 17:14 
+4
+@ user5359531 Anda dapat menggunakan obj = jsonpickle.decode(file.read())dan file.write(jsonpickle.encode(obj)). -  Kilian Batzner 2 Januari '17 jam 8:04
+1
+Sebuah pertanyaan khusus untuk Django: apakah penggunaan jsonpickle untuk membuat serial data sesi memiliki kerentanan yang sama dengan acar? (seperti yang dijelaskan di sini docs.djangoproject.com/en/1.11/topics/http/sessions/… )? -  Paul Bormans 23 Juni '17 pukul 14:24
+Tampilkan 2 komentar lainnya

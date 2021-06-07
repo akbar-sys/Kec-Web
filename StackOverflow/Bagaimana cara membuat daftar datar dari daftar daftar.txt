@@ -1,0 +1,167 @@
+Bagaimana cara membuat daftar datar dari daftar daftar?
+Ditanyakan 12 tahun yang lalu
+Aktif 6 hari lalu
+Dilihat 2,8 juta kali
+
+4081
+
+
+1238
+Apakah ada jalan pintas untuk membuat daftar sederhana dari daftar daftar dengan Python?
+
+Saya bisa melakukannya dalam satu forlingkaran, tapi mungkin ada "one-liner" yang keren? Saya mencobanya denganfunctools.reduce()
+
+from functools import reduce
+l = [[1, 2, 3], [4, 5, 6], [7], [8, 9]]
+reduce(lambda x, y: x.extend(y), l)
+tapi saya mendapatkan kesalahan ini:
+
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "<stdin>", line 1, in <lambda>
+AttributeError: 'NoneType' object has no attribute 'extend'
+ular piton
+daftar
+multidimensi-array
+meratakan
+Bagikan
+Perbaiki pertanyaan ini
+Mengikuti
+diedit 18 Maret pukul 14:15
+
+Boris
+7.083 6 6 lencana emas62 62 lencana perak6363 lencana perunggu
+tanya 4 Jun '09 jam 20:30
+
+Emma
+41.4k 4 4 lencana emas17 17 lencana perak1010 lencana perunggu
+30
+Ada diskusi mendalam tentang ini di sini: rightfootin.blogspot.com/2006/09/more-on-python-flatten.html , membahas beberapa metode meratakan daftar daftar bersarang yang sewenang-wenang. Bacaan yang menarik! -  RichieHindle 4 Juni '09 pukul 20:41 
+9
+Beberapa jawaban lain lebih baik tetapi alasan Anda gagal adalah karena metode 'perpanjang' selalu mengembalikan Tidak Ada. Untuk daftar dengan panjang 2, ini akan berfungsi tetapi mengembalikan Tidak Ada. Untuk daftar yang lebih panjang, itu akan menggunakan 2 argumen pertama, yang mengembalikan None. Kemudian dilanjutkan dengan None.extend(<third arg>), yang menyebabkan kesalahan ini –  mehtunguh 11 Juni '13 pukul 21:48 
+Solusi @shawn-chin adalah yang lebih pythonic di sini, tetapi jika Anda perlu mempertahankan jenis urutan, katakanlah Anda memiliki tupel tupel daripada daftar daftar, maka Anda harus menggunakan reduce(operator.concat, tuple_of_tuples). Menggunakan operator.concat dengan tupel tampaknya berkinerja lebih cepat daripada chain.from_iterables dengan daftar. -  Meitham 6 Okt '14 pukul 21:46
+stackoverflow.com/questions/50259290/... (artikel ini menjelaskan perbedaan antara np.flatten () dan tf.flatten () penggunaan (statis vs dinamis) ndarray. -  Singa Emas 18 Desember '20 pukul 16:48
+Tambahkan komentar
+51 Jawaban
+1
+2
+Lanjut
+
+5774
+
+Diberikan daftar daftar t,
+
+flat_list = [item for sublist in t for item in sublist]
+yang berarti:
+
+flat_list = []
+for sublist in t:
+    for item in sublist:
+        flat_list.append(item)
+lebih cepat daripada cara pintas yang diposting sejauh ini. ( tadalah daftar untuk diratakan.)
+
+Berikut adalah fungsi yang sesuai:
+
+flatten = lambda t: [item for sublist in t for item in sublist]
+Sebagai bukti, Anda dapat menggunakan timeitmodul di perpustakaan standar:
+
+$ python -mtimeit -s't=[[1,2,3],[4,5,6], [7], [8,9]]*99' '[item for sublist in t for item in sublist]'
+10000 loops, best of 3: 143 usec per loop
+$ python -mtimeit -s't=[[1,2,3],[4,5,6], [7], [8,9]]*99' 'sum(t, [])'
+1000 loops, best of 3: 969 usec per loop
+$ python -mtimeit -s't=[[1,2,3],[4,5,6], [7], [8,9]]*99' 'reduce(lambda x,y: x+y,t)'
+1000 loops, best of 3: 1.1 msec per loop
+Penjelasan: pintasan berdasarkan +(termasuk penggunaan tersirat dalam sum) adalah, kebutuhan, O(T**2)ketika ada subdaftar T -- karena daftar hasil antara terus bertambah panjang, pada setiap langkah objek daftar hasil perantara baru akan dialokasikan, dan semua item di hasil antara sebelumnya harus disalin (serta beberapa yang baru ditambahkan di akhir). Jadi, untuk penyederhanaan dan tanpa kehilangan keumuman yang sebenarnya, katakanlah Anda memiliki T sublist dari k item masing-masing: k item pertama disalin bolak-balik T-1 kali, k item kedua T-2 kali, dan seterusnya; jumlah total salinan adalah k kali jumlah x untuk x dari 1 hingga T dikecualikan, yaitu k * (T**2)/2.
+
+Pemahaman daftar hanya menghasilkan satu daftar, sekali, dan menyalin setiap item (dari tempat tinggal aslinya ke daftar hasil) juga tepat sekali.
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 6 Januari pukul 23:17
+
+Richard
+44.9k 24 24 lencana emas144 144 lencana perak216216 lencana perunggu
+dijawab 4 Jun '09 jam 20:37
+
+Alex Martelli
+763k 156 156 lencana emas1160 1160 lencana perak13451345 lencana perunggu
+543
+Saya mencoba tes dengan data yang sama, menggunakan itertools.chain.from_iterable: $ python -mtimeit -s'from itertools import chain; l=[[1,2,3],[4,5,6], [7], [8,9]]*99' 'list(chain.from_iterable(l))'. Ini berjalan sedikit lebih dari dua kali lebih cepat dari pemahaman daftar bersarang yang merupakan alternatif tercepat yang ditampilkan di sini. -  berintuisi 15 Okt '10 jam 1:21 
+309
+Saya menemukan sintaksnya sulit untuk dipahami sampai saya menyadari bahwa Anda dapat memikirkannya persis seperti bersarang untuk loop. untuk sublist di l: untuk item di sublist: menghasilkan item –  Rob Crowell 27 Juli '11 pukul 16:43
+27
+@BorisChervenkov: Perhatikan bahwa saya membungkus panggilan list()untuk mewujudkan iterator ke dalam daftar. -  berintuisi 20 Mei '12 pukul 22:56
+190
+[daun untuk pohon di hutan untuk daun di pohon] mungkin lebih mudah untuk dipahami dan diterapkan. -  John Mee 29 Agustus '13 pukul 1:38 
+109
+@Joel, sebenarnya saat ini list(itertools.chain.from_iterable(l))adalah yang terbaik -- seperti yang terlihat di komentar lain dan jawaban Shawn. -  Alex Martelli 4 Jan '15 pada 15:40
+Tampilkan 27 komentar lainnya
+
+1840
+
+Anda dapat menggunakan itertools.chain():
+
+import itertools
+
+list2d = [[1,2,3], [4,5,6], [7], [8,9]]
+merged = list(itertools.chain(*list2d))
+Atau Anda dapat menggunakan itertools.chain.from_iterable()yang tidak perlu membongkar daftar dengan *operator :
+
+merged = list(itertools.chain.from_iterable(list2d))
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 11 Maret pukul 11:25
+
+iacob
+8.010 4 4 lencana emas26 26 lencana perak5353 lencana perunggu
+dijawab 4 Jun '09 pada 21:06
+
+Shawn Chin
+74.4k 17 17 lencana emas153 153 lencana perak184184 lencana perunggu
+16
+Ini *adalah hal rumit yang membuat chainkurang mudah daripada pemahaman daftar. Anda harus tahu bahwa rantai hanya menggabungkan iterable yang diteruskan sebagai parameter, dan * menyebabkan daftar tingkat atas diperluas menjadi parameter, jadi chaingabungkan semua iterable itu, tetapi tidak turun lebih jauh. Saya pikir ini membuat pemahaman lebih mudah dibaca daripada penggunaan rantai dalam kasus ini. -  Tim Dierks Sep 3 '14 pukul 14:13 
+84
+@TimDierks: Saya tidak yakin "ini mengharuskan Anda untuk memahami sintaks Python" adalah argumen yang menentang penggunaan teknik yang diberikan dalam Python. Tentu, penggunaan yang rumit dapat membingungkan, tetapi operator "percikan" umumnya berguna dalam banyak keadaan, dan ini tidak menggunakannya dengan cara yang tidak jelas; menolak semua fitur bahasa yang belum tentu jelas bagi pengguna pemula berarti Anda mengikat satu tangan di belakang. Mungkin juga membuang pemahaman daftar saat Anda melakukannya; pengguna dari latar belakang lain akan menemukan forloop yang berulang kali appendlebih jelas. -  ShadowRanger 12 Nov '15 pukul 20:26 
+Jawaban ini, dan jawaban lain di sini, memberikan hasil yang salah jika tingkat atas juga mengandung nilai. misalnya, list = [["abc","bcd"],["cde","def"],"efg"]akan menghasilkan output["abc", "bcd", "cde", "def", "e", "f", "g"]. -  gouravkr Jan 1 '20 jam 10:39 
+Tampaknya *operator tidak dapat digunakan di python2 -  wkm 05 Juni '20 pukul 10:17
+1
+@gouravkr itu benar, tetapi di sini, string jauh lebih sedikit nilainya daripada iterable . Pertanyaannya adalah tentang daftar daftar, jadi memang iterable lain dalam daftar induk tidak dijamin berfungsi. Daftar (sebagai struktur data homogen) paling sering menyimpan item dengan tipe yang sama, jadi mungkin tupel lebih cocok dalam kasus penggunaan Anda. -  Alex Povel 2 Juli '20 pukul 14:35 
+Tambahkan komentar
+
+1046
+
+Catatan dari penulis : Ini tidak efisien. Tapi menyenangkan, karena monoid itu luar biasa. Itu tidak sesuai untuk produksi kode Python.
+
+>>> l = [[1, 2, 3], [4, 5, 6], [7], [8, 9]]
+>>> sum(l, [])
+[1, 2, 3, 4, 5, 6, 7, 8, 9]
+Ini hanya menjumlahkan elemen iterable yang diteruskan dalam argumen pertama, memperlakukan argumen kedua sebagai nilai awal jumlah (jika tidak diberikan, 0digunakan sebagai gantinya dan kasus ini akan memberi Anda kesalahan).
+
+Karena Anda menjumlahkan daftar bersarang, Anda sebenarnya mendapatkan [1,3]+[2,4]hasil dari sum([[1,3],[2,4]],[]), yang sama dengan [1,3,2,4].
+
+Perhatikan bahwa hanya berfungsi pada daftar daftar. Untuk daftar daftar daftar, Anda memerlukan solusi lain.
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 19 Mei pukul 10:17
+
+tipis
+98.1k 30 30 lencana emas201 201 lencana perak217217 lencana perunggu
+dijawab 4 Jun '09 jam 20:35
+
+Triptych
+189k 32 32 lencana emas145 145 lencana perak168168 lencana perunggu
+118
+itu cukup rapi dan pintar tetapi saya tidak akan menggunakannya karena membingungkan untuk dibaca. -  andrewrk 15 Juni '10 pukul 18:55
+94
+Ini adalah algoritme pelukis Shlemiel joelonsoftware.com/articles/fog0000000319.html -- tidak perlu tidak efisien dan juga tidak perlu jelek. -  Mike Graham 25 Apr '12 pukul 18:24
+47
+Operasi penambahan pada daftar membentuk a Monoid, yang merupakan salah satu abstraksi paling nyaman untuk memikirkan +operasi dalam pengertian umum (tidak terbatas pada angka saja). Jadi jawaban ini layak mendapat +1 dari saya untuk perawatan daftar (yang benar) sebagai monoid. Performanya mengkhawatirkan ... –  ulidtko 3 Des '14 jam 10:35
+9
+@andrewrk Nah, beberapa orang berpikir bahwa ini adalah cara terbersih untuk melakukannya: youtube.com/watch?v=IOiZatlZtGU yang tidak mengerti mengapa ini keren hanya perlu menunggu beberapa dekade sampai semua orang melakukannya dengan cara ini : ) mari gunakan bahasa pemrograman (dan abstraksi) yang ditemukan dan tidak ditemukan, Monoid ditemukan. -  jhegedus 5 Okt '15 jam 8:51 
+13
+ini adalah cara yang sangat tidak efisien karena aspek kuadrat dari penjumlahan. -  Jean-François Fabre ♦ 31 Juli '17 pukul 18:04
+Tampilkan 11 komentar lainnya

@@ -1,0 +1,143 @@
+Bagaimana cara mengimpor kembali paket yang diperbarui saat menggunakan Python Interpreter? [duplikat]
+Ditanyakan 12 tahun, 2 bulan yang lalu
+Aktif 2 tahun, 6 bulan lalu
+Dilihat 270rb kali
+
+422
+
+
+74
+Pertanyaan ini sudah memiliki jawaban di sini :
+Bagaimana cara membongkar (memuat ulang) modul Python? (21 jawaban)
+Tutup 4 tahun yang lalu .
+Saya sering menguji modul saya di Python Interpreter, dan ketika saya melihat kesalahan, saya segera memperbarui file .py. Tapi bagaimana saya membuatnya mencerminkan Interpreter? Jadi, sejauh ini saya telah keluar dan masuk kembali ke Interpreter karena mengimpor ulang file lagi tidak berhasil untuk saya.
+
+ular piton
+Bagikan
+Mengikuti
+tanya 26 Mar '09 jam 1:19
+Ashu
+2
+Sepertinya pertanyaan ini ditanyakan/dijawab sebelum rilis reimport. Lihat jawaban saya di bawah ini untuk info baru. -  kkurian 3 Februari '12 pukul 17:25 
+3
+Impor dalam Python di-cache, jadi biasanya impor kedua dan selanjutnya mendapatkan kode yang sama meskipun file telah berubah. -  Tandai tebusan 05 Juni '15 pukul 17:10
+Tambahkan komentar
+11 Jawaban
+
+353
+
+Pembaruan untuk Python3 : (dikutip dari jawaban yang sudah dijawab , sejak edit/komentar terakhir di sini menyarankan metode yang sudah usang)
+
+Di Python 3, reloaddipindahkan ke impmodul. Di 3.4, imptidak digunakan lagi karena importlib, dan reloadditambahkan ke yang terakhir. Saat menargetkan 3 atau lebih baru, referensikan modul yang sesuai saat memanggil reloadatau mengimpornya.
+
+Bawa pulang:
+
+Python3 >= 3.4: importlib.reload(packagename)
+Python3 < 3.4: imp.reload(packagename)
+Python2: lanjutkan di bawah
+Gunakan reloadfungsi bawaan:
+
+https://docs.python.org/2/library/functions.html#reload
+
+Kapan reload(module)dieksekusi:
+
+Kode modul Python dikompilasi ulang dan kode level modul dieksekusi ulang, mendefinisikan satu set objek baru yang terikat dengan nama dalam kamus modul. Fungsi init dari modul ekstensi tidak dipanggil untuk kedua kalinya.
+Seperti semua objek lain di Python, objek lama hanya direklamasi setelah jumlah referensinya turun ke nol.
+Nama-nama dalam namespace modul diperbarui untuk menunjuk ke objek baru atau yang diubah.
+Referensi lain ke objek lama (seperti nama di luar modul) tidak di-rebound untuk merujuk ke objek baru dan harus diperbarui di setiap namespace di mana mereka muncul jika diinginkan.
+Contoh:
+
+# Make a simple function that prints "version 1"
+shell1$ echo 'def x(): print "version 1"' > mymodule.py
+
+# Run the module
+shell2$ python
+>>> import mymodule
+>>> mymodule.x()
+version 1
+
+# Change mymodule to print "version 2" (without exiting the python REPL)
+shell2$ echo 'def x(): print "version 2"' > mymodule.py
+
+# Back in that same python session
+>>> reload(mymodule)
+<module 'mymodule' from 'mymodule.pyc'>
+>>> mymodule.x()
+version 2
+Bagikan
+Mengikuti
+diedit 29 Jan '18 pukul 17:50
+
+r2evans
+77.6k 4 4 lencana emas55 55 lencana perak9696 lencana perunggu
+dijawab 26 Mar '09 jam 1:25
+
+semuakodemu
+19.5k 17 17 lencana emas73 73 lencana perak100100 lencana perunggu
+15
+Perhatikan bahwa reload hanya memuat ulang modul yang ditentukan; impor modul itu juga harus dimuat ulang secara individual. -  Richard Levasseur 26 Mar '09 pada 1:28
+7
+Perhatikan juga bahwa objek apa pun yang merujuk ke apa pun dalam modul (seperti instance yang kelasnya ditentukan dalam modul) akan terus menggunakan benda lama yang dimuat ulang sebelumnya. Secara umum, memulai ulang penerjemah adalah cara paling bersih. -  Mil 26 Mar '09 pada 1:38
+38
+Muat ulang sekarang menjadi fungsi yang lebih lama di Python 3 . Gunakan imp.reload() sebagai gantinya –  Casebash 12 Des '12 pukul 1:33
+6
+reload()tidak memuat ulang paket atau modul apa pun yang diimpor oleh modul tingkat atas dengan andal. -  Cerin 12 Nov '13 pukul 17:26
+3
+Apakah ada cara serupa untuk menggunakan reload untuk pernyataan seperti: from src imort func as f ? -  Evyatar Sivan 22 Mei '16 jam 8:56 
+Tampilkan 7 komentar lainnya
+
+217
+
+Semua jawaban di atas tentang reload()atau imp.reload()sudah tidak digunakan lagi.
+
+reload()bukan lagi fungsi bawaan dalam python 3 dan imp.reload()ditandai usang (lihat help(imp)).
+
+Lebih baik digunakan importlib.reload()sebagai gantinya.
+
+Bagikan
+Mengikuti
+diedit 22 Nov '18 pukul 19:18
+
+Mateen Ulhaq
+18.4k 13 13 lencana emas75 75 lencana perak112112 lencana perunggu
+dijawab 6 Apr '14 jam 12:41
+
+kawing-chiu
+2.485 1 1 lencana emas12 12 lencana perak1010 lencana perunggu
+1
+Terima kasih. Saya tidak mengerti mengapa jawaban ini tidak memiliki suara. Tidak ada solusi lain yang berfungsi di Python 3.4. -  wsaleem 5 Agustus '14 pukul 7:12
+4
+Perhatikan bahwa ini mengambil objek modul sebagai argumennya, bukan str . -  Blaszard 2 Nov '15 pukul 16:26
+Ini tidak bekerja untuk saya. Saya mendapatkan pesan di repl, mengatakan bahwa modul tidak memiliki metode seperti itu. -  patah tulang 13 Jan '16 pada 9:57
+17
+Masalahnya adalah Anda harus mengimpor importlibterlebih dahulu. Jadi setelah melakukan import importlib, Anda kemudian dapat melakukannya importlib.reload(some_module). -  patah tulang 13 Januari '16 pada 9:59
+4
+Ini bekerja untuk saya, tetapi seringkali tidak pada awalnya. Kesalahan saya adalah saya terus lupa bahwa saya telah melakukan sesuatu seperti "impor bigfancything as bft" kemudian mencoba melakukan "importlib.reload(bigfancything)". Anda akan berpikir orang malas seperti saya akan mencoba "importlib.reload(bft)" yang lebih pendek dan benar terlebih dahulu, tetapi tidak demikian. -  DarenW 3 April '17 pukul 20:37
+Tampilkan 2 komentar lainnya
+
+37
+
+Jadi, sejauh ini saya telah keluar dan masuk kembali ke Interpreter karena mengimpor ulang file lagi tidak berhasil untuk saya.
+
+Ya, katakan saja importlagi memberi Anda salinan modul yang ada dari sys.modules.
+
+Anda dapat mengatakan reload(module)untuk memperbarui sys.modulesdan mendapatkan salinan baru dari modul tunggal itu, tetapi jika ada modul lain yang memiliki referensi ke modul asli atau objek apa pun dari modul asli , mereka akan menyimpan referensi lama mereka dan Hal-Hal yang Sangat Membingungkan akan terjadi.
+
+Jadi jika Anda memiliki module a, yang bergantung pada module b, dan bperubahannya, Anda harus 'memuat ulang b' diikuti dengan 'memuat ulang a'. Jika Anda memiliki dua modul yang saling bergantung, yang sangat umum ketika modul-modul itu adalah bagian dari paket yang sama, Anda tidak dapat memuat ulang keduanya: jika Anda memuat ulang p.aitu akan mendapatkan referensi ke yang lama p.b, dan sebaliknya sebaliknya. Satu-satunya cara untuk melakukannya adalah dengan membongkar keduanya sekaligus dengan menghapus item mereka dari sys.modules, sebelum mengimpornya lagi. Ini menjijikkan dan memiliki beberapa jebakan praktis yang berkaitan dengan entri modul menjadi None sebagai penanda impor-relatif gagal.
+
+Dan jika Anda memiliki modul yang meneruskan referensi ke objeknya ke modul sistem — misalnya ia mendaftarkan codec, atau menambahkan penangan peringatan — Anda terjebak; Anda tidak dapat memuat ulang modul sistem tanpa membingungkan lingkungan Python lainnya.
+
+Singkatnya: untuk semua kecuali kasus paling sederhana dari satu modul mandiri yang dimuat oleh satu skrip mandiri, reload()sangat sulit untuk diperbaiki; jika, seperti yang Anda maksudkan, Anda menggunakan 'paket', Anda mungkin akan lebih baik melanjutkan siklus penerjemah.
+
+Bagikan
+Mengikuti
+diedit 29 Okt '12 pukul 17:57
+
+dek
+117k 25 25 lencana emas140 140 lencana perak191191 lencana perunggu
+dijawab 26 Mar '09 jam 1:46
+
+bobince
+499k 101 101 lencana emas622 622 lencana perak807807 lencana perunggu
+Namun, jika Anda berbicara tentang kasus uji dan skrip pengujian unit yang berubah, menjalankan reload pada sut akan berfungsi dengan baik. Sebenarnya, saya bingung jika menambahkan "reload(sut module)" harus menjadi sesuatu yang saya sertakan sebagai standar dalam unit test. -  Danny Staple 25 Mei '11 pukul 10:05
+Tambahkan komentar

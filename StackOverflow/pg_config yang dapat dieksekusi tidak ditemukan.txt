@@ -1,0 +1,141 @@
+pg_config yang dapat dieksekusi tidak ditemukan
+Ditanyakan 8 tahun, 10 bulan yang lalu
+Aktif 12 hari yang lalu
+Dilihat 770rb kali
+
+1007
+
+
+165
+Saya mengalami masalah saat menginstal psycopg2. Saya mendapatkan kesalahan berikut ketika saya mencoba untuk pip install psycopg2:
+
+Error: pg_config executable not found.
+
+Please add the directory containing pg_config to the PATH
+
+or specify the full executable path with the option:
+
+
+
+    python setup.py build_ext --pg-config /path/to/pg_config build ...
+
+
+
+or with the pg_config option in 'setup.cfg'.
+
+----------------------------------------
+Command python setup.py egg_info failed with error code 1 in /tmp/pip-build/psycopg2
+Tapi masalahnya pg_configsebenarnya ada di saya PATH; itu berjalan tanpa masalah:
+
+$ which pg_config
+/usr/pgsql-9.1/bin/pg_config
+Saya mencoba menambahkan jalur pg_config ke setup.cfgfile dan membuatnya menggunakan file sumber yang saya unduh dari situs web mereka ( http://initd.org/psycopg/ ) dan saya mendapatkan pesan kesalahan berikut!
+
+Error: Unable to find 'pg_config' file in '/usr/pgsql-9.1/bin/'
+Tapi sebenarnya ADA!!!
+
+Saya bingung dengan kesalahan ini. Apakah ada yang bisa membantu?
+
+By the way, saya sudosemua perintah. Saya juga menggunakan RHEL 5.5.
+
+ular piton
+pip
+psycopg2
+Bagikan
+Mengikuti
+diedit 11 Des 13 '15:27
+
+William Jackson
+1.030 8 8 lencana perak2222 lencana perunggu
+ditanyakan 23 Juli '12 pukul 19:09
+
+pengguna1448207
+10.2k 3 3 lencana emas11 11 lencana perak55 lencana perunggu
+9
+Saat Anda menjalankan perintah sebagai sudo, $PATHdiubah. Bisakah Anda memeriksa ulang $PATH Anda sebagai root? -  Hugo Tavares 25 Juli '12 pukul 0:18
+2
+Dalam kasus saya, saya berlari ln -s /usr/pgsql-9.1/bin/pg_config /usr/sbin/pg_configdan semuanya baik-baik saja! -  CK.Nguyen 23 Agustus '16 pukul 16:24
+Tambahkan komentar
+49 Jawaban
+1
+2
+Lanjut
+
+988
+
+pg_configada di postgresql-devel( libpq-devdi Debian/Ubuntu, libpq-develdi Centos/Fedora/Cygwin/Babun.)
+
+Bagikan
+Mengikuti
+diedit 20 Mei pukul 17:25
+
+sumur dalam
+17.9k 10 10 lencana emas31 31 lencana perak3737 lencana perunggu
+dijawab 20 Agustus '12 pukul 11:51
+
+Tilman Baumann
+10.5k 2 2 lencana emas12 12 lencana perak1010 lencana perunggu
+97
+Dipecahkan setelah menginstal libpq-devdi ubuntu lucid (10.04). Terima kasih sebelumnya. -  tiang pancang 4 Mei 13 jam 8:38 
+27
+pg_configdari postgress.app ada di /Applications/Postgres.app/Contents/Versions/<your version>/bin(Mac OS X) –  Tim Daubenschütz 17 Mar '15 pada 13:01 
+23
+Ada libpqxx-develdi fedora. -  robsn 8 Des '15 pukul 14:42
+104
+sudo apt-get install libpq-devbekerja untuk saya di Ubuntu -  Bill Cheatham Feb 10 '16 pada 16:11
+61
+di Alpine Linux: apk tambahkan postgresql-dev –  RJ 10 Okt '16 jam 3:10
+Tampilkan 14 komentar lainnya
+
+513
+
+Di Mac OS X, saya menyelesaikannya menggunakan manajer paket homebrew
+
+brew install postgresql
+Bagikan
+Mengikuti
+diedit 26 Apr '18 pukul 21:42
+
+saku
+42.1k 8 8 lencana emas59 59 lencana perak8484 lencana perunggu
+dijawab 9 Juli '14 jam 4:28
+
+azalea
+8.108 3 3 lencana emas31 31 lencana perak4040 lencana perunggu
+37
+Luar biasa! Ini memecahkan masalah bagi saya, tetapi pemula harus menyadari bahwa Anda perlu menginstal manajer paket Homebrew terlebih dahulu agar brewperintah berfungsi. -  sean 2 Desember '14 pukul 20:49
+Bekerja untuk saya juga, meskipun saya melakukan brew install setelah pgadmin install. -  Khanal 27 Jan '16 pada 21:34
+13
+Bukankah itu menginstal seluruh database? -  zmbq 29 Februari '16 pukul 14:56
+9
+Saya butuh tambahanbrew link postgresql -  vincentlcy 10 Mar '16 pada 8:56
+1
+Untuk menambahkan komentar @seane, gunakan panduan ini untuk menginstal homebrew. -  Srini 20 Juli '16 pukul 21:34 
+Tampilkan 3 komentar lainnya
+
+293
+
+Sudahkah Anda menginstal python-dev? Jika sudah, coba instal jugalibpq-dev
+
+sudo apt-get install libpq-dev python-dev
+Dari artikel: Cara menginstal psycopg2 di bawah virtualenv
+
+Bagikan
+Mengikuti
+diedit 11 Okt 19 jam 11:38
+
+phoenix
+4.028 1 1 lencana emas29 29 lencana perak3333 lencana perunggu
+dijawab 20 Jan 13 jam 11:51
+
+thegauraw
+4.462 2 2 lencana emas18 18 lencana perak1414 lencana perunggu
+Di komputer saya, saya hanya menginstal klien Postgresql, sehingga Anda harus menginstal libpq-dev dan python-dev. -  bnPYSse 24 Nov '14 pukul 18:18
+3
+Diragukan bahwa python-dev diperlukan. -  juanitogan Feb 6 '16 pada 22:26
+itu membantu saya. Terima kasih –  Arun 7 Juni '19 pukul 17:22
+10
+python3-dev diperlukan. Tanpa itu saya mendapatkanPython.h: No such file or directory -  krubo 12 Okt '19 pukul 16:52
+2
+satu lagi ketergantungan yang diperlukan untuk ini adalahapt-get install -y gcc –  Anum Sheraz 16 Okt '19 jam 9:09
+Tampilkan 3 komentar lainnya

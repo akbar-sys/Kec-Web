@@ -1,0 +1,138 @@
+Kesalahan python "ImportError: Tidak ada modul bernama"
+Ditanyakan 12 tahun, 6 bulan yang lalu
+Aktif 1 bulan yang lalu
+Dilihat 1,8 juta kali
+
+524
+
+
+91
+Python diinstal di direktori lokal.
+
+Pohon direktori saya terlihat seperti ini:
+
+(local directory)/site-packages/toolkit/interface.py
+Kode saya ada di sini:
+
+(local directory)/site-packages/toolkit/examples/mountain.py
+Untuk menjalankan contoh, saya menulis python mountain.py, dan dalam kode yang saya miliki:
+
+from toolkit.interface import interface
+Dan saya mendapatkan kesalahan:
+
+Traceback (most recent call last):
+  File "mountain.py", line 28, in ?
+    from toolkit.interface import interface
+ImportError: No module named toolkit.interface
+Saya sudah memeriksa sys.pathdan di sana saya memiliki direktori /site-packages. Juga, saya memiliki file __init__.py.bindi folder toolkit untuk menunjukkan kepada Python bahwa ini adalah sebuah paket. Saya juga punya __init__.py.bindi direktori contoh.
+
+Saya tidak tahu mengapa Python tidak dapat menemukan file saat berada di sys.path. Ada ide? Bisakah itu menjadi masalah izin? Apakah saya memerlukan izin eksekusi?
+
+ular piton
+kesalahan impor
+python-impor
+Bagikan
+Perbaiki pertanyaan ini
+Mengikuti
+diedit 15 Agustus '17 pukul 19:50
+
+alex
+4,699 8 8 lencana emas43 43 lencana perak8383 lencana perunggu
+tanya 3 Des 08 jam 21:26
+
+Eduardo
+17.2k 20 20 lencana emas59 59 lencana perak7171 lencana perunggu
+3
+Periksa apakah Anda telah membaca izin ke file itu dari python. Lihat: stackoverflow.com/a/20999950/1657225 –  cSn 8 Januari '14 pukul 15:39
+2
+Pastikan untuk menandai direktori Anda sebagai "Resources Root" untuk memberi tahu PyCharm bahwa ini adalah sebuah paket. -  Yushan ZHANG 18 Oktober '17 pukul 13:41
+Masalah dalam kasus saya adalah bahwa ada izin untuk modul yang baru diinstal tidak 755. Hal itu dikarenakan umaskpada mesin 0027yang otherstidak memiliki readizin menyebabkan modul tidak terbaca. Menambahkan readizin memperbaiki masalah saya. Sebaiknya periksa izin direktori target pasca-instalasi. -  anu 27 Nov '17 pada 0:46 
+Coba tiup url: stackoverflow.com/questions/47887614/… –  Rawan-25 19 Des '17 pukul 13:28
+mungkin nama direktori lokal adalah interface(telah konflik). -  Benyamin Jafari 13 Agustus '18 pukul 9:16
+Tampilkan 1 komentar lagi
+31 Jawaban
+1
+2
+Lanjut
+
+296
+
+Berdasarkan komentar Anda pada posting orip, saya kira inilah yang terjadi:
+
+Anda mengedit __init__.pydi windows.
+Editor windows menambahkan sesuatu yang tidak dapat dicetak, mungkin carriage-return (end-of-line di Windows adalah CR/LF; di unix hanya LF), atau mungkin CTRL-Z (windows end-of-file).
+Anda menggunakan WinSCP untuk menyalin file ke kotak unix Anda.
+WinSCP berpikir: "Ini memiliki sesuatu yang bukan teks dasar; saya akan menempatkan ekstensi .bin untuk menunjukkan data biner."
+Hilang __init__.py(sekarang disebut __init__.py.bin) berarti python tidak memahami toolkit sebagai sebuah paket.
+Anda membuat __init__.pydi direktori yang sesuai dan semuanya berfungsi... ?
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+dijawab 4 Des 08 jam 0:17
+
+John Fouhy
+37.2k 18 18 lencana emas59 59 lencana perak7373 lencana perunggu
+56
+Juga, python -c 'import sys; print sys.path' membantu -- terkadang pengguna telah menempatkan file di jalur yang tidak dipindai. -  mikebabcock 28 Februari '12 pukul 15:06
+1
+Saya menggunakan hal yang sama kecuali WinSCP tidak menambahkan .bin. -  pengguna 31 Okt '13 jam 6:41
+10
+jika saya memiliki "__init__.py" kosong apakah hal yang sama akan terjadi? -  dietbacon 14 Des '14 pada 1:02 
+3
+OMG, Anda memerintah! Ini cerita saya: 1. Anda mengedit init .py di windows 2. Itu menambahkan TAB, bukan spasi 3. Anda banyak mencari di Google sampai menemukan posting ini! ;) –  GBrian Mar 1 '16 pada 8:21 
+3
+Bagi saya masalahnya adalah saya menggunakan python driver.pyketika saya seharusnya menggunakan python3 driver.pysejak saya menginstal dengan pip3. -  Eric Wiener 17 Mar '19 pukul 20:26
+Tampilkan 3 komentar lainnya
+
+79
+
+Apakah
+
+(local directory)/site-packages/toolkit
+punya __init__.py?
+
+Untuk melakukan impor berjalan melalui direktori Anda, setiap direktori harus memiliki __init__.pyfile.
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+dijawab 03 Des '08 pukul 21:50
+
+orang bodoh
+16.3k 12 12 lencana emas35 35 lencana perak5252 lencana perunggu
+1
+Poin bagus! Catatan: Sejak Python 3.3, direktori apa pun di sys.path dengan nama yang cocok dengan nama paket akan dikenali. -  PatrickT 25 Juni '16 pukul 16:59
+2
+bukankah ini hanya diperlukan untuk referensi jalur relatif? mengapa harus setiap direktori memilikinya? -  Jiwa sonik 4 Maret '19 pukul 17:12
+Tambahkan komentar
+
+68
+
+Saya mengalami hal yang sangat mirip ketika saya melakukan latihan ini di LPTHW; Saya tidak pernah bisa membuat Python mengenali bahwa saya memiliki file di direktori tempat saya menelepon. Tapi saya bisa membuatnya bekerja pada akhirnya. Apa yang saya lakukan, dan yang saya rekomendasikan, adalah mencoba ini:
+
+(CATATAN: Dari posting awal Anda, saya berasumsi Anda menggunakan mesin berbasis *NIX dan menjalankan berbagai hal dari baris perintah, jadi saran ini disesuaikan untuk itu. Karena saya menjalankan Ubuntu, inilah yang saya lakukan)
+
+1) Ubah direktori (cd) ke direktori di atas direktori tempat file Anda berada. Dalam hal ini, Anda mencoba menjalankan mountain.pyfile, dan mencoba memanggil toolkit.interface.pymodul, yang berada di direktori terpisah. Dalam hal ini, Anda akan pergi ke direktori yang berisi jalur ke kedua file tersebut (atau dengan kata lain, direktori terdekat yang dilalui oleh kedua file tersebut). Yang dalam hal ini adalah toolkitdirektori.
+
+2) Saat Anda berada di tookitdirektori, masukkan baris kode ini pada baris perintah Anda:
+
+export PYTHONPATH=.
+
+Ini menetapkan PYTHONPATH Anda ke ".", yang pada dasarnya berarti bahwa PYTHONPATH Anda sekarang akan mencari file yang dipanggil di dalam direktori tempat Anda berada saat ini, (dan lebih tepatnya, di cabang sub-direktori dari direktori tempat Anda berada. Jadi tidak hanya terlihat di direktori Anda saat ini, tetapi di semua direktori yang ada di direktori Anda saat ini).
+
+3) Setelah Anda mengatur PYTHONPATH Anda pada langkah di atas, jalankan modul Anda dari direktori Anda saat ini ( toolkitdirektori). Python sekarang harus menemukan dan memuat modul yang Anda tentukan.
+
+Semoga ini membantu. Saya sendiri cukup frustrasi dengan hal ini.
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+dijawab 22 Apr '14 jam 3:52
+
+hantu
+737 5 5 lencana perak77 lencana perunggu
+3
+Atau di Windows set PYTHONPATH=.. -  cjbarth 28 Agustus '14 pukul 13:08
+Ini berhasil untuk saya. Juga SEPENUHNYA menyederhanakan frustrasi PYTHONPATH saya, karena saya harus memperbaruinya ke jalur absolut setiap kali saya mengganti mesin. Terima kasih terima kasih terima kasih. -  engkau 15 Juni '16 pukul 16:17
+Hati-hati jika Anda memiliki referensi perpustakaan kustom atau pihak ketiga dalam PYTHONPATHvariabel lingkungan yang sudah ada . Jika Anda melakukan sebaliknya jalankan: set PYTHONPATH=%PYTHONPATH%;.;untuk menambahkan .ke PYTHONPATHdan kemudian echo %PYTHONPATH%yang akan menampilkan path\to\custom\library;.;. Kemudian jalankan aplikasi Anda dari direktori aplikasi dengan python applicationlaunchfile.py. -  EliSquared 7 Desember '20 pukul 21:12 
+Tambahkan komentar

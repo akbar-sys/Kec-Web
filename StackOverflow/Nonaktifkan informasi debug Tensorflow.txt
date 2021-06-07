@@ -1,0 +1,172 @@
+Nonaktifkan informasi debug Tensorflow
+Ditanyakan 5 tahun, 2 bulan yang lalu
+Aktif 4 bulan yang lalu
+Dilihat 188k kali
+
+260
+
+
+59
+Dengan men-debug informasi, maksud saya apa yang ditampilkan TensorFlow di terminal saya tentang pustaka yang dimuat dan perangkat yang ditemukan, dll., bukan kesalahan Python.
+
+I tensorflow/stream_executor/dso_loader.cc:105] successfully opened CUDA library libcublas.so locally
+I tensorflow/stream_executor/dso_loader.cc:105] successfully opened CUDA library libcudnn.so locally
+I tensorflow/stream_executor/dso_loader.cc:105] successfully opened CUDA library libcufft.so locally
+I tensorflow/stream_executor/dso_loader.cc:105] successfully opened CUDA library libcuda.so.1 locally
+I tensorflow/stream_executor/dso_loader.cc:105] successfully opened CUDA library libcurand.so locally
+I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:900] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+I tensorflow/core/common_runtime/gpu/gpu_init.cc:102] Found device 0 with properties: 
+name: Graphics Device
+major: 5 minor: 2 memoryClockRate (GHz) 1.0885
+pciBusID 0000:04:00.0
+Total memory: 12.00GiB
+Free memory: 11.83GiB
+I tensorflow/core/common_runtime/gpu/gpu_init.cc:126] DMA: 0 
+I tensorflow/core/common_runtime/gpu/gpu_init.cc:136] 0:   Y 
+I tensorflow/core/common_runtime/gpu/gpu_device.cc:717] Creating TensorFlow device (/gpu:0) -> (device: 0, name: Graphics Device, pci bus id: 0000:04:00.0)
+I tensorflow/core/common_runtime/gpu/gpu_bfc_allocator.cc:51] Creating bin of max chunk size 1.0KiB
+...
+ular piton
+aliran tensor
+Bagikan
+Perbaiki pertanyaan ini
+Mengikuti
+diedit 13 Mar 19 '12:38
+
+serv-inc
+29.6k 9 9 lencana emas128 128 lencana perak146146 lencana perunggu
+tanya 10 Mar '16 jam 8:32
+
+Ghilas BELHADJ
+11.1k 9 9 lencana emas48 48 lencana perak8383 lencana perunggu
+5
+masalah pelacakan: github.com/tensorflow/tensorflow/issues/1258 –  Yaroslav Bulatov 11 Mar '16 pukul 17:26
+Tensorflow masih merupakan kode alfa awal dan mereka masih memperbaiki bug untuk kompatibilitas dasar dengan numpy dan panda. Jadi untuk menghilangkan peringatan ini dalam satu pukulan, lakukan import warningskemudian warnings.filterwarnings('ignore'), lalu jalankan impor tensorflow dan dan kode yang bergantung pada kode alpha-tensorflow yang rusak, lalu aktifkan kembali peringatan melalui warnings.resetwarnings(). Tensorflow tidak boleh mengiklankan nama versi di atas 0,05 pada saat ini. -  Eric Leschinski 24 Sep '19 pukul 0:52 
+Tambahkan komentar
+15 Jawaban
+
+299
+
+Anda dapat menonaktifkan semua log debug menggunakan os.environ:
+
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
+import tensorflow as tf
+Diuji pada tf 0.12 dan 1.0
+
+Secara rinci,
+
+0 = all messages are logged (default behavior)
+1 = INFO messages are not printed
+2 = INFO and WARNING messages are not printed
+3 = INFO, WARNING, and ERROR messages are not printed
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 25 Juli '19 pukul 21:26
+
+craymichael
+3,478 1 1 lencana emas11 11 lencana perak2222 lencana perunggu
+dijawab 8 Februari '17 pukul 19:23
+
+mwweb
+5.751 4 4 lencana emas15 15 lencana perak2121 lencana perunggu
+Ini berfungsi, tetapi menghapus stempel waktu di depan log -- bagaimana ini bisa diaktifkan lagi? -  DreamFlasher 10 Apr '18 pukul 16:29
+Apa arti level ini (0, 1, 2, 3)? -  diralik 19 Nov '18 pukul 21:54
+5
+tidak berfungsi untuk 1.13 dan python3, bahkan sebelum mengimpor tensorflow –  Li haonan 26 Mei '19 pukul 18:45 
+3
+satu-satunya solusi yang bekerja untuk saya di TF2.0.0 Ini hanya berfungsi ketika diletakkan SEBELUM mengimpor tensorflow –  salouri 18 Okt '20 pada 7:41
+1
+Bekerja pada TF2.0 dan Python 3. Impor os sebelum mengimpor tensorflow. -  nj2237 30 Des '20 pukul 23:13
+Tampilkan 1 komentar lagi
+
+188
+
+Pembaruan 2.0 (10/8/19) Pengaturan TF_CPP_MIN_LOG_LEVELseharusnya masih berfungsi (lihat di bawah dalam pembaruan v0.12+), tetapi saat ini ada masalah yang terbuka (lihat masalah #31870 ). Jika pengaturan TF_CPP_MIN_LOG_LEVELtidak bekerja untuk Anda (sekali lagi, lihat di bawah), coba lakukan hal berikut untuk mengatur level log:
+
+import tensorflow as tf
+tf.get_logger().setLevel('INFO')
+Selain itu, silakan lihat dokumentasi tf.autograph.set_verbosityyang mengatur verbositas pesan log tanda tangan - misalnya:
+
+# Can also be set using the AUTOGRAPH_VERBOSITY environment variable
+tf.autograph.set_verbosity(1)
+v0.12+ Pembaruan (20/5/17), Bekerja melalui TF 2.0+:
+
+Di TensorFlow 0.12+, per masalah ini , Anda sekarang dapat mengontrol logging melalui variabel lingkungan yang disebut TF_CPP_MIN_LOG_LEVEL; default ke 0 (semua log ditampilkan) tetapi dapat diatur ke salah satu nilai berikut di bawah Levelkolom.
+
+  Level | Level for Humans | Level Description                  
+ -------|------------------|------------------------------------ 
+  0     | DEBUG            | [Default] Print all messages       
+  1     | INFO             | Filter out INFO messages           
+  2     | WARNING          | Filter out INFO & WARNING messages 
+  3     | ERROR            | Filter out all messages      
+Lihat contoh OS generik berikut menggunakan Python:
+
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # or any {'0', '1', '2'}
+import tensorflow as tf
+Anda dapat menyetel variabel lingkungan ini di lingkungan tempat Anda menjalankan skrip. Misalnya, dengan bash ini bisa dalam file ~/.bashrc, /etc/environment, /etc/profile, atau di shell sebenarnya sebagai:
+
+TF_CPP_MIN_LOG_LEVEL=2 python my_tf_script.py
+Untuk lebih teliti, Anda memanggil juga mengatur level untuk tf_loggingmodul Python , yang digunakan dalam mis. ringkasan ops, tensorboard, berbagai estimator, dll.
+
+# append to lines above
+tf.logging.set_verbosity(tf.logging.ERROR)  # or any {DEBUG, INFO, WARN, ERROR, FATAL}
+Untuk 1.14 Anda akan menerima peringatan jika Anda tidak mengubah menggunakan API v1 sebagai berikut:
+
+# append to lines above
+tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)  # or any {DEBUG, INFO, WARN, ERROR, FATAL}
+**Untuk TensorFlow atau TF-Learn Logging Versi Sebelumnya (v0.11.x atau lebih rendah):**
+Lihat halaman di bawah ini untuk informasi tentang TensorFlow logging; dengan pembaruan baru, Anda dapat mengatur verbositas logging menjadi DEBUG, INFO, WARN, ERROR, atau FATAL. Sebagai contoh:
+
+tf.logging.set_verbosity(tf.logging.ERROR)
+Halaman ini juga membahas monitor yang dapat digunakan dengan model TF-Learn. Inilah halamannya .
+
+Ini tidak memblokir semua logging (hanya TF-Learn). Saya punya dua solusi; satu adalah solusi 'benar secara teknis' (Linux) dan yang lainnya melibatkan pembangunan kembali TensorFlow.
+
+script -c 'python [FILENAME].py' | grep -v 'I tensorflow/'
+Untuk yang lain, silakan lihat jawaban ini yang melibatkan memodifikasi sumber dan membangun kembali TensorFlow.
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 7 Jan pukul 23:39
+dijawab 28 Jul '16 pukul 19:33
+
+craymichael
+3,478 1 1 lencana emas11 11 lencana perak2222 lencana perunggu
+pesan "I tensorflow" dapat mengganggu, tf harus menyediakan beberapa cara untuk membungkamnya menggunakan api alih-alih membangun kembali –  fisikawan 1 Agustus '18 pukul 16:41
+2
+Ini juga dapat dilakukan dari baris perintah:export TF_CPP_MIN_LOG_LEVEL="3" && python your_code.py –  Andrew Hundt 26 Agustus '18 pukul 2:58
+Itu juga dapat dijalankan sebagaiTF_CPP_MIN_LOG_LEVEL="3" python your_code.py -  craymichael 27 Agustus '18 pukul 3:17
+Apakah ada cara untuk mengubah peringatan/kesalahan tensorflow menjadi kesalahan? -  CMCDragonkai 30 Agustus '18 pukul 5:04 
+1
+tf.logging.set_verbosity(tf.logging.ERROR) # atau {DEBUG, INFO, WARN, ERROR, FATAL} apa pun yang berfungsi untuk saya –  Amir Md Amiruzzaman 13 Jan '20 pada 3:52
+Tampilkan 3 komentar lainnya
+
+38
+
+Untuk kompatibilitas dengan Tensorflow 2.0 , Anda dapat menggunakantf.get_logger
+
+import logging
+tf.get_logger().setLevel(logging.ERROR)
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 14 Agustus '19 pukul 14:54
+dijawab 13 Mar '19 jam 12:35
+
+serv-inc
+29.6k 9 9 lencana emas128 128 lencana perak146146 lencana perunggu
+3
+Bekerja untuk saya dengan tensorflow 1.13.1 –  abramodj 28 Mar '19 pukul 12:55
+1
+Bekerja untuk saya dengan 1.13.1. Kode sampel . -  pengguna1857492 14 Agustus '19 jam 8:33
+2
+Juga berfungsi sebagai string dengantf.get_logger().setLevel('ERROR') –  seb 26 Agustus '20 pukul 17:00
+1
+Ini adalah satu-satunya hal yang berhasil untuk kesalahan saya mengenai 0 gradien –  JoeTheShmoe 8 Nov '20 pukul 23:06
+1
+Tidak ada yang lain selain ini yang bekerja untuk saya di notebook jupyter. -  Zeel B Patel 14 Mei pukul 16:41
+Tampilkan 1 komentar lagi

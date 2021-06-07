@@ -1,0 +1,155 @@
+Python tidak berfungsi di baris perintah git bash
+Ditanyakan 5 tahun, 8 bulan yang lalu
+Aktif 1 bulan yang lalu
+Dilihat 182k kali
+
+281
+
+
+108
+Python tidak akan berjalan di git bash (Windows). Ketika saya mengetik python di baris perintah, itu membawa saya ke baris kosong tanpa mengatakan bahwa itu telah memasuki python 2.7.10 seperti halnya di Powershell. Itu tidak memberi saya pesan kesalahan, tetapi python tidak berjalan.
+
+Saya sudah memastikan variabel lingkungan di PATH disertakan c:\python27. Apa lagi yang bisa saya periksa?
+
+Sesi di mana masalah ini terjadi terlihat seperti berikut ini:
+
+user@hostname MINGW64 ~
+$ type python
+python is /c/Python27/python
+
+user@hostname MINGW64 ~
+$ python
+...duduk di sana tanpa kembali ke prompt.
+
+ular piton
+jendela
+git
+garis komando
+git-bash
+Bagikan
+Perbaiki pertanyaan ini
+Mengikuti
+diedit 26 Des '15 pada 7:49
+
+wasabigeek
+2.263 1 1 lencana emas18 18 lencana perak2929 lencana perunggu
+ditanyakan 15 Sep '15 pukul 23:18
+
+Caroline Morris
+2,811 3 3 lencana emas8 8 lencana perak55 lencana perunggu
+2
+"Tidak ada yang terjadi"? Anda bahkan tidak mendapatkan kesalahan? (Artinya: Jika Anda mendapatkan pesan kesalahan, itu harus menjadi bagian dari pertanyaan Anda). -  Charles Duffy 15 Sep '15 pukul 23:23 
+13
+Saya tidak mendapatkan pesan kesalahan saat mengetik python. Itu hanya membawa saya ke baris kosong, tetapi tidak menunjukkan bahwa python sebenarnya sedang berjalan –  Caroline Morris 16 Sep '15 pada 0:29
+4
+@CharlesDuff, dia menjelaskan, Charles, tidak ada pesan kesalahan. Bash hanya membeku. Membekukan terminal adalah pesan kesalahannya. -  hijau 8 Juni '16 pukul 6:22
+1
+@Green, seperti yang seharusnya jelas dengan jawaban saya, itu bukan lagi poin yang kurang jelas -- dan belum menjadi bagian yang lebih baik dalam setahun. Selain itu, pertanyaannya tidak sejelas sekarang sampai saya mengeditnya untuk membuatnya tidak ambigu pada poin yang mengikuti komentar OP sebelumnya di utas ini; memeriksa sejarah. -  Charles Duffy 8 Juni '16 pukul 15:01 
+3
+pertanyaan serupa di sini: https://stackoverflow.com/questions/13588454/… using python -imenyelesaikannya. -  ngeek 27 Maret '20 pada 1:26
+Tampilkan 1 komentar lagi
+20 Jawaban
+
+428
+
+Solusi sementara
+Cukup masukkan ini di git Shell Anda di windows -> alias python='winpty python.exe', itu saja dan Anda akan memiliki alias untuk python yang dapat dieksekusi. Alias ​​​​ini akan berlaku selama sesi shell.
+
+winpty adalah paket perangkat lunak Windows yang menyediakan antarmuka yang mirip dengan pty-master Unix untuk berkomunikasi dengan program konsol Windows.
+
+Solusi permanen
+Tambahkan perintah ke .bashrcdirektori home pengguna Anda.
+
+Menggunakan CLI
+Ini dapat dicapai dari git bash seperti:
+
+echo "alias python='winpty python.exe'" >> ~/.bashrc
+yang akan dibuat .bashrcdi direktori home pengguna saat ini jika file tidak ada atau tambahkan alias ke akhir .bashrcjika ada.
+
+Menggunakan editor teks
+Atau, Anda dapat membuat file .bashrc. Bergantung pada pengelola file Anda, ini mungkin lebih mudah dilakukan di git bash seperti:
+
+cd ~
+touch .bashrc
+Pada titik mana Anda dapat membuka .bashrcdi editor teks pilihan Anda dan menambahkannya di sana.
+
+Untuk menerapkan perubahan, gunakan perintah source .bashrcatau mulai ulang shell.
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 20 April pukul 22:38
+
+CervEd
+705 6 6 lencana perak1414 lencana perunggu
+dijawab 10 Apr '16 pada 14:05
+
+Vitaliy Terziev
+5.308 3 3 lencana emas15 15 lencana perak2424 lencana perunggu
+6
+Catatan: Anda harus menggunakan fungsi Python quit()untuk keluar dari interpreter. -  anishpatel 1 November '16 pada 1:59
+7
+Anda juga dapat menggunakan (standar windows) ^Z(ctrl-Z) + returnuntuk keluar. -  Emil Styrke 31 Januari '17 pukul 9:13
+7
+Juga jika Anda ingin mengatur alias ke python 'berbeda' dari itu dari windows, Anda dapat mengatur jalur yang sepenuhnya memenuhi syarat menggunakan sintaks berikutalias python='winpty /c/Python27/python.exe' -  ScottMcC 3 Agustus '17 pukul 1:45
+3
+Anda juga dapat menjalankan source .bashrcalih-alih memulai ulang shell. -  Jonathan Sudiaman 6 Februari '18 pukul 13:53
+2
+Git bash harus benar-benar menjelaskan efek menginstal konsol minty dengan lebih baik. Mungkin bahkan menautkan ke jawaban ini :) –  Atau Ohev-Zion 6 Desember '19 pukul 15:57
+Tampilkan 8 komentar lainnya
+
+96
+
+Saya tidak melihat opsi berikutnya dalam daftar jawaban, tetapi saya bisa mendapatkan prompt interaktif dengan kunci "-i":
+
+$ python -i
+Python 3.5.2 (v3.5.2:4def2a2901a5, Jun 25 2016, 22:18:55)
+Type "help", "copyright", "credits" or "license" for more information.
+>>> 
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+dijawab 29 Sep '16 pada 19:44
+
+vav
+4.151 1 1 lencana emas16 16 lencana perak3636 lencana perunggu
+-i argumen: Ketika skrip dilewatkan sebagai argumen pertama atau opsi -c digunakan, masuk ke mode interaktif setelah menjalankan skrip atau perintah, bahkan ketika sys.stdin tampaknya bukan terminal. File PYTHONSTARTUP tidak dibaca. docs.python.org/3/using/cmdline.html#cmdoption-i –  Air raksa 15 Mei '19 pukul 7:54 
+Apakah ini lebih mahal daripada alias python='winpty python.exe' ? -  PYK 17 Februari '20 pukul 19:51 
+2
+ini adalah opsi tanpa upaya konfigurasi yang berfungsi di komputer mana pun. -  vav 20 Februari '20 pukul 16:22
+Tambahkan komentar
+
+64
+
+Ini adalah bug yang dikenal di MSys2, yang menyediakan terminal yang digunakan oleh Git Bash. Anda dapat mengatasinya dengan menjalankan build Python tanpa dukungan ncurses, atau dengan menggunakan WinPTY , digunakan sebagai berikut:
+
+Untuk menjalankan program konsol Windows di mintty atau Cygwin sshd, tambahkan console.exe ke baris perintah:
+
+$ build/console.exe c:/Python27/python.exe
+Python 2.7.2 (default, Jun 12 2011, 15:08:59) [MSC v.1500 32 bit (Intel)] on win32
+Type "help", "copyright", "credits" or "license" for more information.
+>>> 10 + 20
+30
+>>> exit()
+The binari prebuilt untuk msys cenderung bekerja dengan Git Bash. (Periksa apakah ada versi yang lebih baru jika waktu yang signifikan telah berlalu sejak jawaban ini diposting!).
+
+Pada Git untuk Windows 2.7.1, coba juga gunakan winpty c:Python27/python.exe; WinPTY dapat disertakan out-of-the-box.
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 8 Februari '16 pada 22:38
+dijawab 16 Sep '15 jam 3:38
+
+Charles Duffy
+236k 34 34 lencana emas306 306 lencana perak358358 lencana perunggu
+2
+Bisakah Anda menjelaskan build/console.exe c:/Python27/python.exe- apakah ini harus dijalankan di konsol GitMsys atau cara lain? -  0 kaki 31 Januari '16 pukul 21:01
+@h3d0, ya, di dalam terminal. Tentu saja, ini mengasumsikan bahwa itu buildadalah direktori yang console.exeada di dalamnya; perbarui jalur dengan tepat tergantung di mana/bagaimana Anda benar-benar menginstalnya. -  Charles Duffy 31 Januari '16 pukul 23:08
+1
+@h3d0 Ya, ini adalah perangkat lunak tambahan; jawaban saya termasuk tautan. -  Charles Duffy 1 Februari '16 pukul 14:00 
+9
+Saya pikir Anda dapat menggunakannya sebagai winpty c:/Python27/python.exe, tanpa melakukan tambahan apa pun. Utilitas winpty.exe dapat ditemukan di Git\usr\bin. Saya menggunakan Git untuk Windows v2.7.1 –  Xun Yang 8 Februari '16 pukul 22:22
+1
+@XunYang, ...winpty dibundel sekarang? Bagus! Diedit dengan tepat. -  Charles Duffy 8 Februari '16 pukul 22:37 
+Tampilkan 4 komentar lainnya

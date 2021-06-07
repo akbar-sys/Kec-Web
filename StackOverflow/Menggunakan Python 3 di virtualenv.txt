@@ -1,0 +1,140 @@
+Menggunakan Python 3 di virtualenv
+Ditanyakan 7 tahun yang lalu
+Aktif 1 tahun, 3 bulan lalu
+Dilihat 947k kali
+
+815
+
+
+255
+Menggunakan virtualenv , saya menjalankan proyek saya dengan versi default Python (2.7). Pada satu proyek, saya perlu menggunakan Python 3.4.
+
+Saya dulu brew install python3menginstalnya di Mac saya. Sekarang, bagaimana cara membuat virtualenv yang menggunakan versi baru?
+
+misalnya sudo virtualenv envPython3
+
+Jika saya mencoba:
+
+virtualenv -p python3 test
+Saya mendapat:
+
+Running virtualenv with interpreter /usr/local/bin/python3
+Using base prefix '/usr/local/Cellar/python3/3.4.0_1/Frameworks/Python.framework/Versions/3.4'
+New python executable in test/bin/python3.4
+Also creating executable in test/bin/python
+Failed to import the site module
+Traceback (most recent call last):
+  File "/Users/user/Documents/workspace/test/test/bin/../lib/python3.4/site.py", line 67, in <module>
+    import os
+  File "/Users/user/Documents/workspace/test/test/bin/../lib/python3.4/os.py", line 634, in <module>
+    from _collections_abc import MutableMapping
+ImportError: No module named '_collections_abc'
+ERROR: The executable test/bin/python3.4 is not functioning
+ERROR: It thinks sys.prefix is '/Users/user/Documents/workspace/test' (should be '/Users/user/Documents/workspace/test/test')
+ERROR: virtualenv is not compatible with this system or executable
+ular piton
+python-3.x
+virtualenv
+Bagikan
+Mengikuti
+diedit 16 Mar '16 pada 13:32
+
+Alan W. Smith
+21.9k 3 3 lencana emas64 64 lencana perak8888 lencana perunggu
+tanya 24 Mei '14 jam 8:05
+
+Prometheus
+27.3k 37 37 lencana emas139 139 lencana perak270270 lencana perunggu
+1
+apakah Anda hanya mencoba memperbarui juru bahasa di lingkungan Anda saat ini atau apakah Anda baru saja memutuskan untuk memulai dari awal? -  Charlie Parker 28 Agustus '16 pukul 21:37
+Apakah mungkin untuk hanya menginstal python3 di lingkungan virtual tanpa memperbarui sistem python (menjaga python2.x) di mac? -  Juni 16 Mar '20 pada 16:31
+Tambahkan komentar
+22 Jawaban
+
+1446
+
+jalankan saja
+
+virtualenv -p python3 envname
+Perbarui setelah pengeditan OP:
+
+Ada bug dalam versi OP dari virtualenv, seperti yang dijelaskan di sini . Masalahnya diperbaiki dengan menjalankan:
+
+pip install --upgrade virtualenv
+Bagikan
+Mengikuti
+diedit 24 Mei 14 jam 9:39
+dijawab 24 Mei '14 jam 8:11
+
+tbrisker
+15k 1 1 lencana emas14 14 lencana perak1717 lencana perunggu
+20
+Pembaruan virtualenv berfungsi, tetapi untuk beberapa alasan saya juga harus eksplisit tentang python3 yang dapat dieksekusi denganvirtualenv -p $(which python3) envname –  dkami 7 November '14 pukul 22:15
+2
+apakah mungkin untuk hanya mengubah juru bahasa python lingkungan saat ini daripada membuat lingkungan baru? -  Charlie Parker 28 Agustus '16 pukul 21:36
+Di Raspbian Jessie 'virtualenv --no-site-packages python3.4' berfungsi. --distribute sudah usang dan -p tampaknya tidak diperlukan karena virtualenv menggunakan python3. -  alkopop79 10 November '17 pukul 13:04 
+1
+Mengapa setelah dijalankan virtualenv -p python3 my_virtual_env, python3dapat diakses dari luar lingkungan virtual juga? -  Bishwas Mishra 17 Apr '18 pada 9:57 
+1
+Setelah itu Anda perlu menggunakan cd envnamedan menjalankan source ./bin/activate- ini akan menjalankan lingkungan virtual. Gunakan deactivateuntuk keluar dari lingkungan virtual ini. -  Pencelupan 12 Mar '20 pukul 12:21
+Tampilkan 2 komentar lainnya
+
+266
+
+Python 3 memiliki dukungan bawaan untuk lingkungan virtual - venv . Mungkin lebih baik menggunakan itu sebagai gantinya. Merujuk ke dokumen:
+
+Pembuatan lingkungan virtual dilakukan dengan menjalankan skrip pyvenv:
+
+pyvenv /path/to/new/virtual/environment
+
+Pembaruan untuk Python 3.6 dan yang lebih baru:
+
+Seperti komentar pawciobiel dengan benar , sudah tidak digunakan lagi pada Python 3.6 dan cara barunya adalah:pyvenv
+
+python3 -m venv /path/to/new/virtual/environment
+Bagikan
+Mengikuti
+diedit 23 Mei '17 pukul 12:10
+
+komunitas ♦
+1 11 lencana perak
+dijawab 14 Mei '15 jam 9:09
+
+tokek
+7.063 2 2 lencana emas28 28 lencana perak5555 lencana perunggu
+2
+saya harap Anda benar karena saya baru saja meninggalkan virtualenv untuk bekerja dengan pyenv bersama dengan python 3.5.2 –  Jayesh 27 Sep '16 pukul 19:40
+1
+Saya belum menemukan informasi apa pun yang mengonfirmasi masalah terkait lokasi, yang dapat dipindahkan telah dihapus sebagai opsi .... apakah sekarang tidak perlu? apakah mereka solusi? atau hanya sekarang sama sekali tidak berguna untuk menyiapkan aplikasi? -  JM Becker 27 Sep '16 pada 21:33
+7
+Tepat tetapi Anda juga dapat menjalankan: python3 -m venv /path/v3karena skrip pyvenv sudah tidak digunakan lagi pada Python 3.6. -  paciobiel 19 Nov '16 pada 0:37 
+5
+menggunakan anaconda python 3.6 terbaru di mac, dan python3 -m venv /path/v3kesalahan di sini. Error: Command '['/path/v3/bin/python3', '-Im', 'ensurepip', '--upgrade', '--default-pip']' returned non-zero exitApakah saya melewatkan sesuatu? Dengan --without-pipopsi, setidaknya membuat venv dengan mengaktifkan/menonaktifkan skrip dengan benar. -  biksu 6 Maret '17 pukul 2:15
+3
+Adakah yang tahu cara mengaktifkan python3.6 -m venv <venvname>. Tidak ada Script/ di direktori yang dibuat, atau "mengaktifkan" di subdir bin/. -  Shayne 19 Sep '17 pukul 5:47
+Tampilkan 3 komentar lainnya
+
+61
+
+Saya sudah mencoba pyenv dan ini sangat berguna untuk mengganti versi python (global, lokal di folder atau di virtualenv):
+
+brew install pyenv
+kemudian instal versi Python yang Anda inginkan:
+
+pyenv install 3.5.0
+dan cukup buat virtualenv dengan jalur ke versi juru bahasa yang dibutuhkan:
+
+virtualenv -p /Users/johnny/.pyenv/versions/3.5.0/bin/python3.5 myenv
+Itu dia, periksa versinya:
+
+. ./myenv/bin/activate && python -V
+Ada juga plugin untuk pyenv pyenv-virtualenv tetapi entah bagaimana tidak berhasil untuk saya.
+
+Bagikan
+Mengikuti
+dijawab 19 Sep '15 pada 20:38
+
+Johnner
+3.095 1 1 lencana emas20 20 lencana perak2323 lencana perunggu
+tampaknya metode Anda perlu membuat lingkungan python baru. Bisakah pyenv bekerja dengan virtualenv dan dengan mudah mengubah versi python saya kapan pun saya mau? -  Charlie Parker 28 Agustus '16 pukul 22:17
+Tambahkan komentar

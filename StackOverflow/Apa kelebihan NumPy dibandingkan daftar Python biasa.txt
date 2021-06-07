@@ -1,0 +1,137 @@
+Apa kelebihan NumPy dibandingkan daftar Python biasa?
+Ditanyakan 11 tahun, 11 bulan yang lalu
+Aktif 1 tahun, 11 bulan yang lalu
+Dilihat 201rb kali
+
+504
+
+
+206
+Apa kelebihan NumPy dibandingkan daftar Python biasa?
+
+Saya memiliki sekitar 100 seri pasar keuangan, dan saya akan membuat array kubus 100x100x100 = 1 juta sel. Saya akan melakukan regresi (3-variabel) setiap x dengan masing-masing y dan z, untuk mengisi array dengan kesalahan standar.
+
+Saya telah mendengar bahwa untuk "matriks besar" saya harus menggunakan NumPy sebagai lawan dari daftar Python, untuk alasan kinerja dan skalabilitas. Masalahnya, saya tahu daftar Python dan sepertinya cocok untuk saya.
+
+Apa keuntungannya jika saya pindah ke NumPy?
+
+Bagaimana jika saya memiliki 1000 seri (yaitu, 1 miliar sel floating point dalam kubus)?
+
+ular piton
+array
+daftar
+numpy
+numpy-ndarray
+Bagikan
+Perbaiki pertanyaan ini
+Mengikuti
+diedit 27 Februari '19 pada 0:29
+
+kmario23
+42.2k 12 12 lencana emas123 123 lencana perak130130 lencana perunggu
+tanya 14 Jun '09 pukul 23:02
+
+Thomas Browne
+20.2k 25 25 lencana emas66 66 lencana perak105105 lencana perunggu
+Tambahkan komentar
+5 Jawaban
+
+774
+
+Array NumPy lebih ringkas daripada daftar Python -- daftar daftar seperti yang Anda gambarkan, dengan Python, akan memakan waktu setidaknya 20 MB atau lebih, sementara array NumPy 3D dengan float presisi tunggal di dalam sel akan muat dalam 4 MB. Akses dalam membaca dan menulis item juga lebih cepat dengan NumPy.
+
+Mungkin Anda tidak terlalu peduli untuk hanya satu juta sel, tetapi Anda pasti menginginkan satu miliar sel -- tidak ada pendekatan yang cocok dengan arsitektur 32-bit, tetapi dengan build 64-bit NumPy akan lolos dengan 4 GB atau lebih , Python saja akan membutuhkan setidaknya sekitar 12 GB (banyak pointer yang berukuran dua kali lipat) -- perangkat keras yang jauh lebih mahal!
+
+Perbedaannya sebagian besar disebabkan oleh "ketidaklangsungan" - daftar Python adalah array pointer ke objek Python, setidaknya 4 byte per pointer ditambah 16 byte bahkan untuk objek Python terkecil (4 untuk pointer tipe, 4 untuk jumlah referensi, 4 untuk nilai -- dan pengalokasi memori dibulatkan menjadi 16). Array NumPy adalah array nilai seragam -- angka presisi tunggal masing-masing membutuhkan 4 byte, presisi ganda, 8 byte. Kurang fleksibel, tetapi Anda membayar secara substansial untuk fleksibilitas daftar Python standar!
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 29 Nov '10 pukul 11:55
+
+Peter Mortensen
+28.3k 21 21 lencana emas95 95 lencana perak123123 lencana perunggu
+dijawab 14 Jun '09 pukul 23:16
+
+Alex Martelli
+764k 156 156 lencana emas1160 1160 lencana perak13451345 lencana perunggu
+1
+Saya telah mencoba menggunakan "sys.getsizeof()" untuk membandingkan ukuran daftar Python dan array NumPy dengan jumlah elemen yang sama dan sepertinya tidak menunjukkan bahwa array NumPy jauh lebih kecil. Apakah ini masalahnya atau apakah sys.getsizeof() mengalami masalah dalam mencari tahu seberapa besar array NumPy? -  Jack Simpson 8 Juni '16 pukul 12:41
+5
+@JackSimpson getsizeoftidak dapat diandalkan. Dokumentasi dengan jelas menyatakan bahwa: Hanya konsumsi memori yang secara langsung dikaitkan dengan objek yang diperhitungkan, bukan konsumsi memori objek yang dirujuk. Ini berarti bahwa jika Anda memiliki daftar python bersarang, ukuran elemen tidak diperhitungkan. -  Bakuriu 9 Agustus '16 pukul 19:40
+5
+getsizeofpada daftar hanya memberi tahu Anda berapa banyak RAM yang dikonsumsi objek daftar itu sendiri dan RAM yang dikonsumsi oleh pointer dalam array datanya, itu tidak memberi tahu Anda berapa banyak RAM yang dikonsumsi oleh objek yang dirujuk oleh pointer tersebut. -  PM 2 Ring 10 Okt '16 jam 12:38
+@AlexMartelli, bisakah Anda memberi tahu saya dari mana Anda mendapatkan angka-angka ini? -  lmiguelvargasf 6 Mei '17 pukul 18:49
+3
+Sebagai peringatan, perkiraan Anda tentang ukuran daftar daftar daftar Python yang setara tidak aktif. Array numpy 4 GB dari C floats (4 byte) akan diterjemahkan ke sesuatu yang lebih dekat dengan nilai 32 GB lists dan Python floats (yang sebenarnya adalah C doubles), bukan 12 GB; masing-masing floatpada 64 bit Python menempati ~ 24 byte (dengan asumsi tidak ada kehilangan keselarasan di pengalokasi), ditambah 8 byte lainnya di listuntuk menampung referensi (dan itu mengabaikan alokasi berlebih dan header objek untuk lists itu sendiri, yang mungkin menambahkan GB lain tergantung pada persisnya berapa banyak alokasi yang berlebihan terjadi). -  ShadowRanger 8 November '18 pukul 2:18 
+Tampilkan 3 komentar lainnya
+
+245
+
+NumPy tidak hanya lebih efisien; itu juga lebih nyaman. Anda mendapatkan banyak operasi vektor dan matriks secara gratis, yang terkadang memungkinkan seseorang untuk menghindari pekerjaan yang tidak perlu. Dan mereka juga diimplementasikan secara efisien.
+
+Misalnya, Anda bisa membaca kubus Anda langsung dari file ke dalam array:
+
+x = numpy.fromfile(file=open("data"), dtype=float).reshape((100, 100, 100))
+Jumlahkan sepanjang dimensi kedua:
+
+s = x.sum(axis=1)
+Temukan sel mana yang berada di atas ambang batas:
+
+(x > 0.5).nonzero()
+Hapus setiap irisan yang diindeks genap di sepanjang dimensi ketiga:
+
+x[:, :, ::2]
+Juga, banyak perpustakaan yang berguna bekerja dengan array NumPy. Misalnya, analisis statistik dan perpustakaan visualisasi.
+
+Bahkan jika Anda tidak memiliki masalah kinerja, mempelajari NumPy sepadan dengan usaha.
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 28 Februari '17 pada 1:53
+dijawab 14 Jun '09 pukul 23:38
+
+Roberto Bonvallet
+27.4k 5 5 lencana emas37 37 lencana perak5757 lencana perunggu
+2
+Terima kasih - Anda telah memberikan alasan bagus lainnya dalam contoh ketiga Anda, karena memang, saya akan mencari matriks untuk sel di atas ambang batas. Selain itu, saya memuat dari sqlLite. Pendekatan file akan jauh lebih efisien. -  Thomas Browne 14 Juni '09 pukul 23:54
+Tambahkan komentar
+
+115
+
+Alex menyebutkan efisiensi memori, dan Roberto menyebutkan kenyamanan, dan keduanya adalah poin bagus. Untuk beberapa ide lagi, saya akan menyebutkan kecepatan dan fungsionalitas .
+
+Fungsionalitas: Anda mendapatkan banyak hal bawaan dengan NumPy, FFT, konvolusi, pencarian cepat, statistik dasar, aljabar linier, histogram, dll. Dan sungguh, siapa yang bisa hidup tanpa FFT?
+
+Kecepatan: Berikut adalah tes untuk melakukan penjumlahan pada daftar dan array NumPy, yang menunjukkan bahwa penjumlahan pada array NumPy 10x lebih cepat (dalam pengujian ini -- jarak tempuh dapat bervariasi).
+
+from numpy import arange
+from timeit import Timer
+
+Nelements = 10000
+Ntimeits = 10000
+
+x = arange(Nelements)
+y = range(Nelements)
+
+t_numpy = Timer("x.sum()", "from __main__ import x")
+t_list = Timer("sum(y)", "from __main__ import y")
+print("numpy: %.3e" % (t_numpy.timeit(Ntimeits)/Ntimeits,))
+print("list:  %.3e" % (t_list.timeit(Ntimeits)/Ntimeits,))
+yang pada sistem saya (saat saya menjalankan cadangan) memberikan:
+
+numpy: 3.004e-05
+list:  5.363e-04
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 1 Agustus '17 pukul 18:18
+
+Matt
+24.7k 6 6 lencana emas74 74 lencana perak7272 lencana perunggu
+dijawab 15 Jun '09 jam 4:59
+
+tom10
+60.4k 8 8 lencana emas116 116 lencana perak129129 lencana perunggu
+Tambahkan komentar

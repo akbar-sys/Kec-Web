@@ -1,0 +1,101 @@
+Kesalahan Python "FileExists" saat membuat direktori
+Ditanyakan 8 tahun, 8 bulan yang lalu
+Aktif 1 tahun, 2 bulan lalu
+Dilihat 85rb kali
+
+63
+
+
+10
+Saya memiliki beberapa utas yang berjalan secara paralel dari Python pada sistem cluster. Setiap utas python menghasilkan direktori mydir. Setiap skrip, sebelum mengeluarkan, memeriksa apakah mydir ada dan jika tidak membuatnya:
+
+if not os.path.isdir(mydir):
+    os.makedirs(mydir)
+tetapi ini menghasilkan kesalahan:
+
+os.makedirs(self.log_dir)                                             
+  File "/usr/lib/python2.6/os.py", line 157, in makedirs
+mkdir(name,mode)
+OSError: [Errno 17] File exists
+Saya menduga itu mungkin karena kondisi balapan, di mana satu pekerjaan menciptakan dir sebelum yang lain melakukannya. Apakah ini mungkin? Jika demikian, bagaimana kesalahan ini dapat dihindari?
+
+Saya tidak yakin ini adalah kondisi balapan, jadi saya bertanya-tanya apakah masalah lain dalam Python dapat menyebabkan kesalahan aneh ini.
+
+ular piton
+file-io
+sistem file
+antre
+komputasi cluster
+Bagikan
+Mengikuti
+diedit 17 Desember '15 pukul 13:59
+
+Jahid
+18.3k 8 8 lencana emas79 79 lencana perak9595 lencana perunggu
+ditanyakan pada 17 Sep '12 pada 22:35
+pengguna248237
+Tambahkan komentar
+5 Jawaban
+
+55
+
+Setiap kode waktu dapat dijalankan antara saat Anda memeriksa sesuatu dan saat Anda menindaklanjutinya, Anda akan memiliki kondisi balapan. Salah satu cara untuk menghindari ini (dan cara biasa dalam Python) adalah dengan mencoba dan kemudian menangani pengecualian
+
+while True:
+    mydir = next_dir_name()
+    try:
+        os.makedirs(mydir)
+        break
+    except OSError, e:
+        if e.errno != errno.EEXIST:
+            raise   
+        # time.sleep might help here
+        pass
+Jika Anda memiliki banyak utas yang mencoba membuat serangkaian direktori yang dapat diprediksi, ini masih akan menimbulkan banyak pengecualian, tetapi Anda akan sampai di sana pada akhirnya. Lebih baik hanya memiliki satu utas yang membuat direktori dalam kasus itu
+
+Bagikan
+Mengikuti
+diedit 29 Mar '20 pukul 13:27
+
+Jahid
+18.3k 8 8 lencana emas79 79 lencana perak9595 lencana perunggu
+dijawab 17 Sep '12 pukul 22:44
+
+John La Rooy
+264k 47 47 lencana emas334 334 lencana perak476476 lencana perunggu
+Mengapa Anda memiliki breakdi sana? Loop itu hanya akan membuat satu direktori. -  Ethan Furman 27 Okt '15 pukul 16:59
+3
+Jangan gunakan konstanta hardcoded! Gunakanerrno.EEXISTsebagai pengganti angka ajaib (17). Jika Anda ingin solusi yang lebih elegan untuk masalah Anda, lihat jawaban @Jahid . -  patryk.beza 26 Juli '17 pukul 9:18
+@patryk.beza, terima kasih. Jawaban Jahid akan menjadi cara yang lebih baik bagi kebanyakan orang akhir-akhir ini. -  John La Rooy 26 Juli '17 pukul 23:30
+Tambahkan komentar
+
+109
+
+Pada Python >=3.2, os.makedirs()dapat mengambil argumen opsional ketiga exist_ok:
+
+os.makedirs(mydir, exist_ok=True)
+Bagikan
+Mengikuti
+diedit 6 Jan '16 pada 7:30
+dijawab 11 Mei '15 jam 18:25
+
+Jahid
+18.3k 8 8 lencana emas79 79 lencana perak9595 lencana perunggu
+Tambahkan komentar
+
+17
+
+Tangkap pengecualian dan, jika errno adalah 17, abaikan saja. Itulah satu-satunya hal yang dapat Anda lakukan jika ada kondisi balapan antara panggilan isdirdan makedirs.
+
+Namun, mungkin juga ada file dengan nama yang sama - dalam hal ini os.path.existsakan kembali Truetetapi os.path.isdirmenghasilkan false.
+
+Bagikan
+Mengikuti
+dijawab 17 Sep '12 pukul 22:37
+
+Tuan Pencuri
+286k 77 77 lencana emas557 557 lencana perak610610 lencana perunggu
+3
+Bagaimana dengan menggunakan exist_okparameter os.makedirspada Python 3.2? (Saya bertanya karena belum pernah benar-benar menggunakannya). -  ovgolovin 17 Sep '12 pukul 22:44 
+@ovgolovin, sepertinya itu akan berhasil, tetapi tidak banyak yang bisa kita dukung hanya 3.2 :) –  John La Rooy 17 Sep '12 pukul 22:51
+Tambahkan komentar

@@ -1,0 +1,185 @@
+mysql_config tidak ditemukan saat menginstal antarmuka python mysqldb
+Ditanyakan 9 tahun, 8 bulan yang lalu
+Aktif 9 bulan yang lalu
+Dilihat 536rb kali
+
+549
+
+
+142
+Saya mencoba menjalankan skrip Python di server linux yang terhubung dengan saya melalui ssh. Script menggunakan mysqldb. Saya memiliki semua komponen lain yang saya butuhkan, tetapi ketika saya mencoba menginstal mySQLdb melalui setuptools seperti:,
+
+python setup.py install
+Saya mendapatkan laporan kesalahan berikut terkait dengan mysql_configperintah.
+
+sh: mysql_config: command not found
+Traceback (most recent call last):
+  File "setup.py", line 15, in <module>
+    metadata, options = get_config()
+  File "/usr/lib/python2.5/MySQL-python-1.2.3/setup_posix.py", line 43, in get_config
+    libs = mysql_config("libs_r")
+  File "/usr/lib/python2.5/MySQL-python-1.2.3/setup_posix.py", line 24, in mysql_config
+    raise EnvironmentError("%s not found" % (mysql_config.path,))
+EnvironmentError: mysql_config not found
+Adakah orang lain yang mengalami kesalahan ini dan jika demikian, bagaimana Anda menyelesaikannya/apa yang dapat saya lakukan agar berhasil menginstal mysqldb?
+
+ular piton
+linux
+ssh
+mysql-python
+Bagikan
+Perbaiki pertanyaan ini
+Mengikuti
+diedit 19 Sep '11 pada 22:35
+pengguna257111
+tanya 19 Sep '11 jam 18:00
+
+pengguna904542
+5.947 4 4 lencana emas17 17 lencana perak2626 lencana perunggu
+1
+Hai @ user904542 - Saya telah mengedit pertanyaan Anda semoga membuatnya sedikit lebih ringkas dan memberi Anda beberapa jawaban :) Jika Anda tidak menyukainya, atau ingin memberikan detail tambahan, ada tautan edit langsung di bawah pertanyaan Anda yang Anda dapat digunakan untuk memutar kembali ke aslinya, atau menambah perubahan yang saya buat. –  pengguna257111 19 Sep '11 pada 22:36
+4
+Saya mengalami masalah yang sama persis, karena saya menginstal mysql dari sumber. jika Anda melakukannya juga, jalankan saja sesuatu seperti ini untuk membuat mysql_config tersedia: Sudo ln -s /usr/local/mysql/bin/mysql_config /usr/bin/mysql_config atau tambahkan /usr/local/mysql/bin/ ke jalur Anda. -  Thi Duong Nguyen 10 Februari '12 pukul 21:48
+Jika Anda telah menginstal mysql, komentar di atas oleh Thi Duong Nguyen memecahkan masalah dengan membuat symlink ke file mysql_config di direktori /usr/bin, yang berada di jalur yang akan dicari python. -  Alex Boschmans 31 Jan '13 pukul 22:04 
+3
+lakukan saja ini ------------- apt-get install python-mysqldb –  bayangan0359 10 Januari '17 pukul 12:06 
+@AlexBoschmans symlinking /usr/binsalah, ini usr/local/my...lihat jawaban Thi. -  Timo 1 Mar '18 pukul 20:53
+Tampilkan 1 komentar lagi
+34 Jawaban
+1
+2
+Lanjut
+
+801
+
+mySQLdb adalah antarmuka python untuk mysql, tetapi itu bukan mysql itu sendiri. Dan ternyata mySQLdb membutuhkan perintah 'mysql_config', jadi Anda harus menginstalnya terlebih dahulu.
+
+Bisakah Anda mengonfirmasi bahwa Anda menginstal atau tidak menginstal mysql itu sendiri, dengan menjalankan "mysql" dari shell? Itu akan memberi Anda respons selain "mysql: command not found".
+
+Distribusi linux mana yang Anda gunakan? Mysql sudah dikemas sebelumnya untuk sebagian besar distribusi linux. Misalnya, untuk debian / ubuntu, menginstal mysql semudah
+
+sudo apt-get install mysql-server
+mysql-config ada dalam paket yang berbeda, yang dapat diinstal dari (sekali lagi, dengan asumsi debian/ubuntu):
+
+sudo apt-get install libmysqlclient-dev
+jika Anda menggunakan mariadb, drop in pengganti mysql, lalu jalankan
+
+sudo apt-get install libmariadbclient-dev
+Referensi: https://github.com/JudgeGirl/Judge-sender/issues/4#issuecomment-186542797
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 7 Nov '19 pada 20:01
+
+almanegra
+585 6 6 lencana perak1818 lencana perunggu
+dijawab 19 Sep '11 pada 18:06
+
+amarillion
+21.9k 13 13 lencana emas64 64 lencana perak8080 lencana perunggu
+1
+Membaca daftar paket...Selesai Membangun pohon ketergantungan Membaca informasi status...Selesai Catatan, memilih libmysqlclient15-dev daripada libmysqlclient-dev Beberapa paket tidak dapat diinstal. Ini mungkin berarti bahwa Anda telah meminta situasi yang tidak mungkin atau jika Anda menggunakan distribusi yang tidak stabil bahwa beberapa paket yang diperlukan belum dibuat atau dipindahkan dari Incoming. Informasi berikut dapat membantu untuk mengatasi situasi: Paket berikut memiliki dependensi yang belum terpenuhi: libmysqlclient15-dev: Tergantung: zlib1g-dev tetapi tidak akan diinstal E: Paket rusak –  pengguna904542 19 Sep '11 pukul 18:32 
+3
+Haruskah 'Sudo apt-get install mysql' menjadi 'Sudo apt-get install mysql-server'? -  Kohanz 28 Apr '15 pada 14:01
+8
+Perhatikan bahwa untuk Debian itu sudo apt-get install mysql-serverdansudo apt-get install mysql-client –  Marc Juchli Apr 12 '16 pada 20:54
+4
+Bisakah kita akhirnya mengakui bahwa 'pip' adalah kegagalan kolosal? Kesalahan seperti ini sangat menyebalkan, dan tampaknya terjadi pada sebagian besar paket. Python sangat membutuhkan solusi baru untuk manajemen paket. -  Eddie Sullivan 14 Sep '17 pukul 22:30
+5
+Bagi saya di Debian itu libmysqlclient-dev. Sebenarnya saya telah menginstal keduanya libmariadbclient-dev libmysqlclient-dev –  mirek 24 Apr '19 pukul 20:24
+Tampilkan 9 komentar lainnya
+
+205
+
+Saya menginstal python-mysqldi Ubuntu 12.04 menggunakan
+
+pip install mysql-python
+Pertama saya memiliki masalah yang sama:
+
+Not Found "mysql_config"
+Ini berhasil untuk saya
+
+$ sudo apt-get install libmysqlclient-dev
+Lalu saya punya masalah ini:
+
+...
+_mysql.c:29:20: error fatal: Python.h: No existe el archivo o el directorio
+
+compilación terminada.
+
+error: command 'gcc' failed with exit status 1
+Kemudian saya mencoba dengan
+
+apt-get install python-dev
+Dan saat itu aku bahagia :)
+
+pip install mysql-python
+    Installing collected packages: mysql-python
+      Running setup.py install for mysql-python
+        building '_mysql' extension
+        gcc -pthread -fno-strict-aliasing -DNDEBUG -g -fwrapv -O2 -Wall -Wstrict-prototypes -fPIC -Dversion_info=(1,2,4,'beta',4) -D__version__=1.2.4b4 -I/usr/include/mysql -I/usr/include/python2.7 -c _mysql.c -o build/temp.linux-x86_64-2.7/_mysql.o -DBIG_JOINS=1 -fno-strict-aliasing -g
+        In file included from _mysql.c:44:0:
+        /usr/include/mysql/my_config.h:422:0: aviso: se redefinió "HAVE_WCSCOLL" [activado por defecto]
+        /usr/include/python2.7/pyconfig.h:890:0: nota: esta es la ubicación de la definición previa
+        gcc -pthread -shared -Wl,-O1 -Wl,-Bsymbolic-functions -Wl,-Bsymbolic-functions -Wl,-z,relro build/temp.linux-x86_64-2.7/_mysql.o -L/usr/lib/x86_64-linux-gnu -lmysqlclient_r -lpthread -lz -lm -lrt -ldl -o build/lib.linux-x86_64-2.7/_mysql.so
+
+Successfully installed mysql-python
+Cleaning up...
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 16 Desember '14 pukul 17:17
+
+warvariuc
+50.2k 34 34 lencana emas156 156 lencana perak216216 lencana perunggu
+dijawab 10 Okt '12 jam 8:01
+
+xtornasol512
+2.169 1 1 lencana emas10 10 lencana perak66 lencana perunggu
+1
+Bekerja juga pada openSUSE, di mana "libmysqlclient-dev" menjadi "libmysqlclient-devel". Sekarang paket pip terpasang dengan baik. Terima kasih. -  pbarill 30 Nov '13 pukul 4:14
+Terima kasih! Bekerja juga di Ubuntu 14.04.1 LTS –  Krasimir 7 Desember '14 pukul 16:04
+menginstal header python dev memecahkan kesalahan Python.h yang hilang. Terima kasih. -  Natus Drew 19 Mei '16 pukul 22:58
+4
+jika menggunakan python3.x, coba dengan apt-get install python3-dev. -  Legolas Bloom 29 Sep '16 pada 1:59
+Ini tidak berhasil untuk saya pada 14,04 - "E: Paket 'python-dev' tidak memiliki kandidat instalasi" –  Rene Wooller 21 Sep '17 pukul 2:00
+Tambahkan komentar
+
+71
+
+(Khusus untuk Mac OS X)
+
+Saya telah mencoba banyak hal, tetapi serangkaian perintah ini akhirnya berhasil untuk saya.
+
+Install mysql
+brew install mysql
+brew unlink mysql
+brew install mysql-connector-c
+Tambahkan folder mysql bin ke PATH
+export PATH=/usr/local/Cellar/mysql/8.0.11/bin:$PATH
+mkdir /usr/local/Cellar/lib/
+Buat symlink
+sudo ln -s /usr/local/Cellar/mysql/8.0.11/lib/libmysqlclient.21.dylib /usr/local/Cellar/lib/libmysqlclient.21.dylib
+brew reinstall openssl( sumber )
+Terakhir, instal mysql-client
+LIBRARY_PATH=$LIBRARY_PATH:/usr/local/opt/openssl/lib/ pip install mysqlclient
+Pembaruan: Jika ini tidak berhasil, @vinyll menyarankan untuk menjalankan brew link mysqlsebelum langkah 8.
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 20 Mar '20 pukul 17:41
+dijawab 3 Jul '18 jam 7:52
+
+Pulkit Pahwa
+1.192 9 9 lencana perak77 lencana perunggu
+Untuk Langkah 4, gunakan brew info mysqluntuk mendapatkan jalur aktual/benar ke instalasi mysql. Kemudian untuk membuat PATHperubahan tetap ada, lakukan export PATH..di ~/.bash_profile Anda. -  Gino Mempin 26 Des '19 pukul 1:21
+langkah 1-4 dengan brew link --overwrite mysql-connector-cbekerja di Mac saya –  Kelaparan 12 Februari '20 pukul 3:59
+12
+Saya harus melakukan brew link mysqllangkah 8 sebelum menjalankannya. -  vinil 10 Mar '20 pada 22:03
+1
+Saya menambahkan ini ke .bashrc: export CPPFLAGS="-I/usr/local/opt/openssl@1.1/include" export LDFLAGS="-L/usr/local/opt/openssl@1.1/lib", dan hanya menjalankan brew install mysql, dan itu berhasil. Juga memperbaiki semua eksekusi pip di masa mendatang untuk memastikan mereka menggunakan lib ssl yang tepat. -  coredumperror 3 Okt '20 pada 2:54
+1
+Bekerja seperti pesona! -  Muhammad Haseeb 9 Okt '20 pada 7:33
+Tampilkan 6 komentar lainnya

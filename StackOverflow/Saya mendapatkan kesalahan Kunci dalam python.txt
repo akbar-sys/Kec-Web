@@ -1,0 +1,131 @@
+Saya mendapatkan kesalahan Kunci dalam python
+Ditanyakan 9 tahun, 1 bulan yang lalu
+Aktif 10 bulan yang lalu
+Dilihat 768k kali
+
+212
+
+
+44
+Dalam program python saya, saya mendapatkan kesalahan ini:
+
+KeyError: 'variablename'
+Dari kode ini:
+
+path = meta_entry['path'].strip('/'),
+Adakah yang bisa menjelaskan mengapa ini terjadi?
+
+ular piton
+kamus
+Bagikan
+Perbaiki pertanyaan ini
+Mengikuti
+diedit 15 Juli '15 pukul 23:50
+
+Eric Leschinski
+124k 82 82 lencana emas382 382 lencana perak321321 lencana perunggu
+tanya 12 Apr '12 jam 2:11
+
+David Liaw
+2,689 2 2 lencana emas18 18 lencana perak2525 lencana perunggu
+12
+Key errorumumnya berarti keytidak ada. Jadi, apakah Anda yakin 'jalan' itu ada.? -  RanRag 12 April '12 pukul 2:13
+3
+Cetak konten meta_entrydan pastikan kunci yang Anda inginkan ada. -  Makoto 12 April '12 pukul 2:14
+Tambahkan komentar
+8 Jawaban
+
+286
+
+A KeyErrorumumnya berarti kuncinya tidak ada. Jadi, apakah Anda yakin pathkuncinya ada?
+
+Dari dokumen python resmi:
+
+pengecualian KeyError
+
+Dibesarkan ketika kunci pemetaan (kamus) tidak ditemukan di kumpulan kunci yang ada.
+
+Sebagai contoh:
+
+>>> mydict = {'a':'1','b':'2'}
+>>> mydict['a']
+'1'
+>>> mydict['c']
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+KeyError: 'c'
+>>>
+Jadi, cobalah untuk mencetak konten meta_entrydan periksa apakah pathada atau tidak.
+
+>>> mydict = {'a':'1','b':'2'}
+>>> print mydict
+{'a': '1', 'b': '2'}
+Atau, Anda dapat melakukan:
+
+>>> 'a' in mydict
+True
+>>> 'c' in mydict
+False
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 14 Jun '17 pada 9:01
+
+maxkoryukov
+2,896 5 5 lencana emas26 26 lencana perak4444 lencana perunggu
+dijawab 12 Apr '12 jam 2:15
+
+RanRag
+44k 34 34 lencana emas103 103 lencana perak155155 lencana perunggu
+hm...bagaimana cara melakukannya? (Maaf karena menjadi noob) Aplikasi ini di-host di mesin aplikasi google dan saya tidak memiliki akses ke file apa pun yang dibuatnya. -  David Liaw 12 April '12 pukul 2:49 
+Saya memiliki akses ke kode saya tetapi tidak ada kode yang dibuat atau digunakan mesin –  David Liaw 12 April '12 pukul 5:22
+Jadi, kode yang Anda posting path = meta_entry['path'].strip('/'),adalah bagian dari kode Anda atau mesinnya. Jika itu adalah bagian dari mesin, saya khawatir tidak ada yang tidak bisa dilakukan. -  RanRag 12 April '12 pukul 5:24 
+@lonehangman: daripada hanya melakukan print meta_entrydan memeriksa apakah itu berisi pathatau tidak. -  RanRag 15 April '12 pukul 4:59
+1
+Solusi Adam Lewis sederhana dan efisien –  Behnam Heydari 16 Januari '20 pukul 15:20
+Tampilkan 14 komentar lainnya
+
+134
+
+Saya sepenuhnya setuju dengan komentar kesalahan Kunci. Anda juga dapat menggunakan metode get() kamus untuk menghindari pengecualian. Ini juga dapat digunakan untuk memberikan jalur default daripada Noneseperti yang ditunjukkan di bawah ini.
+
+>>> d = {"a":1, "b":2}
+>>> x = d.get("A",None)
+>>> print x
+None
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+dijawab 12 Apr '12 pukul 2:20
+
+Adam Lewis
+6.307 6 6 lencana emas36 36 lencana perak5959 lencana perunggu
+9
++1 untuk komentar .get() yang sangat relevan. Sepertinya aplikasi yang bagus dari Python EAFP (Easier to Ask for Forgiveness than Permission) daripada LBYL (Look Before You Leap) yang menurut saya kurang Pythonic. -  Niels Bom 24 April '12 pukul 11:08
+Bagaimana cara mendapatkan kunci bersarang menggunakan get()? -  Slowaways 28 Desember '20 pukul 15:39
+Tambahkan komentar
+
+38
+
+Untuk dict, gunakan saja
+
+if key in dict
+
+dan jangan gunakan pencarian di daftar kunci
+
+if key in dict.keys()
+
+Yang terakhir akan lebih memakan waktu.
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 13 Juli '20 pukul 16:53
+
+Roberto Caboni
+6.078 10 10 lencana emas19 19 lencana perak3434 lencana perunggu
+dijawab 18 Feb '16 pada 15:02
+
+angin kunci
+1.015 14 14 lencana perak2424 lencana perunggu
+Tambahkan komentar

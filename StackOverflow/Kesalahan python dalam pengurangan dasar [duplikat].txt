@@ -1,0 +1,135 @@
+Kesalahan python dalam pengurangan dasar? [duplikat]
+Ditanyakan 8 tahun, 5 bulan yang lalu
+Aktif 8 tahun, 5 bulan lalu
+Dilihat 25rb kali
+
+18
+
+
+4
+Pertanyaan ini sudah memiliki jawaban di sini :
+Tutup 8 tahun yang lalu .
+Kemungkinan Duplikat:
+Kesalahan pembulatan Python dengan angka float
+matematika python salah
+
+Saya tidak bisa membuat Python melakukan pengurangan 1 - 0.8 dengan benar dan menetapkannya. Itu terus muncul dengan jawaban yang salah, 0.199999999999999996.
+
+Saya menjelajahi sedikit:
+
+sq = {}
+sub = {}
+for i in range(1000):
+    sq[str(i/1000.)+'**2']=((i/1000.)**2)
+    sub['1-'+str(i/1000.)]=(1.0-(i/1000.))
+dan menemukan bahwa kesalahan ini terjadi dengan kelompok float yang agak acak antara 0 dan 1 hingga tempat desimal ketiga. Kesalahan serupa juga terjadi saat Anda mengkuadratkan float tersebut, tetapi ke subset yang berbeda.
+
+Saya berharap penjelasan tentang ini dan bagaimana membuat Python melakukan aritmatika dengan benar. Menggunakan round(x,3)adalah solusi yang saya gunakan untuk saat ini, tetapi tidak elegan.
+
+Terima kasih!
+
+Ini adalah sesi di shell Python 2.7.3 saya:
+
+*** Python 2.7.3 (default, Apr 10 2012, 23:24:47) [MSC v.1500 64 bit (AMD64)] on win32. ***
+*** Remote Python engine  is active ***
+>>> 1-0.8
+0.19999999999999996
+>>> print 1-0.8
+0.2
+>>> a = 1-0.8
+>>> a
+0.19999999999999996
+>>> print a
+0.2
+>>> a = 0.2
+>>> print a
+0.2
+>>> a
+0.2
+>>> 
+Berikut kode yang saya masukkan ke beberapa penerjemah online:
+
+def doit():
+    d = {'a':1-0.8}
+    return d
+
+print doit()
+dan keluarannya:
+
+{'a': 0.19999999999999996}
+ular piton
+pengurangan
+ekspresi aritmatika
+Bagikan
+Perbaiki pertanyaan ini
+Mengikuti
+diedit 23 Mei '17 jam 12:09
+
+komunitas ♦
+1 11 lencana perak
+tanya 2 Jan '13 jam 10:23
+
+gotube
+559 1 1 lencana emas4 4 lencana perak1919 lencana perunggu
+3
+cek yoda.arachsys.com/csharp/floatingpoint.html –  bawahan 2 Jan '13 jam 10:25
+effbot.org/pyfaq/… –  Paul Hankin 2 Jan '13 jam 10:47
+Tambahkan komentar
+3 Jawaban
+
+12
+
+Angka mengambang tidak berfungsi seperti yang Anda harapkan.
+
+Sebagai permulaan, baca panduan floating point . Singkat cerita: komputer mewakili bilangan floating point sebagai biner, dan ternyata menyimpan pecahan desimal yang tepat sebagai biner tidak mungkin ( coba sendiri di atas kertas untuk mengetahui alasannya). Untuk tujuan praktis, 0.199999999999999996 adalah "cukup dekat" dengan 0,2. Jika Anda ingin mencetaknya sebagai 0,2, maka Anda dapat melakukan sesuatu seperti:
+
+print "%0.1f" % floating_point_value
+Jadi apa yang Anda lihat bukanlah kesalahan. Itu perilaku yang diharapkan.
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 3 Jan 13 jam 8:16
+dijawab 2 Jan '13 jam 10:24
+
+mpenkov
+20.4k 7 7 lencana emas76 76 lencana perak121121 lencana perunggu
+Terima kasih. BTW, output dari doit() adalah kamus, bukan bilangan bulat, jadi print "%0.1f" % doit()tidak berfungsi dalam kasus ini. -  gotube 3 Januari '13 pada 05:05
+Kamu benar. Saya telah memperbarui jawabannya menjadi sedikit lebih eksplisit. -  mpenkov 3 Jan '13 jam 8:17
+Apakah Anda punya saran tentang cara menggunakan pekerjaan ini saat menggunakan jq? Saya menggunakan jq untuk fungsi matematika sederhana dan itu memberi saya output serupa untuk masalah mudah. -  maclian 26 Mei pukul 19:14
+Tambahkan komentar
+
+14
+
+Gunakan Decimalyang dirancang hanya untuk ini:
+
+>>> from decimal import Decimal, getcontext
+>>> Decimal(1) - Decimal(0.8)
+Decimal('0.1999999999999999555910790150')
+>>> getcontext().prec = 3
+>>> Decimal(1) - Decimal(0.8)
+Decimal('0.200')
+>>> float(Decimal(1) - Decimal(0.8))
+0.2
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+dijawab 2 Jan '13 jam 11:11
+
+Burhan Khalid
+152k 17 17 lencana emas215 215 lencana perak255255 lencana perunggu
+Mengapa Anda memasukkan float? Pengurangan pertama memiliki masalah yang sama dengan OP karena itu. Gunakan string sebagai gantinya: Decimal(1) - Decimal('0.8')->Decimal('0.2') –  wjandrea 26 Des '20 pukul 19:26
+Tambahkan komentar
+
+2
+
+Python menyimpan float dengan 'bit', dan beberapa float yang tidak dapat Anda wakili secara akurat, tidak peduli berapa banyak bit presisi yang Anda miliki. Ini adalah masalah yang Anda miliki di sini. Ini seperti mencoba menulis 1/3dalam desimal dengan jumlah desimal terbatas yang ditempatkan dengan sangat akurat.
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+dijawab 2 Jan '13 jam 10:25
+
+Keriangan
+27.5k 7 7 lencana emas73 73 lencana perak8686 lencana perunggu
+Tambahkan komentar

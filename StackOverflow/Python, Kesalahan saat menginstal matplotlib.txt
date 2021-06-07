@@ -1,0 +1,227 @@
+Python, Kesalahan saat menginstal matplotlib
+Ditanyakan 7 bulan yang lalu
+Aktif 3 bulan lalu
+Dilihat 4k kali
+
+6
+
+
+2
+OS: Windows 10
+
+Python versi: 3.9.0
+
+Kode kesalahan:
+
+ERROR: Command errored out with exit status 1: python setup.py egg_info Check the logs for full command output. 
+Saya mencoba:
+
+python -m pip install -U pip
+python -m pip install -U matplotlib
+tidak berhasil.
+
+dan kemudian saya mencoba:
+
+pip install --upgrade setuptools
+tidak menyelesaikan masalah.
+
+Saya membaca SO bahwa mungkin jika saya membuka Shell dalam mode administrator itu bisa menyelesaikan masalah tetapi tidak berhasil juga.
+
+Saya melihat seseorang menyebutkan ez-setup untuk kode kesalahan ini. Saya menginstalnya tetapi tidak berhasil juga.
+
+Saya tidak tahu apakah ada hubungannya tetapi direktori C saya terlihat seperti ini:
+
+C:\Users\METİNUSTA
+Ini memiliki karakter i huruf besar yang terkadang dapat menyebabkan masalah dengan aplikasi. Saya tidak dapat mengubahnya karena saya menggunakan kunci Windows sekolah saya dan tidak memungkinkan saya melakukan perubahan apa pun. Karena itu saya menginstal python di D: .
+
+Juga di sini daftar pip saya untuk informasi tambahan:
+
+ez-setup    0.9
+flake8      3.8.4
+mccabe      0.6.1
+pip         20.2.4
+pycodestyle 2.6.0
+pyflakes    2.2.0
+setuptools  50.3.2
+wheel       0.35.1
+dan akhirnya seluruh log kesalahan yang saya dapatkan di windows powershell:
+
+    ERROR: Command errored out with exit status 1:
+     command: 'd:\python\python39\python.exe' -c 'import sys, setuptools, tokenize; sys.argv[0] = '"'"'C:\\Users\\METİNUSTA\\AppData\\Local\\Temp\\pip-install-8iv10tb_\\matplotlib\\setup.py'"'"'; __file__='"'"'C:\\Users\\METİNUSTA\\AppData\\Local\\Temp\\pip-install-8iv10tb_\\matplotlib\\setup.py'"'"';f=getattr(tokenize, '"'"'open'"'"', open)(__file__);code=f.read().replace('"'"'\r\n'"'"', '"'"'\n'"'"');f.close();exec(compile(code, __file__, '"'"'exec'"'"'))' egg_info --egg-base 'C:\Users\METİNUSTA\AppData\Local\Temp\pip-pip-egg-info-elosrn6m'
+         cwd: C:\Users\METİNUSTA\AppData\Local\Temp\pip-install-8iv10tb_\matplotlib\
+    Complete output (99 lines):
+      WARNING: Missing build requirements in pyproject.toml for numpy>=1.15 from https://files.pythonhosted.org/packages/bf/e8/15aea783ea72e2d4e51e3ec365e8dc4a1a32c9e5eb3a6d695b0d58e67cdd/numpy-1.19.2.zip#sha256=0d310730e1e793527065ad7dde736197b705d0e4c9999775f212b03c44a8484c.
+      WARNING: The project does not specify a build backend, and pip cannot fall back to setuptools without 'setuptools>=40.8.0' and 'wheel'.
+        ERROR: Command errored out with exit status 1:
+         command: 'd:\python\python39\python.exe' 'd:\python\python39\lib\site-packages\pip\_vendor\pep517\_in_process.py' prepare_metadata_for_build_wheel 'C:\Users\METNUS~1\AppData\Local\Temp\tmpqz3brme_'
+             cwd: C:\Users\METİNUSTA\AppData\Local\Temp\pip-wheel-l2wpf1i8\numpy
+        Complete output (49 lines):
+        Error in sitecustomize; set PYTHONVERBOSE for traceback:
+        SyntaxError: (unicode error) 'utf-8' codec can't decode byte 0xdd in position 0: unexpected end of data (sitecustomize.py, line 21)
+        Running from numpy source directory.
+        setup.py:470: UserWarning: Unrecognized setuptools command, proceeding with generating Cython sources and expanding templates
+          run_build = parse_setuppy_commands()
+        Error in sitecustomize; set PYTHONVERBOSE for traceback:
+        SyntaxError: (unicode error) 'utf-8' codec can't decode byte 0xdd in position 0: unexpected end of data (sitecustomize.py, line 21)
+        Processing numpy/random\_bounded_integers.pxd.in
+        Processing numpy/random\bit_generator.pyx
+        Traceback (most recent call last):
+          File "C:\Users\METİNUSTA\AppData\Local\Temp\pip-wheel-l2wpf1i8\numpy\tools\cythonize.py", line 59, in process_pyx
+            from Cython.Compiler.Version import version as cython_version
+        ModuleNotFoundError: No module named 'Cython'
+
+        During handling of the above exception, another exception occurred:
+
+        Traceback (most recent call last):
+          File "C:\Users\METİNUSTA\AppData\Local\Temp\pip-wheel-l2wpf1i8\numpy\tools\cythonize.py", line 235, in <module>
+            main()
+          File "C:\Users\METİNUSTA\AppData\Local\Temp\pip-wheel-l2wpf1i8\numpy\tools\cythonize.py", line 231, in main
+            find_process_files(root_dir)
+          File "C:\Users\METİNUSTA\AppData\Local\Temp\pip-wheel-l2wpf1i8\numpy\tools\cythonize.py", line 222, in find_process_files
+            process(root_dir, fromfile, tofile, function, hash_db)
+          File "C:\Users\METİNUSTA\AppData\Local\Temp\pip-wheel-l2wpf1i8\numpy\tools\cythonize.py", line 188, in process
+            processor_function(fromfile, tofile)
+          File "C:\Users\METİNUSTA\AppData\Local\Temp\pip-wheel-l2wpf1i8\numpy\tools\cythonize.py", line 64, in process_pyx
+            raise OSError('Cython needs to be installed in Python as a module')
+        OSError: Cython needs to be installed in Python as a module
+        Cythonizing sources
+        Traceback (most recent call last):
+          File "d:\python\python39\lib\site-packages\pip\_vendor\pep517\_in_process.py", line 280, in <module>
+            main()
+          File "d:\python\python39\lib\site-packages\pip\_vendor\pep517\_in_process.py", line 263, in main
+            json_out['return_val'] = hook(**hook_input['kwargs'])
+          File "d:\python\python39\lib\site-packages\pip\_vendor\pep517\_in_process.py", line 133, in prepare_metadata_for_build_wheel
+            return hook(metadata_directory, config_settings)
+          File "d:\python\python39\lib\site-packages\setuptools\build_meta.py", line 161, in prepare_metadata_for_build_wheel
+            self.run_setup()
+          File "d:\python\python39\lib\site-packages\setuptools\build_meta.py", line 253, in run_setup
+            super(_BuildMetaLegacyBackend,
+          File "d:\python\python39\lib\site-packages\setuptools\build_meta.py", line 145, in run_setup
+            exec(compile(code, __file__, 'exec'), locals())
+          File "setup.py", line 499, in <module>
+            setup_package()
+          File "setup.py", line 479, in setup_package
+            generate_cython()
+          File "setup.py", line 274, in generate_cython
+            raise RuntimeError("Running cythonize failed!")
+        RuntimeError: Running cythonize failed!
+        ----------------------------------------
+    ERROR: Command errored out with exit status 1: 'd:\python\python39\python.exe' 'd:\python\python39\lib\site-packages\pip\_vendor\pep517\_in_process.py' prepare_metadata_for_build_wheel 'C:\Users\METNUS~1\AppData\Local\Temp\tmpqz3brme_' Check the logs for full command output.
+    Traceback (most recent call last):
+      File "d:\python\python39\lib\site-packages\setuptools\installer.py", line 126, in fetch_build_egg
+        subprocess.check_call(cmd)
+      File "d:\python\python39\lib\subprocess.py", line 373, in check_call
+        raise CalledProcessError(retcode, cmd)
+    subprocess.CalledProcessError: Command '['d:\\python\\python39\\python.exe', '-m', 'pip', '--disable-pip-version-check', 'wheel', '--no-deps', '-w', 'C:\\Users\\METNUS~1\\AppData\\Local\\Temp\\tmppoh8r2c9', '--quiet', 'numpy>=1.15']' returned non-zero exit status 1.
+
+    The above exception was the direct cause of the following exception:
+
+    Traceback (most recent call last):
+      File "<string>", line 1, in <module>
+      File "C:\Users\METİNUSTA\AppData\Local\Temp\pip-install-8iv10tb_\matplotlib\setup.py", line 242, in <module>
+        setup(  # Finally, pass this all along to distutils to do the heavy lifting.
+      File "d:\python\python39\lib\site-packages\setuptools\__init__.py", line 152, in setup
+        _install_setup_requires(attrs)
+      File "d:\python\python39\lib\site-packages\setuptools\__init__.py", line 147, in _install_setup_requires
+        dist.fetch_build_eggs(dist.setup_requires)
+      File "d:\python\python39\lib\site-packages\setuptools\dist.py", line 673, in fetch_build_eggs
+        resolved_dists = pkg_resources.working_set.resolve(
+      File "d:\python\python39\lib\site-packages\pkg_resources\__init__.py", line 764, in resolve
+        dist = best[req.key] = env.best_match(
+      File "d:\python\python39\lib\site-packages\pkg_resources\__init__.py", line 1049, in best_match
+        return self.obtain(req, installer)
+      File "d:\python\python39\lib\site-packages\pkg_resources\__init__.py", line 1061, in obtain
+        return installer(requirement)
+      File "d:\python\python39\lib\site-packages\setuptools\dist.py", line 732, in fetch_build_egg
+        return fetch_build_egg(self, req)
+      File "d:\python\python39\lib\site-packages\setuptools\installer.py", line 128, in fetch_build_egg
+        raise DistutilsError(str(e)) from e
+    distutils.errors.DistutilsError: Command '['d:\\python\\python39\\python.exe', '-m', 'pip', '--disable-pip-version-check', 'wheel', '--no-deps', '-w', 'C:\\Users\\METNUS~1\\AppData\\Local\\Temp\\tmppoh8r2c9', '--quiet', 'numpy>=1.15']' returned non-zero exit status 1.
+
+    Edit setup.cfg to change the build options; suppress output with --quiet.
+
+    BUILDING MATPLOTLIB
+      matplotlib: yes [3.3.2]
+          python: yes [3.9.0 (tags/v3.9.0:9cf6752, Oct  5 2020, 15:34:40) [MSC
+                      v.1927 64 bit (AMD64)]]
+        platform: yes [win32]
+     sample_data: yes [installing]
+           tests: no  [skipping due to configuration]
+          macosx: no  [Mac OS-X only]
+
+    ----------------------------------------
+ERROR: Command errored out with exit status 1: python setup.py egg_info Check the logs for full command output.
+ular piton
+matplotlib
+pip
+Bagikan
+Perbaiki pertanyaan ini
+Mengikuti
+tanya 24 Okt '20 jam 19:42
+
+Metin Usta
+85 1 1 lencana perak55 lencana perunggu
+1
+matplotlib belum membuat roda untuk versi 3.9 jadi python Anda mencoba membuatnya dari sumber. Anda harus menurunkan versi ke python 3.8 dan semuanya akan berfungsi -  Ianhi 24 Okt '20 pukul 19:58
+1
+Terima kasih banyak, tolong tambahkan komentar Anda sebagai jawaban? Jadi saya bisa menandai sebagai terpecahkan. -  Metin Usta 24 Okt '20 pukul 20:03
+Tambahkan komentar
+4 Jawaban
+
+5
+
+edit: matplotlib sekarang telah merilis roda untuk python 3.9 jadi pip install --upgrade matplotlibseharusnya berfungsi.
+
+jawaban asli
+
+matplotlib belum membuat roda untuk versi 3.9 jadi python Anda mencoba membuatnya dari sumber. Anda harus menurunkan versi ke python 3.8 dan semuanya akan berfungsi
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 15 Februari pukul 17:36
+dijawab 24 Okt '20 jam 20:04
+
+Ianhi
+1,873 1 1 lencana emas13 13 lencana perak1717 lencana perunggu
+1
+FYI, inilah PR relevan yang akan menambahkan roda untuk Python 3.9: github.com/matplotlib/matplotlib/pull/18842 . Perhatikan bahwa membangun dari sumber seharusnya berfungsi, tetapi pada Windows mungkin ada pekerjaan untuk menyiapkan rantai alat pembangunan. -  cbrnr 6 November '20 pada 7:47
+bagaimana cara melihat roda mana yang tersedia untuk matplotlib? -  baxx 5 Januari pukul 13:17
+Untuk Python ^3.9.2: Harap pertimbangkan jawaban saya di bawah ini –  Kesepian 27 Februari pukul 15:37
+Tambahkan komentar
+
+5
+
+python -m pip install --upgrade pip
+
+pip install matplotlib==3.3.1
+
+Bekerja untuk saya.
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 15 Februari pukul 7:02
+
+sophros
+8.829 5 5 lencana emas30 30 lencana perak5757 lencana perunggu
+dijawab 9 Nov '20 pukul 18:34
+
+Andrija Novakovic
+53 44 lencana perunggu
+Tambahkan komentar
+
+1
+
+Ini karena matplotlib tidak memiliki roda 3.9..
+
+Untuk kenyamanan dalam penggunaan matplotlib, Anda dapat menginstal anaconda. Di lingkungan anaconda matplotlib, numpy dan panda tersedia secara default untuk Python yang diinstal di Anaconda. Atau Anda dapat menggunakan versi Python yang lebih rendah.
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+dijawab 5 Nov '20 jam 12:02
+
+Farshad Javid
+320 4 4 lencana perak66 lencana perunggu
+Tambahkan komentar

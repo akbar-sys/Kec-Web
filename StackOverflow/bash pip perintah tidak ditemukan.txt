@@ -1,0 +1,132 @@
+bash: pip: perintah tidak ditemukan
+Ditanyakan 9 tahun, 2 bulan yang lalu
+Aktif 1 bulan yang lalu
+Dilihat 1,5 juta kali
+
+512
+
+
+109
+Saya mengunduh pip dan menjalankan python setup.py installdan semuanya bekerja dengan baik. Langkah selanjutnya dalam tutorial ini adalah menjalankan pip install <lib you want>tetapi bahkan sebelum mencoba menemukan sesuatu secara online, saya mendapatkan kesalahan "bash: pip: command not found".
+
+Ini ada di Mac OS X, yang saya juga baru, jadi saya berasumsi ada semacam pengaturan jalur yang tidak diatur dengan benar ketika saya menjalankan setup.py. Bagaimana saya bisa menyelidiki lebih lanjut? Apa yang perlu saya periksa untuk mendapatkan ide yang lebih baik tentang penyebab pasti masalah?
+
+EDIT: Saya juga mencoba menginstal Python 2.7 untuk Mac dengan harapan bahwa proses instalasi yang ramah akan melakukan pembersihan apa pun seperti mengedit PATH dan apa pun yang diperlukan agar semuanya berfungsi sesuai dengan tutorial, tetapi ini tidak berhasil. Setelah menginstal berjalan 'python' masih menjalankan Python 2.6 dan PATH tidak diperbarui.
+
+ular piton
+maco
+pip
+python-2.6
+Bagikan
+Perbaiki pertanyaan ini
+Mengikuti
+diedit 20 Mar '12 pukul 3:12
+ditanyakan 20 Mar '12 pukul 2:43
+
+Trindazo
+14.8k 21 21 lencana emas74 74 lencana perak104104 lencana perunggu
+Apakah instalasi laporan pip berhasil? -  jdi 20 Mar '12 pukul 2:48
+Mungkin Anda perlu menjalankan perintah sebagai root? -  John La Rooy 20 Mar '12 pukul 2:50
+Saya menjalankan terminal menggunakan Sudo, jadi semuanya harus dijalankan sebagai root. Yang diinstal memang melaporkan keberhasilan. -  Trindazo 20 Mar '12 pukul 2:52
+23
+Itu karena jalur python3 (\bin) tidak memiliki "pip" lagi, ia memiliki "pip3". Buka terminal Anda dan ketik "pip3 -v" dan saya yakin Anda akan melihatnya di sana. Sejak Python 3.5 pip telah disertakan dengan Python tetapi mereka menamainya sedikit. Semoga membantu. -  S Walsh 28 Februari '19 pukul 0:59
+pip 3 bekerja untuk saya. Contoh: pip3 menginstal APScheduler –  Dan 11 Okt '19 jam 2:28
+Tampilkan 1 komentar lagi
+32 Jawaban
+1
+2
+Lanjut
+
+559
+
+Mengapa tidak melakukan sudo easy_install pipatau jika ini untuk python 2.6 sudo easy_install-2.6 pip?
+
+Ini menginstal pip menggunakan sistem penginstal paket python default dan menghemat kerumitan pengaturan manual sekaligus.
+
+Ini akan memungkinkan Anda untuk menjalankan pipperintah untuk instalasi paket python karena akan diinstal dengan sistem python. Saya juga merekomendasikan setelah Anda memiliki pip menggunakan paket dan pola virtualenv . :)
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 2 Okt '16 pada 2:49
+
+dda
+5.700 2 2 lencana emas23 23 lencana perak3333 lencana perunggu
+dijawab 20 Mar '12 pukul 5:27
+
+klobucar
+6.143 1 1 lencana emas11 11 lencana perak1515 lencana perunggu
+76
+Terima kasih atas sarannya, maaf tapi saya pemulasudo: easy_install: command not found –  SSH ini 9 Agustus '13 pukul 15:16
+TabError: penggunaan tab dan spasi yang tidak konsisten dalam lekukan (python 3.4) –  Aero Wang 15 Juli '15 pada 22:06
+Tautan yang diposting @PaigeLo tampaknya mengarah ke halaman acak yang membuat Safari saya membeku ... tidak akan merekomendasikan melakukan itu –  kopi 8 Okt '15 pukul 20:19
+5
+sudo apt install python-pip? -  Juan Zamora 31 Agustus '18 pukul 18:33
+61
+Ini mengasumsikan Anda telah easy_installmenginstal. Bagaimana ini jawaban? -  Steven 10 Sep '19 pukul 17:49
+Tampilkan 2 komentar lainnya
+
+390
+
+Pembaruan 2020 :
+
+Untuk Debian/Ubuntu saat ini, gunakan
+
+apt-get install python3-pip
+untuk menginstal pip3.
+
+Jawaban lama 2013 (easy_install sekarang tidak digunakan lagi):
+
+Gunakan setuptools untuk menginstal pip: sudo easy_install pip
+
+(Saya tahu bagian di atas dari jawaban saya berlebihan dengan klobucar, tetapi saya belum dapat menambahkan komentar), jadi inilah jawaban dengan solusi untuk sudo: easy_install: command not founddi Debian/Ubuntu: sudo apt-get install python-setuptools
+
+Juga, untuk python3, gunakan easy_install3dan python3-setuptools.
+
+Untuk Python 3, gunakan apt-get install python3-pip.
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 27 Jun '20 pada 19:29
+dijawab 10 Agustus '13 pada 20:34
+
+cidermole
+4,586 1 1 lencana emas12 12 lencana perak1616 lencana perunggu
+11
+untuk pip3: sudo apt-get install python3-setuptools&sudo easy_install3 pip –  Felix 23 Okt '16 pada 0:48 
+ini adalah jawaban yang benar sudo apt-get install python-setuptoolsdiikuti olehsudo easy_install pip –  Luis Martins 19 Apr '18 pukul 6:28
+17
+Pembaruan 2019: sudo apt-get install python3-pipadalah perintah yang tepat untuk Python3 dari askubuntu –  Tersenyum 26 Apr '19 pukul 14:21
+3
+@Smily Tapi pertanyaannya menyatakan secara eksplisit bahwa ini untuk macOS, bukan Ubuntu -  Sri Harsha Chilakapati 24 Mar '20 pada 15:59
+1
+@SriHarshaChilakapati Anda benar dan jawaban ini tampaknya lebih terkait: https://stackoverflow.com/a/20340173/9714920 –  Tersenyum 25 Mar '20 pukul 16:10
+Tampilkan 3 komentar lainnya
+
+251
+
+Pertama-tama: coba pip3 alih-alih pip . Contoh:
+
+pip3 --version
+pip 9.0.1 from /usr/local/lib/python3.6/site-packages (python 3.6)
+pip3 harus diinstal secara otomatis bersama dengan Python3.x. Dokumentasinya belum diperbarui, jadi cukup ganti pip dengan pip3 dalam instruksi, saat menginstal Flask misalnya.
+
+Sekarang, jika ini tidak berhasil, Anda mungkin harus menginstal pip secara terpisah.
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+dijawab 13 Okt '17 jam 8:13
+
+Per Aronson yang Ditanyakan
+9.590 8 8 lencana emas47 47 lencana perak7070 lencana perunggu
+2
+Semua yang menginstal ubuntu 16 harus mencoba ini terlebih dahulu. -  l__flex__l 13 Nov '17 jam 8:11
+13
+Bekerja untuk saya di macOS setelah brew install python. -  Fabian Lauer 24 Sep '18 pukul 9:12
+Itu persis kasus saya. Menginstal Python dari file .pkg. -  ekar 26 Sep '18 jam 8:35
+Dan Anda dapat menggunakan pip2 jika Anda menggunakan Python 2.x –  aris 23 Des '18 pukul 2:11
+1
+ini menyelamatkan hari saya! -  Fuad Ak 4 April pukul 12:57
+Tambahkan komentar

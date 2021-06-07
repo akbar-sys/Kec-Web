@@ -1,0 +1,101 @@
+kesalahan python: tidak ada modul bernama pylab
+Ditanyakan 8 tahun, 11 bulan yang lalu
+Aktif 1 tahun, 3 bulan lalu
+Dilihat 188k kali
+
+89
+
+
+20
+Saya baru mengenal Python dan ingin menggunakan plotfungsinya untuk membuat grafik. Saya menggunakan ubuntu 12.04. Saya mengikuti langkah-langkah instalasi Python dari http://eli.thegreenplace.net/2011/10/10/installing-python-2-7-on-ubuntu/ tetapi ketika saya melakukannya
+
+from pylab import *
+Saya mendapatkan kesalahan ini
+
+>>> from pylab import *
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+ImportError: No module named pylab
+Versi Python saya adalah python 2.7. Adakah yang bisa memberi tahu saya apa yang saya lewatkan di sini?
+
+ular piton
+python-2.7
+ubuntu-12.04
+matplotlib
+Bagikan
+Perbaiki pertanyaan ini
+Mengikuti
+diedit 10 Agustus '12 pukul 2:30
+
+Bart
+18.5k 7 7 lencana emas66 66 lencana perak7373 lencana perunggu
+tanya 9 Jun '12 jam 23:30
+
+Sadiksha Gautam
+4.604 6 6 lencana emas35 35 lencana perak6767 lencana perunggu
+3
+Saya sudah menginstal scipy di virtualenv , yang dipecahkan untuk saya adalah file pip install matplotlib. -  Elias Dorneles 6 November '13 pukul 20:30
+Tambahkan komentar
+7 Jawaban
+
+132
+
+Anda harus menginstal numpy, scipy, dan matplotlib untuk mendapatkan pylab. Di ubuntu Anda dapat menginstalnya dengan perintah ini:
+
+sudo apt-get install python-numpy python-scipy python-matplotlib
+Jika Anda menginstal python dari sumber, Anda perlu menginstal paket-paket ini melalui pip. Perhatikan bahwa Anda mungkin harus menginstal dependensi lain untuk melakukan ini, serta menginstal numpy sebelum dua lainnya.
+
+Yang mengatakan, saya akan merekomendasikan menggunakan versi python di repositori karena saya pikir itu up to date dengan versi python saat ini (2.7.3).
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 9 Juni '12 pukul 23:39
+dijawab 9 Jun '12 pukul 23:34
+
+Trevor
+9.022 2 2 lencana emas23 23 lencana perak2626 lencana perunggu
+1
+apakah saya tidak perlu menghubungkan apa yang terinstal di sistem dengan python yang sudah saya miliki? jika saya melakukan seperti yang Anda katakan maka itu akan terinstal di sistem. Bisakah Anda memberi tahu saya bagaimana saya bisa menghubungkan keduanya? -  Sadiksha Gautam 9 Juni '12 pukul 23:57
+15
+Anda harus menghapus python yang Anda miliki dan menggunakan versi repositori, atau menggunakan pip untuk menginstal numpy, scipy dan matplotlib. Perintah untuk melakukannya adalah pip install numpykemudian pip install scipy matplotlib. -  Trevor 10 Juni '12 pukul 0:59 
+1
+Jangan lupa bahwa pylab membutuhkan tk:sudo apt-get install python-tk –  agmezr 4 Jan '16 pada 21:02
+Tambahkan komentar
+
+42
+
+Saya memecahkan masalah yang sama dengan menginstal "matplotlib".
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 7 Nov '12 pukul 18:40
+
+kopi
+2.900 14 14 lencana perak1919 lencana perunggu
+dijawab 7 Nov '12 pukul 18:12
+
+JANGDONGMIN
+421 4 4 lencana perak22 lencana perunggu
+Tambahkan komentar
+
+18
+
+Saya menginstal python-numpy python-scipy python-matplotlib, tetapi tidak berhasil untuk saya dan saya mendapatkan kesalahan yang sama. Pylab tidak dikenali tanpa matplotlib. Jadi saya menggunakan ini:
+
+from matplotlib import pylab
+from pylab import *
+dan bekerja untuk saya.
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 16 Mei '16 jam 8:33
+dijawab 15 Mei '16 jam 5:47
+
+Farhood Farahnak
+191 1 1 lencana perak33 lencana perunggu
+Meskipun kode ini dapat menjawab pertanyaan, akan lebih baik untuk menyertakan beberapa konteks, menjelaskan cara kerjanya dan kapan menggunakannya. Jawaban kode saja tidak berguna dalam jangka panjang. -  Bono 15 Mei '16 pada 7:08
+Saya tidak mendapatkan suara rendah untuk balasan ini: Saya memiliki masalah yang sama dan memang, pylab adalah bagian dari matplotlib dan beberapa skrip masih mencoba memuatnya secara langsung. Kode di atas cukup jelas: sebagai 'muat pylab dari matplotlib'. -  formiaczek 21 Sep '16 pukul 14:38
+Tambahkan komentar

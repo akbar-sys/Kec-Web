@@ -1,0 +1,324 @@
+Menjalankan perintah Bash dengan Python
+Ditanyakan 10 tahun, 6 bulan yang lalu
+Aktif 10 hari yang lalu
+Dilihat 678k kali
+
+356
+
+
+126
+Di mesin lokal saya, saya menjalankan skrip python yang berisi baris ini
+
+bashCommand = "cwm --rdf test.rdf --ntriples > test.nt"
+os.system(bashCommand)
+Ini bekerja dengan baik.
+
+Kemudian saya menjalankan kode yang sama di server dan saya mendapatkan pesan kesalahan berikut:
+
+'import site' failed; use -v for traceback
+Traceback (most recent call last):
+File "/usr/bin/cwm", line 48, in <module>
+from swap import  diag
+ImportError: No module named swap
+Jadi yang saya lakukan adalah memasukkan a print bashCommandwhich yang mencetak saya daripada perintah di terminal sebelum menjalankannya dengan os.system().
+
+Tentu saja, saya mendapatkan lagi kesalahan (disebabkan oleh os.system(bashCommand)) tetapi sebelum kesalahan itu ia mencetak perintah di terminal. Kemudian saya hanya menyalin output itu dan melakukan salin tempel ke terminal dan tekan enter dan berfungsi ...
+
+Apakah ada yang tahu apa yang terjadi?
+
+ular piton
+pesta
+Bagikan
+Perbaiki pertanyaan ini
+Mengikuti
+diedit 30 Mei 19 jam 20:43
+
+pembuat kode hutan
+28.9k 11 11 lencana emas78 78 lencana perak105105 lencana perunggu
+tanya 23 Nov '10 jam 12:38
+
+mkn
+9.636 17 17 lencana emas45 45 lencana perak6161 lencana perunggu
+3
+Tampaknya ada perbedaan di lingkungan tergantung pada bagaimana Anda menjalankannya cwm. Mungkin Anda memiliki beberapa konfigurasi .bashrcyang mengatur lingkungan untuk penggunaan bash interaktif? -  Sven Marnach 23 Nov '10 pukul 12:46
+Apakah Anda mencoba menjalankan perintah dari baris perintah saat masuk di server? Posting Anda hanya mengatakan Anda "menempelkannya ke terminal". -  Sven Marnach 23 Nov '10 pukul 13:04
+@Sven: ya maksud saya saya menjalankan perintah langsung di terminal server –  mkn 23 Nov '10 pukul 13:15
+Tampaknya ada perbedaan dalam PYTHONPATH tergantung pada bagaimana Anda menjalankan cwm. Atau mungkin ada perbedaan PATH, dan versi yang berbeda cwmdisebut. Atau versi Python yang berbeda. Sangat sulit untuk mengetahui hal ini tanpa akses ke mesin... –  Sven Marnach 23 Nov '10 pukul 14:22 
+Tambahkan komentar
+10 Jawaban
+
+367
+
+Jangan gunakan os.system. Ini telah ditinggalkan demi subproses . Dari dokumen : "Modul ini bermaksud untuk menggantikan beberapa modul dan fungsi yang lebih lama: os.system, os.spawn".
+
+Seperti dalam kasus Anda:
+
+bashCommand = "cwm --rdf test.rdf --ntriples > test.nt"
+import subprocess
+process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
+output, error = process.communicate()
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 12 Jan '18 jam 8:54
+
+pengguna1767754
+18.8k 14 14 lencana emas112 112 lencana perak133133 lencana perunggu
+dijawab 23 Nov '10 jam 12:44
+
+pengguna225312
+108k 64 64 lencana emas162 162 lencana perak179179 lencana perunggu
+9
+Ini tidak melakukan apa yang saya inginkan ketika saya perlu melakukan cd 'path\to\somewhere'diikuti oleh perintah bash lain yang perlu dijalankan di suatu tempat. @pengguna225312 –  AWrightIV 4 Mar '13 jam 4:32 
+45
+@AWrightIV Jika Anda membutuhkan subproses Anda untuk dijalankan di direktori kerja tertentu, Anda dapat menggunakan cwdargumen ke Popen:subprocess.Popen(..., cwd='path\to\somewhere') –  tahan air 11 Juli '14 pukul 18:46 
+9
+Untuk perintah saya, saya membutuhkan Shell=True seperti di sini; stackoverflow.com/questions/18962785/… –  pengguna984003 27 Okt '15 pukul 20:53
+5
+Lebih baik gunakan shlex.split() daripada string.split() dalam hal ini –  Alexey Sviridov 24 Mei '18 pukul 3:51
+4
+... ( stdout=filemengalihkan output ke file dalam kasus ini. Ini mengimplementasikan > file). Akan salah untuk meneruskan ..., '>', 'file']perintah terakhir yang mengharapkan pengalihan (itu tidak akan berfungsi tanpa shell dan jika Anda menggunakan shell, Anda harus meneruskan perintah sebagai string) –  jfs 31 Okt '18 pukul 18:54
+Tampilkan 6 komentar lainnya
+
+293
+
+Untuk sedikit memperluas jawaban sebelumnya di sini, ada sejumlah detail yang biasanya diabaikan.
+
+Lebih subprocess.run()lebih subprocess.check_call()dan teman-teman selama subprocess.call()lebih subprocess.Popen()lebih os.system()lebihos.popen()
+Memahami dan mungkin menggunakan text=True, alias universal_newlines=True.
+Pahami arti shell=Trueatau shell=Falsedan bagaimana perubahan kutipan dan ketersediaan kenyamanan shell.
+Pahami perbedaan antara shdan Bash
+Memahami bagaimana subproses terpisah dari induknya, dan umumnya tidak dapat mengubah induknya.
+Hindari menjalankan interpreter Python sebagai subproses dari Python.
+Topik-topik ini dibahas secara lebih rinci di bawah ini.
+
+Lebih suka subprocess.run()atausubprocess.check_call()
+The subprocess.Popen()Fungsi adalah pekerja keras tingkat rendah tetapi sulit untuk digunakan dengan benar dan Anda berakhir copy / paste beberapa baris kode ... yang nyaman sudah ada di perpustakaan standar sebagai satu set tingkat yang lebih tinggi wrapper fungsi untuk berbagai keperluan, yang disajikan secara lebih rinci berikut ini.
+
+Berikut paragraf dari dokumentasi :
+
+Pendekatan yang disarankan untuk memanggil subproses adalah dengan menggunakan run()fungsi untuk semua kasus penggunaan yang dapat ditanganinya. Untuk kasus penggunaan yang lebih lanjut, Popenantarmuka yang mendasarinya dapat digunakan secara langsung.
+
+Sayangnya, ketersediaan fungsi pembungkus ini berbeda antara versi Python.
+
+subprocess.run()secara resmi diperkenalkan di Python 3.5. Ini dimaksudkan untuk menggantikan semua hal berikut.
+subprocess.check_output()diperkenalkan di Python 2.7 / 3.1. Ini pada dasarnya setara dengansubprocess.run(..., check=True, stdout=subprocess.PIPE).stdout
+subprocess.check_call()diperkenalkan di Python 2.5. Ini pada dasarnya setara dengansubprocess.run(..., check=True)
+subprocess.call()diperkenalkan di Python 2.4 dalam subprocessmodul asli ( PEP-324 ). Ini pada dasarnya setara dengansubprocess.run(...).returncode
+API tingkat tinggi vs subprocess.Popen()
+Refactored dan extended subprocess.run()lebih logis dan lebih fleksibel daripada fungsi lama yang digantikannya. Ini mengembalikan CompletedProcessobjek yang memiliki berbagai metode yang memungkinkan Anda untuk mengambil status keluar, output standar, dan beberapa hasil dan indikator status lainnya dari subproses yang telah selesai.
+
+subprocess.run()adalah cara yang harus dilakukan jika Anda hanya membutuhkan program untuk menjalankan dan mengembalikan kontrol ke Python. Untuk skenario yang lebih terlibat (proses latar belakang, mungkin dengan I/O interaktif dengan program induk Python), Anda masih perlu menggunakan subprocess.Popen()dan mengurus semua pemipaan sendiri. Ini membutuhkan pemahaman yang cukup rumit tentang semua bagian yang bergerak dan tidak boleh dianggap enteng. PopenObjek yang lebih sederhana mewakili proses (mungkin masih berjalan) yang perlu dikelola dari kode Anda selama sisa masa pakai subproses.
+
+Mungkin perlu ditekankan bahwa hanya subprocess.Popen()sekedar menciptakan sebuah proses. Jika Anda membiarkannya begitu saja, Anda memiliki subproses yang berjalan bersamaan dengan Python, jadi proses "latar belakang". Jika tidak perlu melakukan input atau output atau berkoordinasi dengan Anda, itu dapat melakukan pekerjaan yang berguna secara paralel dengan program Python Anda.
+
+Hindari os.system()danos.popen()
+Sejak waktu abadi (baik, sejak Python 2.5) osdokumentasi modul telah berisi rekomendasi untuk lebih disukai subprocessdaripada os.system():
+
+The subprocessModul menyediakan fasilitas yang lebih kuat untuk pemijahan proses baru dan mengambil hasil mereka; menggunakan modul itu lebih disukai daripada menggunakan fungsi ini.
+
+Masalahnya system()adalah itu jelas tergantung pada sistem dan tidak menawarkan cara untuk berinteraksi dengan subproses. Itu hanya berjalan, dengan output standar dan kesalahan standar di luar jangkauan Python. Satu-satunya informasi yang diterima kembali oleh Python adalah status keluar dari perintah (nol berarti sukses, meskipun arti dari nilai bukan nol juga bergantung pada sistem).
+
+PEP-324 (yang telah disebutkan di atas) berisi alasan yang lebih rinci mengapa os.systembermasalah dan bagaimana subprocessupaya untuk memecahkan masalah tersebut.
+
+os.popen()dulu bahkan lebih putus asa :
+
+Tidak digunakan lagi sejak versi 2.6: Fungsi ini sudah usang. Gunakan subprocessmodul.
+
+Namun, sejak beberapa waktu di Python 3, telah diimplementasikan kembali untuk hanya menggunakan subprocess, dan dialihkan ke subprocess.Popen()dokumentasi untuk detailnya.
+
+Memahami dan biasanya menggunakan usually check=True
+Anda juga akan melihat bahwa subprocess.call()memiliki banyak batasan yang sama dengan os.system(). Dalam penggunaan biasa, Anda biasanya harus memeriksa apakah proses selesai dengan sukses, which subprocess.check_call()dan subprocess.check_output()do (di mana yang terakhir juga mengembalikan output standar dari subproses yang sudah selesai). Demikian pula, Anda biasanya harus menggunakan check=Truedengan subprocess.run()kecuali Anda secara khusus perlu mengizinkan subproses untuk mengembalikan status kesalahan.
+
+Dalam praktiknya, dengan check=Trueor subprocess.check_*, Python akan mengeluarkan CalledProcessErrorpengecualian jika subproses mengembalikan status keluar bukan nol.
+
+Kesalahan umum dengan subprocess.run()adalah menghilangkan check=Truedan terkejut ketika kode hilir gagal jika subproses gagal.
+
+Di sisi lain, masalah umum dengan check_call()dan check_output()adalah bahwa pengguna yang menggunakan fungsi ini secara membabi buta terkejut ketika pengecualian diajukan, misalnya ketika greptidak menemukan kecocokan. (Anda mungkin harus menggantinya grepdengan kode Python asli, seperti yang diuraikan di bawah ini.)
+
+Semua hal diperhitungkan, Anda perlu memahami bagaimana perintah shell mengembalikan kode keluar, dan dalam kondisi apa mereka akan mengembalikan kode keluar yang tidak nol (kesalahan), dan membuat keputusan sadar bagaimana tepatnya itu harus ditangani.
+
+Pahami dan mungkin gunakan text=Truealiasuniversal_newlines=True
+Sejak Python 3, string internal ke Python adalah string Unicode. Tetapi tidak ada jaminan bahwa subproses menghasilkan keluaran Unicode, atau string sama sekali.
+
+(Jika perbedaannya tidak segera terlihat, Unicode Pragmatis Ned Batchelder direkomendasikan, jika tidak wajib, membaca. Ada presentasi video 36 menit di belakang tautan jika Anda mau, meskipun membaca halaman sendiri mungkin akan memakan waktu lebih sedikit. )
+
+Jauh di lubuk hati, Python harus mengambil bytesbuffer dan menafsirkannya entah bagaimana. Jika berisi gumpalan data biner, itu tidak boleh didekodekan menjadi string Unicode, karena itu rawan kesalahan dan perilaku yang memicu bug - tepatnya jenis perilaku sial yang membingungkan banyak skrip Python 2, sebelum ada cara untuk membedakan dengan benar antara teks yang disandikan dan data biner.
+
+Dengan text=True, Anda memberi tahu Python bahwa Anda, pada kenyataannya, mengharapkan kembali data tekstual dalam penyandian default sistem, dan bahwa itu harus didekodekan menjadi string Python (Unicode) dengan kemampuan terbaik Python (biasanya UTF-8 pada yang sedang hingga sistem tanggal, kecuali mungkin Windows?)
+
+Jika bukan itu yang Anda minta kembali, Python hanya akan memberi Anda bytesstring di dalam stdoutdan stderrstring. Mungkin di beberapa kemudian mengarahkan Anda lakukan tahu bahwa mereka string teks setelah semua, dan kau tahu pengkodean mereka. Kemudian, Anda dapat memecahkan kodenya.
+
+normal = subprocess.run([external, arg],
+    stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+    check=True,
+    text=True)
+print(normal.stdout)
+
+convoluted = subprocess.run([external, arg],
+    stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+    check=True)
+# You have to know (or guess) the encoding
+print(convoluted.stdout.decode('utf-8'))
+Python 3.7 memperkenalkan alias yang lebih pendek dan lebih deskriptif dan dapat dimengerti textuntuk argumen kata kunci yang sebelumnya agak menyesatkan disebut universal_newlines.
+
+Memahami shell=Truevsshell=False
+Dengan shell=TrueAnda memberikan satu string ke shell Anda, dan shell mengambilnya dari sana.
+
+Dengan shell=FalseAnda memberikan daftar argumen ke OS, melewati shell.
+
+Ketika Anda tidak memiliki shell, Anda menyimpan proses dan menyingkirkan sejumlah kompleksitas tersembunyi yang cukup besar, yang mungkin atau mungkin tidak menyimpan bug atau bahkan masalah keamanan.
+
+Di sisi lain, ketika Anda tidak memiliki shell, Anda tidak memiliki pengalihan, ekspansi wildcard, kontrol pekerjaan, dan sejumlah besar fitur shell lainnya.
+
+Kesalahan umum adalah menggunakan shell=Truedan kemudian tetap memberikan Python daftar token, atau sebaliknya. Ini terjadi untuk bekerja dalam beberapa kasus, tetapi benar-benar tidak jelas dan dapat merusak dengan cara yang menarik.
+
+# XXX AVOID THIS BUG
+buggy = subprocess.run('dig +short stackoverflow.com')
+
+# XXX AVOID THIS BUG TOO
+broken = subprocess.run(['dig', '+short', 'stackoverflow.com'],
+    shell=True)
+
+# XXX DEFINITELY AVOID THIS
+pathological = subprocess.run(['dig +short stackoverflow.com'],
+    shell=True)
+
+correct = subprocess.run(['dig', '+short', 'stackoverflow.com'],
+    # Probably don't forget these, too
+    check=True, text=True)
+
+# XXX Probably better avoid shell=True
+# but this is nominally correct
+fixed_but_fugly = subprocess.run('dig +short stackoverflow.com',
+    shell=True,
+    # Probably don't forget these, too
+    check=True, text=True)
+Balasan umum "tetapi itu berhasil untuk saya" bukanlah sanggahan yang berguna kecuali Anda memahami dengan tepat dalam keadaan apa itu bisa berhenti bekerja.
+
+Contoh Pemfaktoran Ulang
+Sangat sering, fitur shell dapat diganti dengan kode Python asli. Awk atau sedskrip sederhana mungkin harus diterjemahkan ke Python saja.
+
+Untuk mengilustrasikan sebagian, berikut adalah contoh tipikal tetapi sedikit konyol yang melibatkan banyak fitur shell.
+
+cmd = '''while read -r x;
+   do ping -c 3 "$x" | grep 'round-trip min/avg/max'
+   done <hosts.txt'''
+
+# Trivial but horrible
+results = subprocess.run(
+    cmd, shell=True, universal_newlines=True, check=True)
+print(results.stdout)
+
+# Reimplement with shell=False
+with open('hosts.txt') as hosts:
+    for host in hosts:
+        host = host.rstrip('\n')  # drop newline
+        ping = subprocess.run(
+             ['ping', '-c', '3', host],
+             text=True,
+             stdout=subprocess.PIPE,
+             check=True)
+        for line in ping.stdout.split('\n'):
+             if 'round-trip min/avg/max' in line:
+                 print('{}: {}'.format(host, line))
+Beberapa hal yang perlu diperhatikan di sini:
+
+Dengan shell=FalseAnda tidak perlu kutipan yang dibutuhkan Shell di sekitar string. Menempatkan tanda kutip mungkin merupakan kesalahan.
+Seringkali masuk akal untuk menjalankan kode sesedikit mungkin dalam subproses. Ini memberi Anda kontrol lebih besar atas eksekusi dari dalam kode Python Anda.
+Karena itu, pipa shell yang kompleks membosankan dan terkadang menantang untuk diimplementasikan kembali dengan Python.
+Kode refactored juga menggambarkan seberapa banyak shell benar-benar bekerja untuk Anda dengan sintaks yang sangat singkat -- baik atau buruk. Python mengatakan eksplisit adalah lebih baik daripada implisit tetapi kode python adalah agak verbose dan bisa dibilang terlihat lebih kompleks daripada ini benar-benar. Di sisi lain, ia menawarkan sejumlah poin di mana Anda dapat mengambil kendali di tengah-tengah sesuatu yang lain, seperti yang dicontohkan secara sepele oleh peningkatan bahwa kita dapat dengan mudah memasukkan nama host bersama dengan output perintah shell. (Ini sama sekali tidak menantang untuk dilakukan di shell, tetapi dengan mengorbankan pengalihan lain dan mungkin proses lain.)
+
+Konstruksi Shell Umum
+Untuk kelengkapan, berikut adalah penjelasan singkat dari beberapa fitur shell ini, dan beberapa catatan tentang bagaimana mereka mungkin dapat diganti dengan fasilitas Python asli.
+
+Globbing alias ekspansi wildcard dapat diganti dengan glob.glob()atau sangat sering dengan perbandingan string Python sederhana seperti for file in os.listdir('.'): if not file.endswith('.png'): continue. Bash memiliki berbagai fasilitas ekspansi lain seperti .{png,jpg}ekspansi brace dan {1..100}juga ekspansi tilde ( ~memperluas ke direktori home Anda, dan lebih umum ~accountke direktori home pengguna lain)
+Variabel shell seperti $SHELLatau $my_exported_varterkadang bisa diganti dengan variabel Python. Variabel shell yang diekspor tersedia sebagai misalnya os.environ['SHELL'](artinya exportadalah membuat variabel tersedia untuk subproses -- variabel yang tidak tersedia untuk subproses jelas tidak akan tersedia untuk Python yang berjalan sebagai subproses dari shell, atau sebaliknya. Kata env=kunci argumen ke subprocessmetode memungkinkan Anda untuk mendefinisikan lingkungan subproses sebagai kamus, jadi itulah salah satu cara untuk membuat variabel Python terlihat oleh subproses). Dengan shell=FalseAnda perlu memahami cara menghapus tanda kutip; misalnya, cd "$HOME"sama dengan os.chdir(os.environ['HOME'])tanpa tanda kutip di sekitar nama direktori. (Sangat seringcdtidak berguna atau perlu, dan banyak pemula menghilangkan tanda kutip ganda di sekitar variabel dan lolos begitu saja sampai suatu hari ... )
+Pengalihan memungkinkan Anda membaca dari file sebagai input standar Anda, dan menulis output standar Anda ke file. grep 'foo' <inputfile >outputfileterbuka outputfileuntuk menulis dan inputfilemembaca, dan meneruskan isinya sebagai input standar ke grep, yang output standarnya kemudian masuk outputfile. Ini umumnya tidak sulit untuk diganti dengan kode Python asli.
+Pipeline adalah bentuk pengalihan. echo foo | nlmenjalankan dua subproses, di mana output standar echoadalah input standar nl(pada level OS, dalam sistem mirip Unix, ini adalah pegangan file tunggal). Jika Anda tidak dapat mengganti satu atau kedua ujung pipa dengan kode Python asli, mungkin pikirkan untuk menggunakan shell, terutama jika pipa memiliki lebih dari dua atau tiga proses (meskipun lihat pipesmodul di perpustakaan standar Python atau angka pesaing pihak ketiga yang lebih modern dan serbaguna).
+Kontrol pekerjaan memungkinkan Anda menginterupsi pekerjaan, menjalankannya di latar belakang, mengembalikannya ke latar depan, dll. Sinyal dasar Unix untuk menghentikan dan melanjutkan proses tentu saja tersedia dari Python juga. Tetapi pekerjaan adalah abstraksi tingkat tinggi di shell yang melibatkan grup proses dll yang harus Anda pahami jika Anda ingin melakukan sesuatu seperti ini dari Python.
+Mengutip di Shell berpotensi membingungkan sampai Anda memahami bahwa semuanya pada dasarnya adalah sebuah string. Jadi ls -l /setara dengan 'ls' '-l' '/'tetapi kutipan di sekitar literal sepenuhnya opsional. String yang tidak dikutip yang berisi metakarakter shell menjalani ekspansi parameter, tokenisasi spasi putih, dan ekspansi wildcard; tanda kutip ganda mencegah tokenisasi spasi putih dan ekspansi wildcard tetapi memungkinkan ekspansi parameter (substitusi variabel, substitusi perintah, dan pemrosesan garis miring terbalik). Ini sederhana dalam teori tetapi bisa membingungkan, terutama ketika ada beberapa lapisan interpretasi (perintah shell jarak jauh, misalnya).
+Pahami perbedaan antara shdan Bash
+subprocessmenjalankan perintah shell Anda dengan /bin/shkecuali Anda secara khusus meminta sebaliknya (kecuali tentu saja pada Windows, di mana ia menggunakan nilai COMSPECvariabel). Ini berarti bahwa berbagai fitur khusus Bash seperti array, [[dll tidak tersedia.
+
+Jika Anda perlu menggunakan sintaks Bash-only, Anda dapat meneruskan jalur ke shell sebagai executable='/bin/bash'(di mana tentu saja jika Bash Anda diinstal di tempat lain, Anda perlu menyesuaikan jalurnya).
+
+subprocess.run('''
+    # This for loop syntax is Bash only
+    for((i=1;i<=$#;i++)); do
+        # Arrays are Bash-only
+        array[i]+=123
+    done''',
+    shell=True, check=True,
+    executable='/bin/bash')
+A subprocessterpisah dari induknya, dan tidak dapat mengubahnya
+Kesalahan yang agak umum adalah melakukan sesuatu seperti
+
+subprocess.run('cd /tmp', shell=True)
+subprocess.run('pwd', shell=True)  # Oops, doesn't print /tmp
+Hal yang sama akan terjadi jika subproses pertama mencoba mengatur variabel lingkungan, yang tentu saja akan hilang ketika Anda menjalankan subproses lain, dll.
+
+Proses anak berjalan sepenuhnya terpisah dari Python, dan ketika selesai, Python tidak tahu apa yang dilakukannya (terlepas dari indikator samar yang dapat disimpulkan dari status keluar dan keluaran dari proses anak). Seorang anak umumnya tidak dapat mengubah lingkungan orang tuanya; itu tidak dapat mengatur variabel, mengubah direktori kerja, atau, dengan banyak kata, berkomunikasi dengan induknya tanpa kerja sama dari induknya.
+
+Perbaikan langsung dalam kasus khusus ini adalah menjalankan kedua perintah dalam satu subproses;
+
+subprocess.run('cd /tmp; pwd', shell=True)
+meskipun jelas kasus penggunaan khusus ini tidak terlalu berguna; sebagai gantinya, gunakan cwdargumen kata kunci, atau os.chdir()sebelum menjalankan subproses. Demikian pula, untuk menyetel variabel, Anda dapat memanipulasi lingkungan proses saat ini (dan juga turunannya) melalui
+
+os.environ['foo'] = 'bar'
+atau meneruskan pengaturan lingkungan ke proses anak dengan
+
+subprocess.run('echo "$foo"', shell=True, env={'foo': 'bar'})
+(belum lagi refactoring yang jelas subprocess.run(['echo', 'bar']); tetapi echomerupakan contoh buruk dari sesuatu untuk dijalankan dalam subproses di tempat pertama, tentu saja).
+
+Jangan jalankan Python dari Python
+Ini adalah saran yang sedikit meragukan; pasti ada situasi di mana masuk akal atau bahkan merupakan persyaratan mutlak untuk menjalankan juru bahasa Python sebagai subproses dari skrip Python. Tetapi sangat sering, pendekatan yang benar hanyalah dengan importmodul Python lain ke dalam skrip panggilan Anda dan memanggil fungsinya secara langsung.
+
+Jika skrip Python lainnya berada di bawah kendali Anda, dan itu bukan modul, pertimbangkan untuk mengubahnya menjadi satu . (Jawaban ini sudah terlalu panjang jadi saya tidak akan membahas detailnya di sini.)
+
+Jika Anda membutuhkan paralelisme, Anda dapat menjalankan fungsi Python dalam subproses dengan multiprocessingmodul. Ada juga threadingyang menjalankan banyak tugas dalam satu proses (yang lebih ringan dan memberi Anda lebih banyak kontrol, tetapi juga lebih dibatasi karena utas dalam suatu proses digabungkan secara erat, dan terikat pada satu GIL .)
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 24 Mei pukul 6:32
+dijawab 21 Agustus '18 pukul 14:05
+
+tiga kali lipat
+140k 24 24 lencana emas207 207 lencana perak269269 ​​lencana perunggu
+5
+Untuk penjelasan yang lebih rinci tentang bagaimana Anda dapat menghindari memanggil Python sebagai subproses, lihat jawaban ini pada pertanyaan yang mirip secara tangensial. -  tiga kali lipat 8 Sep '18 pukul 10:06
+6
+itu mengejutkan saya bahwa saya harus memposting jawaban baru untuk pertanyaan mendasar seperti itu untuk menunjukkan cara menjalankan perintah dari pertanyaan secara idiomatis. Jawaban Anda panjang tetapi saya tidak melihat contoh seperti itu. Tidak terkait: hindari budidaya kargo. Jika check_call() berfungsi dalam kasus Anda, gunakan itu. Saya harus memperbaiki kode yang digunakan run()secara membabi buta. Hilang check=Truemenyebabkan bug yang akan dihindari jika check_call digunakan — "check" ada dalam namanya, Anda tidak dapat menghilangkannya — itu adalah default yang benar: jangan abaikan kesalahan secara diam-diam. Saya tidak membaca lebih lanjut. -  jfs 1 Nov '18 pukul 19:47
+2
+@jfs Terima kasih atas umpan baliknya, saya sebenarnya berencana untuk menambahkan bagian tentang Bash vs shtetapi Anda mengalahkan saya. Saya mencoba mengeja secara spesifik dengan cukup detail untuk membantu pemula yang kesulitannya tidak jelas sehingga agak bertele-tele. Anda harus cukup cukup sebaliknya; +1 –  tiga kali lipat 2 November '18 pukul 5:13
+1
+Apakah stderr/stdout = subprocess.PIPEmemiliki overhead kinerja yang lebih tinggi daripada pengaturan default? -  stringer Apr 5 '19 jam 3:02
+3
+@Stringers Saya belum menguji, tetapi saya tidak mengerti mengapa harus. Jika Anda menghubungkan pipa-pipa itu ke sesuatu yang melakukan beberapa pemrosesan, maka tentu saja pemrosesan itu perlu diperhitungkan; tapi itu tidak terjadi di dalam pipa itu sendiri. Standarnya adalah tidak menangkap stdout atau stderr sama sekali, yaitu apa pun yang dicetak di luar visibilitas dan kontrol Python, sama seperti dengan os.system(). -  tiga kali lipat Apr 5 '19 jam 3:52
+Tampilkan 1 komentar lagi
+
+46
+
+Sebut saja dengan subproses
+
+import subprocess
+subprocess.Popen("cwm --rdf test.rdf --ntriples > test.nt")
+Kesalahan yang Anda dapatkan sepertinya karena tidak ada modul swap di server, Anda harus menginstal swap di server kemudian menjalankan skrip lagi
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+dijawab 23 Nov '10 jam 12:43
+
+Jakob Bowyer
+30.2k 6 6 lencana emas69 69 lencana perak8888 lencana perunggu
+3
+The swapModul jelas ada, karena menjalankan perintah dari karya-karya shell. -  Sven Marnach 23 Nov '10 pukul 12:44 
+2
+Bukan di server, saat dijalankan di server ada error import. -  Jakob Bowyer 23 Nov '10 pukul 12:45
+@mkn: "Lalu saya baru saja menyalin output itu dan melakukan salin tempel ke terminal dan tekan enter dan berfungsi ..." -- Apakah Anda mencoba ini di server atau di mesin Anda? -  Sven Marnach 23 Nov '10 pukul 12:48
+Apakah Anda menjalankan ini di komputer yang berdiri sendiri dengan baik tetapi tidak berfungsi saat Anda menjalankannya di server Anda? Atau apakah Anda dapat menjalankannya di terminal server tetapi bukan server itu sendiri –  Jakob Bowyer 23 Nov '10 pukul 13:15
+1
+itu salah Jika Anda tidak menggunakan shell=Truemaka Anda harus menggunakan daftar untuk menyampaikan beberapa argumen yaitu, gunakan ['a', 'b', 'c']alih-alih 'a b c'. Meskipun pemisahan naif tidak akan berfungsi karena > file(pengalihan shell) dalam perintah. Lebih detail -  jfs 31 Okt '18 pukul 18:50 
+Tampilkan 2 komentar lainnya

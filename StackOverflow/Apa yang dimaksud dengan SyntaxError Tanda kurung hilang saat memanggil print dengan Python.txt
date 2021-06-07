@@ -1,0 +1,153 @@
+Apa yang dimaksud dengan "SyntaxError: Tanda kurung hilang saat memanggil 'print'" dengan Python?
+Ditanyakan 6 tahun, 9 bulan yang lalu
+Aktif 1 bulan yang lalu
+Dilihat 818rb kali
+
+408
+
+
+72
+Ketika saya mencoba menggunakan printpernyataan dengan Python, itu memberi saya kesalahan ini:
+
+>>> print "Hello, World!"
+  File "<stdin>", line 1
+    print "Hello, World!"
+                        ^
+SyntaxError: Missing parentheses in call to 'print'
+Apa artinya?
+
+ular piton
+python-3.x
+Bagikan
+Perbaiki pertanyaan ini
+Mengikuti
+diedit 5 Juni '18 pukul 16:27
+
+Peter Mortensen
+28.3k 21 21 lencana emas95 95 lencana perak123123 lencana perunggu
+ditanyakan 22 Agustus '14 jam 10:58
+
+ncoghlan
+35.5k 8 8 lencana emas67 67 lencana perak7878 lencana perunggu
+Tambahkan komentar
+9 Jawaban
+
+622
+
+Pesan kesalahan ini berarti Anda mencoba menggunakan Python 3 untuk mengikuti contoh atau menjalankan program yang menggunakan pernyataan Python 2 print:
+
+
+print "Hello, World!"
+
+Pernyataan di atas tidak berfungsi di Python 3. Dalam Python 3 Anda perlu menambahkan tanda kurung di sekitar nilai yang akan dicetak:
+
+print("Hello, World!")
+“SyntaxError: Missing parentheses in call to 'print'” adalah pesan kesalahan baru yang ditambahkan di Python 3.4.2 terutama untuk membantu pengguna yang mencoba mengikuti tutorial Python 2 saat menjalankan Python 3.
+
+Di Python 3, nilai pencetakan berubah dari pernyataan yang berbeda menjadi panggilan fungsi biasa, jadi sekarang perlu tanda kurung:
+
+>>> print("Hello, World!")
+Hello, World!
+Di versi Python 3 sebelumnya, interpreter hanya melaporkan kesalahan sintaks umum, tanpa memberikan petunjuk berguna tentang apa yang mungkin salah:
+
+>>> print "Hello, World!"
+  File "<stdin>", line 1
+    print "Hello, World!"
+                        ^
+SyntaxError: invalid syntax
+Adapun mengapa print menjadi fungsi biasa di Python 3, itu tidak berhubungan dengan bentuk dasar pernyataan, melainkan bagaimana Anda melakukan hal-hal yang lebih rumit seperti mencetak banyak item ke stderr dengan spasi tambahan daripada mengakhiri baris.
+
+Dalam Python 2:
+
+>>> import sys
+>>> print >> sys.stderr, 1, 2, 3,; print >> sys.stderr, 4, 5, 6
+1 2 3 4 5 6
+Dalam Python 3:
+
+>>> import sys
+>>> print(1, 2, 3, file=sys.stderr, end=" "); print(4, 5, 6, file=sys.stderr)
+1 2 3 4 5 6
+Dimulai dengan rilis Python 3.6.3 pada September 2017, beberapa pesan kesalahan yang terkait dengan sintaks cetak Python 2.x telah diperbarui untuk merekomendasikan rekan-rekan Python 3.x mereka:
+
+>>> print "Hello!"
+  File "<stdin>", line 1
+    print "Hello!"
+                 ^
+SyntaxError: Missing parentheses in call to 'print'. Did you mean print("Hello!")?
+Karena kasus "Kurung yang hilang dalam panggilan untuk mencetak" adalah kesalahan sintaks waktu kompilasi dan karenanya memiliki akses ke kode sumber mentah, itu dapat menyertakan teks lengkap di sisa baris dalam penggantian yang disarankan. Namun, saat ini tidak mencoba mencari tanda kutip yang sesuai untuk ditempatkan di sekitar ekspresi itu (itu bukan tidak mungkin, hanya cukup rumit sehingga belum dilakukan).
+
+The TypeErrordibangkitkan untuk operator shift kanan juga telah disesuaikan:
+
+>>> print >> sys.stderr
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+TypeError: unsupported operand type(s) for >>: 'builtin_function_or_method' and '_io.TextIOWrapper'. Did you mean "print(<message>, file=<output_stream>)"?
+Karena kesalahan ini muncul saat kode berjalan, daripada saat dikompilasi, kesalahan ini tidak memiliki akses ke kode sumber mentah, dan karenanya menggunakan meta-variabel ( <message>dan <output_stream>) dalam ekspresi pengganti yang disarankan alih-alih apa pun yang sebenarnya diketik pengguna . Tidak seperti kasus kesalahan sintaks, sangat mudah untuk menempatkan tanda kutip di sekitar ekspresi Python dalam pesan kesalahan pergeseran kanan kustom.
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 5 Juni '18 pukul 16:31
+wiki komunitas
+8 putaran, 4 pengguna 75%
+ncoglan
+3
+Terima kasih saya kepada @antti-haapala untuk menambahkan ringkasan di atas yang langsung menjawab pertanyaan sebelum melanjutkan ke penjelasan yang lebih panjang tentang asal-usul pesan kesalahan :) –  ncoghlan 11 Mei '15 jam 4:33
+Saya juga mengganti jawaban ke wiki komunitas, karena terus mengumpulkan perwakilan SO lebih lanjut untuk ini tidak terasa benar bagi saya (lihat bugs.python.org/issue21669 untuk latar belakang tentang bagaimana pesan kesalahan dan pertanyaan SO ini berevolusi bersama) –  ncoghlan 13 Mei '15 pukul 2:13 
+4
+Halo! Saya pikir alat ini dapat membantu seseorang docs.python.org/2/library/2to3.html –  Jhonatas Kleinkauff 7 Juni '16 pukul 22:58
+1
+Tambahkan baris dari depan print_function impor di 2,7 file Anda untuk menambahkan baru python 3 print () baris kode Anda. Oleh karena itu kode menjadi kompatibel dengan 2.7+ dan 3.0+ –  Program Kontrol Master 24 Okt '16 pukul 11:20
+Bagaimana Anda memaksa sistem untuk menggunakan Python 2.7 vs 3? Mungkin ini adalah tempat yang bagus untuk itu. -  Praksitele 19 Nov '17 pukul 6:56
+Tampilkan 2 komentar lainnya
+
+29
+
+Sayangnya, komik xkcd lama tidak sepenuhnya up to date lagi.
+
+https://imgs.xkcd.com/comics/python.png
+
+Sejak Python 3.0 Anda harus menulis:
+
+print("Hello, World!")
+Dan seseorang masih harus menulis antigravityperpustakaan itu :(
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 5 Juni '18 pukul 16:38
+
+Peter Mortensen
+28.3k 21 21 lencana emas95 95 lencana perak123123 lencana perunggu
+dijawab 24 Des '17 pukul 13:56
+
+Kristen
+22k 33 33 lencana emas117 117 lencana perak195195 lencana perunggu
+8
+antigravitasi ada gan... udah coba diimport? ;) –  tyrion 18 Februari '18 pukul 9:58
+Telur Paskah Anti Gravitasi –  jpaugh 7 Mei '18 pukul 21:56
+Tambahkan komentar
+
+22
+
+Ada perubahan sintaks dari Python 2 ke Python 3. Di Python 2,
+
+print "Hello, World!" 
+akan berfungsi tetapi dalam Python 3, gunakan tanda kurung sebagai
+
+print("Hello, World!")
+Ini adalah sintaks yang setara dengan Scala dan dekat dengan Java.
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 13 Jan '19 pada 15:05
+
+Georgia
+6.368 7 7 lencana emas46 46 lencana perak5858 lencana perunggu
+dijawab 31 Juli '17 pukul 6:46
+
+Sagar balai
+419 5 5 lencana perak1313 lencana perunggu
+Hanya mereka yang ingin menghancurkan bahasa yang akan mengubah sintaks sejauh itu. Apa yang wajar untuk dilakukan adalah mempertahankan kedua sintaks sebagai valid. -  Dedak 9 Okt '20 pukul 17:56
+Tambahkan komentar

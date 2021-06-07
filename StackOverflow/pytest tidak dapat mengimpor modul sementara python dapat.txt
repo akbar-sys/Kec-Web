@@ -1,0 +1,164 @@
+pytest tidak dapat mengimpor modul sementara python dapat
+Ditanyakan 4 tahun, 4 bulan yang lalu
+Aktif 18 hari yang lalu
+Dilihat 141k kali
+
+169
+
+
+33
+Saya sedang mengerjakan sebuah paket dengan Python. Saya menggunakan virtualenv. Saya mengatur jalur ke akar modul di jalur .pth di virtualenv saya, sehingga saya dapat mengimpor modul paket sambil mengembangkan kode dan melakukan pengujian (Pertanyaan 1: apakah ini cara yang baik untuk dilakukan?). Ini berfungsi dengan baik (ini adalah contoh, ini adalah perilaku yang saya inginkan):
+
+(VEnvTestRc) zz@zz:~/Desktop/GitFolders/rc$ python
+Python 2.7.12 (default, Jul  1 2016, 15:12:24) 
+[GCC 5.4.0 20160609] on linux2
+Type "help", "copyright", "credits" or "license" for more information.
+>>> from rc import ns
+>>> exit()
+(VEnvTestRc) zz@zz:~/Desktop/GitFolders/rc$ python tests/test_ns.py 
+issued command: echo hello
+command output: hello
+Namun, jika saya mencoba menggunakan PyTest, saya mendapatkan beberapa pesan kesalahan impor:
+
+(VEnvTestRc) zz@zz:~/Desktop/GitFolders/rc$ pytest
+=========================================== test session starts ============================================
+platform linux2 -- Python 2.7.12, pytest-3.0.5, py-1.4.31, pluggy-0.4.0
+rootdir: /home/zz/Desktop/GitFolders/rc, inifile: 
+collected 0 items / 1 errors 
+
+================================================== ERRORS ==================================================
+________________________________ ERROR collecting tests/test_ns.py ________________________________
+ImportError while importing test module '/home/zz/Desktop/GitFolders/rc/tests/test_ns.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+tests/test_ns.py:2: in <module>
+    from rc import ns
+E   ImportError: cannot import name ns
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Interrupted: 1 errors during collection !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+========================================= 1 error in 0.09 seconds ==========================================
+(VEnvTestRc) zz@zz:~/Desktop/GitFolders/rc$ which pytest
+/home/zz/Desktop/VirtualEnvs/VEnvTestRc/bin/pytest
+Saya agak bingung, sepertinya ini menunjukkan kesalahan impor, tetapi Python tidak apa-apa jadi mengapa ada masalah khusus dengan PyTest? Adakah saran untuk alasan / obatnya (Pertanyaan 2)? Saya mencari di Google dan menumpuk kesalahan 'ImportError: tidak dapat mengimpor' untuk PyTest, tetapi hit yang saya dapatkan terkait dengan jalur python yang hilang dan perbaikan untuk ini, yang sepertinya bukan masalah di sini. Ada saran?
+
+ular piton
+impor
+pytest
+Bagikan
+Perbaiki pertanyaan ini
+Mengikuti
+diedit 27 Februari '17 pukul 12:13
+tanya 19 Jan '17 jam 17:51
+
+Zorglub29
+4.291 4 4 lencana emas16 16 lencana perak2828 lencana perunggu
+Tambahkan komentar
+32 Jawaban
+1
+2
+Lanjut
+
+155
+
+Menemukan jawabannya:
+
+JANGAN letakkan __init__.pyfile di folder yang berisi TESTS jika Anda berencana menggunakan pytest. Saya punya satu file seperti itu, menghapusnya memecahkan masalah.
+
+Ini sebenarnya terkubur dalam komentar untuk jawaban kedua masalah PATH dengan pytest 'ImportError: Tidak ada modul bernama YadaYadaYada' jadi saya tidak melihatnya, semoga mendapat lebih banyak visibilitas di sini.
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 23 Mei '17 pukul 11:46
+
+komunitas ♦
+1 11 lencana perak
+dijawab 19 Jan '17 pukul 21:30
+
+Zorglub29
+4.291 4 4 lencana emas16 16 lencana perak2828 lencana perunggu
+81
+Lucu. Saya memiliki masalah yang sama dan saya harus menambahkan init .py ke folder tes saya. -  Ev. 12 Juli '17 pukul 9:02
+9
+Ya, ini bukan solusi umum (meskipun itu dalam kasus Anda), untuk memahami mengapa ini harus dibaca: docs.pytest.org/en/latest/goodpractices.html#test-package-name –  juan 23 Mei '19 pukul 17:59
+7
+Informasi ini SALAH dan menyesatkan! Setelah menambahkan init .py ke dalam folder uji semuanya bekerja dengan baik –  Leonardo Ostan 17 April '20 pukul 14:05
+2
+@LeonardoOstan mungkin salah untuk Anda, tetapi itu tidak berarti informasi ini salah secara umum. Dalam kasus saya itu memecahkan masalah. -  putus asa 2 Juni '20 pukul 13:19
+1
+Ini salah sekarang. Tes saya terletak di project_root/tests/dan kode sumber di project_root/myapp/, saya menempatkan file init project_root/tests/__init__.pyuntuk dapat mengimpor modul pembantu project_root/tests/helper.pydi project_root/tests/test_foo.py. Di dalam project_root/saya dapat menjalankan tes dengan python -m pytest -vv tests/. -  hldev 22 Nov '20 pukul 19:43 
+Tambahkan komentar
+
+127
+
+Saya tidak bisa mengatakan saya mengerti mengapa ini berhasil, tetapi saya memiliki masalah yang sama dan tes berfungsi dengan baik jika saya menjalankan python -m pytest.
+
+Saya menggunakan virtualenv, dengan pytest juga tersedia secara global:
+
+(proj)tom@neon ~/dev/proj$ type -a python
+python is /home/tom/.virtualenvs/proj/bin/python
+python is /usr/bin/python
+
+(proj)tom@neon ~/dev/proj$ python -V
+Python 3.5.2
+
+(proj)tom@neon ~/dev/proj$ type -a pytest
+pytest is /home/tom/.virtualenvs/proj/bin/pytest
+pytest is /usr/bin/pytest
+
+(proj)tom@neon ~/dev/proj$ pytest --version
+This is pytest version 3.5.0, imported from /home/tom/.virtualenvs/proj/lib/python3.5/site-packages/pytest.py
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+dijawab 26 Mar '18 jam 10:01
+
+tom
+36.8k 31 31 lencana emas90 90 lencana perak9898 lencana perunggu
+1
+Juga melakukan pekerjaan untuk saya, masalahnya,, itu dijalankan oleh versi python yang ditentukan alih-alih v.env Anda. -  Nebulosar 24 Apr '18 pukul 6:19
+21
+salah satu alasannya mungkin karena python -m pytest [...]"juga akan menambahkan direktori saat ini ke sys.path." -  minus 5 Desember '18 pukul 13:45
+1
+Memiliki hal yang sama di Windows 10, dan menjalankan python -m pytest menyelesaikannya -  Duccio 12 Agustus '19 pukul 17:35
+1
+Ini juga berfungsi di dalam lingkungan virtual saya yang harus saya jalankanpython3 -m pytest -  Rishi Raj 4 Juni '20 pada 3:17
+1
+Berdasarkan komentar oleh @minusf yang saya gunakan PYTHONPATH=.:./src pytestsebagai target make. -  jan groth 26 Juni '20 pada 4:49
+Tampilkan 2 komentar lainnya
+
+40
+
+Saya baru saja menyelesaikan ini dengan menghapus __init__.py di root proyek saya:
+
+.
+├── __init__.py <--- removed
+├── models
+│   ├── __init__.py
+│   ├── address.py
+│   ├── appointment.py
+│   └── client.py
+├── requirements.txt
+├── setup.cfg
+├── tests
+│   ├── __init__.py
+│   ├── models
+│   │   ├── __init__.py
+│   │   ├── appointment_test.py
+│   │   └── client_test.py
+│   └── other_test.py
+└── script.py
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+dijawab 17 Mei '18 pukul 20:57
+
+Aaron McMillin
+1,881 21 21 lencana perak3737 lencana perunggu
+6
+Jawaban yang diterima __init__.py file in a folder containing TESTStidak menyelesaikan masalah saya. Yang ini berhasil. Saya kira itu karena hierarki file. -  smido 8 '19 Mei pukul 20:51
+Saya telah menghapus __init__.pyfile. Saya masih menghadapi masalah. Menambahkan file conftest.py ke direktori root berfungsi untuk saya. -  Vijay Sali Jan 29 '20 di 8:28 
+Saya berharap conftest.py berada di /tests bukan root –  Aaron McMillin 29 Jan '20 pada 15:58
+Mendapatkan file conftest.py ke direktori root juga memperbaikinya untuk saya. Tidak memiliki file init .py di direktori tes –  Memperbarui 21 Apr '20 pukul 14:34 
+2
+Solusi ini bekerja untuk saya tetapi apakah ada yang tahu ini akan menyebabkan kesalahan impor? -  Aldo Okware 8 Juni '20 pukul 12:26
+Tampilkan 1 komentar lagi

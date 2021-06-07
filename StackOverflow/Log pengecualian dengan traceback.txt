@@ -1,0 +1,213 @@
+Log pengecualian dengan traceback
+Ditanyakan 11 tahun, 8 bulan yang lalu
+Aktif 8 bulan yang lalu
+Dilihat 151k kali
+
+175
+
+
+54
+Bagaimana saya bisa mencatat kesalahan Python saya?
+
+try:
+    do_something()
+except:
+    # How can I log my exception here, complete with its traceback?
+ular piton
+pengecualian
+masuk
+penanganan kesalahan
+Bagikan
+Perbaiki pertanyaan ini
+Mengikuti
+diedit 14 Apr '16 pada 22:01
+
+Mark Amery
+111k 58 58 lencana emas354 354 lencana perak403403 lencana perunggu
+tanya 2 Okt '09 jam 9:07
+
+WAKTU
+218k 324 324 lencana emas727 727 lencana perak10381038 lencana perunggu
+Tambahkan komentar
+11 Jawaban
+
+244
+
+Gunakan logging.exceptiondari dalam except:penangan/blok untuk mencatat pengecualian saat ini bersama dengan informasi jejak, yang diawali dengan pesan.
+
+import logging
+LOG_FILENAME = '/tmp/logging_example.out'
+logging.basicConfig(filename=LOG_FILENAME, level=logging.DEBUG)
+
+logging.debug('This message should go to the log file')
+
+try:
+    run_my_stuff()
+except:
+    logging.exception('Got exception on main handler')
+    raise
+Sekarang melihat file log, /tmp/logging_example.out:
+
+DEBUG:root:This message should go to the log file
+ERROR:root:Got exception on main handler
+Traceback (most recent call last):
+  File "/tmp/teste.py", line 9, in <module>
+    run_my_stuff()
+NameError: name 'run_my_stuff' is not defined
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 27 Mei 20 jam 9:43
+
+HS Rathore
+1.114 1 1 lencana emas10 10 lencana perak1717 lencana perunggu
+dijawab 2 Okt '09 jam 10:24
+
+nosklo
+194k 54 54 lencana emas273 273 lencana perak281281 lencana perunggu
+1
+Melihat kode Django untuk ini, dan saya berasumsi jawabannya tidak, tetapi apakah ada cara untuk membatasi traceback ke sejumlah karakter atau kedalaman tertentu? Masalahnya, untuk traceback yang besar membutuhkan waktu yang cukup lama. -  Edward Luca 21 Mei '14 pukul 13:16 
+11
+Perhatikan bahwa jika Anda mendefinisikan logger dengan logger = logging.getLogger('yourlogger')Anda harus menulis logger.exception('...')agar ini berfungsi ... –  576i 5 Februari '17 pukul 12:43
+Bisakah kita mengubah ini sehingga pesan dicetak dengan INFO tingkat log? -  NM 31 Okt '17 jam 9:38
+Perhatikan bahwa untuk aplikasi eksternal tertentu, seperti wawasan Azure, trackback tidak disimpan dalam log. Kemudian perlu untuk meneruskannya secara eksplisit ke string pesan seperti yang ditunjukkan di bawah ini. -  Edgar H 16 Juli '20 pukul 7:55
+Saya selalu berpikir logging.exception(...)(atau logger.exception(...)jika dikonfigurasi) akan melakukannya. Tetapi saya menjadi agak bingung dengan metode ini exceptiondalam konteks penangan kait pengecualian: sepertinya tidak mencetak traceback dalam konteks ini. Mulai curiga kode panggilan Anda harus exceptdiblokir agar ini berfungsi. -  mike hewan pengerat 10 April pukul 17:49
+Tambahkan komentar
+
+167
+
+Gunakan exc_infoopsi mungkin lebih baik, tetap peringatan atau judul kesalahan:
+
+try:
+    # coode in here
+except Exception as e:
+    logging.error(e, exc_info=True)
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 15 Mar '19 pada 16:09
+
+sophros
+8.804 5 5 lencana emas30 30 lencana perak5757 lencana perunggu
+dijawab 10 April '15 jam 8:00
+
+flycee
+8.289 3 3 lencana emas16 16 lencana perak1414 lencana perunggu
+Saya tidak pernah ingat apa yang exc_info=disebut kwarg; Terima kasih! -  berto 31 Okt '17 jam 15:00
+4
+Ini identik dengan logging.exception, dengan pengecualian bahwa jenisnya dicatat secara berlebihan dua kali. Cukup gunakan logging.exception kecuali jika Anda menginginkan level selain kesalahan. -  Wyrmwood 17 November '17 pukul 16:11
+1
+@Wyrmwood itu tidak identik karena Anda harus memberikan pesan kelogging.exception –  Peter Wood 21 Apr '18 jam 7:30
+Menggunakan logging.error, satu dapat menghindari memberikan pesan canggung seperti ''atau ' 'untuk logging.exception. -  Nuklir03020704 16 April pukul 2:34
+Tambahkan komentar
+
+64
+
+Pekerjaan saya baru-baru ini menugaskan saya untuk mencatat semua traceback/pengecualian dari aplikasi kami. Saya mencoba banyak teknik yang telah diposting orang lain secara online seperti yang di atas tetapi memilih pendekatan yang berbeda. Mengganti traceback.print_exception.
+
+Saya memiliki tulisan di http://www.bbarrows.com/ Itu akan lebih mudah dibaca tetapi saya juga akan menempelkannya di sini.
+
+Ketika ditugaskan untuk mencatat semua pengecualian yang mungkin ditemui perangkat lunak kami di alam liar, saya mencoba sejumlah teknik berbeda untuk mencatat traceback pengecualian python kami. Pada awalnya saya berpikir bahwa hook pengecualian sistem python, sys.excepthook akan menjadi tempat yang tepat untuk memasukkan kode logging. Saya mencoba sesuatu yang mirip dengan:
+
+import traceback
+import StringIO
+import logging
+import os, sys
+
+def my_excepthook(excType, excValue, traceback, logger=logger):
+    logger.error("Logging an uncaught exception",
+                 exc_info=(excType, excValue, traceback))
+
+sys.excepthook = my_excepthook  
+Ini berfungsi untuk utas utama tetapi saya segera menemukan bahwa sys.excepthook saya tidak akan ada di semua utas baru yang proses saya mulai. Ini adalah masalah besar karena sebagian besar semuanya terjadi di utas dalam proyek ini.
+
+Setelah googling dan membaca banyak dokumentasi, informasi paling bermanfaat yang saya temukan adalah dari pelacak Masalah Python.
+
+Posting pertama di utas menunjukkan contoh kerja sys.excepthookNOT yang bertahan di seluruh utas (seperti yang ditunjukkan di bawah). Rupanya ini adalah perilaku yang diharapkan.
+
+import sys, threading
+
+def log_exception(*args):
+    print 'got exception %s' % (args,)
+sys.excepthook = log_exception
+
+def foo():
+    a = 1 / 0
+
+threading.Thread(target=foo).start()
+Pesan di utas Masalah Python ini benar-benar menghasilkan 2 peretasan yang disarankan. Baik subkelas Threaddan bungkus metode run di blok try kecuali kita sendiri untuk menangkap dan mencatat pengecualian atau patch monyet threading.Thread.rununtuk dijalankan di try Anda sendiri kecuali memblokir dan mencatat pengecualian.
+
+Metode pertama subclassing Threadmenurut saya kurang elegan dalam kode Anda karena Anda harus mengimpor dan menggunakan Threadkelas kustom Anda DI MANA Anda ingin memiliki utas logging. Ini akhirnya merepotkan karena saya harus mencari seluruh basis kode kami dan mengganti semua normal Threadsdengan kebiasaan ini Thread. Namun, jelas tentang apa Threadyang dilakukan dan akan lebih mudah bagi seseorang untuk mendiagnosis dan men-debug jika ada yang salah dengan kode logging kustom. Utas logging kustom mungkin terlihat seperti ini:
+
+class TracebackLoggingThread(threading.Thread):
+    def run(self):
+        try:
+            super(TracebackLoggingThread, self).run()
+        except (KeyboardInterrupt, SystemExit):
+            raise
+        except Exception, e:
+            logger = logging.getLogger('')
+            logger.exception("Logging an uncaught exception")
+Metode tambalan monyet kedua threading.Thread.runbagus karena saya bisa menjalankannya sekali setelahnya __main__dan memasukkan kode logging saya di semua pengecualian. Penambalan monyet dapat mengganggu untuk di-debug karena mengubah fungsionalitas yang diharapkan dari sesuatu. Tambalan yang disarankan dari pelacak Masalah Python adalah:
+
+def installThreadExcepthook():
+    """
+    Workaround for sys.excepthook thread bug
+    From
+http://spyced.blogspot.com/2007/06/workaround-for-sysexcepthook-bug.html
+
+(https://sourceforge.net/tracker/?func=detail&atid=105470&aid=1230540&group_id=5470).
+    Call once from __main__ before creating any threads.
+    If using psyco, call psyco.cannotcompile(threading.Thread.run)
+    since this replaces a new-style class method.
+    """
+    init_old = threading.Thread.__init__
+    def init(self, *args, **kwargs):
+        init_old(self, *args, **kwargs)
+        run_old = self.run
+        def run_with_except_hook(*args, **kw):
+            try:
+                run_old(*args, **kw)
+            except (KeyboardInterrupt, SystemExit):
+                raise
+            except:
+                sys.excepthook(*sys.exc_info())
+        self.run = run_with_except_hook
+    threading.Thread.__init__ = init
+Tidak sampai saya mulai menguji logging pengecualian saya, saya menyadari bahwa saya salah.
+
+Untuk menguji saya telah menempatkan
+
+raise Exception("Test")
+di suatu tempat dalam kode saya. Namun, membungkus metode yang disebut metode ini adalah percobaan kecuali blok yang mencetak traceback dan menelan pengecualian. Ini sangat membuat frustrasi karena saya melihat traceback yang dicetak ke STDOUT tetapi tidak dicatat. Saat itulah saya memutuskan bahwa metode yang lebih mudah untuk mencatat traceback adalah dengan menambal monyet metode yang digunakan semua kode python untuk mencetak traceback itu sendiri, traceback.print_exception. Saya berakhir dengan sesuatu yang mirip dengan yang berikut:
+
+def add_custom_print_exception():
+    old_print_exception = traceback.print_exception
+    def custom_print_exception(etype, value, tb, limit=None, file=None):
+        tb_output = StringIO.StringIO()
+        traceback.print_tb(tb, limit, tb_output)
+        logger = logging.getLogger('customLogger')
+        logger.error(tb_output.getvalue())
+        tb_output.close()
+        old_print_exception(etype, value, tb, limit=None, file=None)
+    traceback.print_exception = custom_print_exception
+Kode ini menulis traceback ke String Buffer dan mencatatnya ke logging ERROR. Saya memiliki penangan logging khusus yang mengatur logger 'customLogger' yang mengambil log level ERROR dan mengirimnya pulang untuk dianalisis.
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 13 Mei 15 jam 5:40
+
+Christian Aichinger
+6.288 2 2 lencana emas34 34 lencana perak5656 lencana perunggu
+dijawab 29 Mar '12 pukul 16:58
+
+Brad Barrows
+1.503 1 1 lencana emas12 12 lencana perak1212 lencana perunggu
+2
+Pendekatan yang cukup menarik. Satu pertanyaan - add_custom_print_exceptiontampaknya tidak ada di situs yang Anda tautkan, dan sebagai gantinya ada beberapa kode akhir yang sangat berbeda di sana. Mana yang menurut Anda lebih baik/lebih final dan mengapa? Terima kasih! -  luar biasa 31 Juli '14 pukul 05:53
+Terima kasih, jawaban yang bagus! -  101 Jan 12 '16 jam 3:45
+Ada salah ketik cut and paste. pada panggilan yang didelegasikan ke old_print_exception, batas dan file harus melewati batas dan file, bukan Tidak Ada -- old_print_exception(etype, value, tb, limit, file) –  Marvin 27 Mei '16 pukul 15:15 
+Untuk blok kode terakhir Anda, daripada menginisialisasi StringIO dan mencetak pengecualiannya, Anda bisa memanggil logger.error(traceback.format_tb())(atau format_exc() jika Anda juga menginginkan info pengecualian). -  James 6 Okt '18 pukul 21:01 
+Tautan bersama Anda tidak berfungsi sekarang. Saya juga tidak dapat mencatat traceback menggunakan metode di atas. Saya memanggil raise Exceptionkode, dan sebelum saya memanggil metode yang Anda tetapkan. Tidak ada yang terjadi. @Brad dan @Christian –  Vaibhav Grover 19 April pukul 6:07 
+Tambahkan komentar

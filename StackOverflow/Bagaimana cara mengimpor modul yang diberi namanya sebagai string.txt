@@ -1,0 +1,192 @@
+Bagaimana cara mengimpor modul yang diberi namanya sebagai string?
+Ditanyakan 12 tahun, 6 bulan yang lalu
+Aktif 29 hari yang lalu
+Dilihat 333rb kali
+
+583
+
+
+172
+Saya sedang menulis aplikasi Python yang menggunakan perintah sebagai argumen, misalnya:
+
+$ python myapp.py command1
+Saya ingin aplikasi dapat diperluas, yaitu dapat menambahkan modul baru yang mengimplementasikan perintah baru tanpa harus mengubah sumber aplikasi utama. Pohon itu terlihat seperti:
+
+myapp/
+    __init__.py
+    commands/
+        __init__.py
+        command1.py
+        command2.py
+    foo.py
+    bar.py
+Jadi saya ingin aplikasi menemukan modul perintah yang tersedia saat runtime dan menjalankan yang sesuai.
+
+Python mendefinisikan fungsi __import__ , yang mengambil string untuk nama modul:
+
+__import__(nama, global=Tidak ada, penduduk setempat=Tidak ada, dari daftar=(), level=0)
+
+Fungsi mengimpor nama modul, berpotensi menggunakan global dan lokal yang diberikan untuk menentukan cara menafsirkan nama dalam konteks paket. Fromlist memberikan nama objek atau submodul yang harus diimpor dari modul yang diberi nama.
+
+Sumber: https://docs.python.org/3/library/functions.html# import
+
+Jadi saat ini saya memiliki sesuatu seperti:
+
+command = sys.argv[1]
+try:
+    command_module = __import__("myapp.commands.%s" % command, fromlist=["myapp.commands"])
+except ImportError:
+    # Display error message
+
+command_module.run()
+Ini berfungsi dengan baik, saya hanya ingin tahu apakah mungkin ada cara yang lebih idiomatis untuk mencapai apa yang kami lakukan dengan kode ini.
+
+Perhatikan bahwa saya secara khusus tidak ingin menggunakan telur atau titik ekstensi. Ini bukan proyek sumber terbuka dan saya tidak berharap ada "plugin". Intinya adalah untuk menyederhanakan kode aplikasi utama dan menghilangkan kebutuhan untuk memodifikasinya setiap kali modul perintah baru ditambahkan.
+
+ular piton
+python-impor
+Bagikan
+Perbaiki pertanyaan ini
+Mengikuti
+diedit 14 Okt '19 pukul 19:47
+
+Kevin
+69.8k 12 12 lencana emas97 97 lencana perak139139 lencana perunggu
+tanya 19 Nov '08 jam 6:09
+
+Kamil Kisiel
+17.8k 10 10 lencana emas44 44 lencana perak5454 lencana perunggu
+Apa yang dilakukan fromlist=["myapp.commands"]? -  Pieter Muller 6 Juni '12 pukul 10:29
+1
+@PieterMüller : dalam shell python ketik ini: dir(__import__). Daftar dari harus berupa daftar nama yang akan ditiru "dari impor nama ...". -  mawimawi 9 Agustus '12 pukul 7:13
+3
+Impor modul dari variabel string –  badai_m2138 12 Agustus '15 pukul 18:28
+Pada 2019, Anda harus mencari importlib: https://stackoverflow.com/a/54956419/687896 –  Brandt 13 Maret '19 jam 9:42
+Jangan gunakan __import__ lihat Python Doc menggunakan importlib.import_module –  fcm 28 Juni '19 pukul 15:00
+Tambahkan komentar
+11 Jawaban
+
+346
+
+Dengan Python yang lebih tua dari 2.7/3.1, begitulah cara Anda melakukannya.
+
+Untuk versi yang lebih baru, lihat importlib.import_moduleuntuk Python 2 dan Python 3 .
+
+Anda dapat menggunakan execjika Anda ingin juga.
+
+Atau menggunakan __import__Anda dapat mengimpor daftar modul dengan melakukan ini:
+
+>>> moduleNames = ['sys', 'os', 're', 'unittest'] 
+>>> moduleNames
+['sys', 'os', 're', 'unittest']
+>>> modules = map(__import__, moduleNames)
+Dirobek langsung dari Dive Into Python .
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 4 Mei pukul 22:22
+
+JackKeown
+2.180 5 5 lencana emas24 24 lencana perak3030 lencana perunggu
+dijawab 19 Nov '08 jam 6:17
+
+Harley Holcombe
+155k 15 15 lencana emas67 67 lencana perak6262 lencana perunggu
+7
+apa bedanya dengan exec? -  pengguna1767754 17 Sep '14 jam 7:10
+8
+Satu masalah dengan solusi ini untuk OP adalah bahwa menjebak pengecualian untuk satu atau dua modul "perintah" yang buruk membuat seluruh aplikasi perintahnya gagal pada satu pengecualian. Secara pribadi saya akan mengulang setiap impor yang dibungkus secara individual dalam percobaan: mods=__import__()\nexcept ImportError sebagai error: report(error) untuk memungkinkan perintah lain terus bekerja sementara yang buruk diperbaiki. -  DevPlayer 8 Apr '15 pukul 13:38
+9
+Masalah lain dengan solusi ini, seperti yang ditunjukkan Denis Malinovsky di bawah, adalah bahwa python docs sendiri merekomendasikan untuk tidak menggunakan __import__. Dokumen 2.7: "Karena fungsi ini dimaksudkan untuk digunakan oleh juru bahasa Python dan bukan untuk penggunaan umum, lebih baik menggunakan importlib.import_module()..." Saat menggunakan python3, impmodul memecahkan masalah ini, seperti yang disebutkan monkut di bawah. -  LiavK 8 Juli '15 pukul 15:14 
+2
+@JohnWu mengapa Anda membutuhkan foreachketika Anda memiliki for element indan map()meskipun :) –  cowbert 19 Februari '18 pukul 22:59
+2
+Perhatikan bahwa peta TIDAK akan berfungsi di python 3, karena peta sekarang menggunakan evaluasi malas. -  sapa 13 Nov '18 pukul 21:52
+Tampilkan 3 komentar lainnya
+
+338
+
+Cara yang disarankan untuk Python 2.7 dan 3.1 dan yang lebih baru adalah dengan menggunakan importlibmodul:
+
+importlib.import_module(nama, paket=Tidak ada)
+
+Impor modul. Argumen nama menentukan modul apa yang akan diimpor secara absolut atau relatif (misalnya pkg.mod atau ..mod). Jika nama ditentukan dalam istilah relatif, maka argumen paket harus disetel ke nama paket yang akan bertindak sebagai jangkar untuk menyelesaikan nama paket (misalnya import_module('..mod', 'pkg.subpkg') akan mengimpor pkg.mod).
+
+misalnya
+
+my_module = importlib.import_module('os.path')
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 20 Juni '20 pada 9:12
+
+komunitas ♦
+1 11 lencana perak
+dijawab 22 Des '12 jam 7:33
+
+Denis Malinovsky
+5.034 1 1 lencana emas19 19 lencana perak1717 lencana perunggu
+3
+Direkomendasikan oleh sumber atau otoritas mana? -  michuelnik 8 Apr '15 pukul 13:21
+75
+Dokumentasi menyarankan agar tidak menggunakan __import__fungsi yang mendukung modul yang disebutkan di atas. -  Denis Malinovsky 9 April '15 pukul 12:42
+8
+Ini bekerja dengan baik untuk impor os.path; bagaimana from os.path import *? -  Nam G VU 12 Juni '17 pukul 6:31
+6
+Saya mendapatkan jawabannya di sini https://stackoverflow.com/a/44492879/248616 yaitu. meneleponglobals().update(my_module.__dict) -  Nam G VU 12 Juni '17 pukul 6:46 
+3
+@NamGVU, ini adalah metode berbahaya karena mencemari global Anda dan dapat menimpa pengenal apa pun dengan nama yang sama. Tautan yang Anda poskan memiliki versi kode ini yang lebih baik dan lebih baik. -  Denis Malinovsky 19 Juni '17 pukul 17:11 
+Tampilkan 2 komentar lainnya
+
+132
+
+Catatan: imp tidak digunakan lagi sejak Python 3.4 mendukung importlib
+
+Seperti yang disebutkan, modul imp memberi Anda fungsi pemuatan:
+
+imp.load_source(name, path)
+imp.load_compiled(name, path)
+Saya telah menggunakan ini sebelumnya untuk melakukan sesuatu yang serupa.
+
+Dalam kasus saya, saya mendefinisikan kelas tertentu dengan metode yang ditentukan yang diperlukan. Setelah saya memuat modul, saya akan memeriksa apakah kelas ada di modul, dan kemudian membuat turunan dari kelas itu, seperti ini:
+
+import imp
+import os
+
+def load_from_file(filepath):
+    class_inst = None
+    expected_class = 'MyClass'
+
+    mod_name,file_ext = os.path.splitext(os.path.split(filepath)[-1])
+
+    if file_ext.lower() == '.py':
+        py_mod = imp.load_source(mod_name, filepath)
+
+    elif file_ext.lower() == '.pyc':
+        py_mod = imp.load_compiled(mod_name, filepath)
+
+    if hasattr(py_mod, expected_class):
+        class_inst = getattr(py_mod, expected_class)()
+
+    return class_inst
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 26 Mei '18 pukul 11:16
+
+Brian Burns
+15k 5 5 lencana emas69 69 lencana perak5959 lencana perunggu
+dijawab 19 Nov '08 jam 8:21
+
+biksu
+36.4k 21 21 lencana emas109 109 lencana perak140140 lencana perunggu
+2
+Solusi yang baik dan sederhana. Saya telah menulis yang serupa: stamat.wordpress.com/dynamic-module-import-in-python Tapi Anda memiliki beberapa kekurangan: Bagaimana dengan pengecualian? IOError dan ImportError? Mengapa tidak memeriksa versi yang dikompilasi terlebih dahulu dan kemudian untuk versi sumber. Mengharapkan kelas mengurangi penggunaan kembali dalam kasus Anda. -  tamat 30 Juni '13 pukul 20:40
+3
+Di baris di mana Anda membuat Kelas Saya di modul target, Anda menambahkan referensi yang berlebihan ke nama kelas. Itu sudah disimpan expected_classsehingga Anda bisa melakukannya class_inst = getattr(py_mod,expected_name)(). -  Andrew 16 Okt '13 jam 7:11
+1
+Perhatikan bahwa jika ada file kompilasi byte yang cocok (dengan akhiran .pyc atau .pyo), file tersebut akan digunakan alih-alih menguraikan file sumber yang diberikan . https://docs.python.org/2/library/imp.html#imp.load_source –  cdosborn 30 Juni '15 pada 21:07 
+1
+Perhatian: solusi ini berhasil; namun, modul imp akan ditinggalkan demi lib impor, lihat halaman imp: """Tidak digunakan lagi sejak versi 3.4: Paket imp menunggu penghentian demi importlib.""" –  リ カ ル ド 20 Nov '16 pukul 9:50
+Tambahkan komentar

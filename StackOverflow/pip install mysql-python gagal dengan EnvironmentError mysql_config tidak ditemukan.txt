@@ -1,0 +1,187 @@
+pip install mysql-python gagal dengan EnvironmentError: mysql_config tidak ditemukan
+Ditanyakan 10 tahun, 3 bulan yang lalu
+Aktif 4 bulan yang lalu
+Dilihat 618rb kali
+
+880
+
+
+243
+Ini adalah kesalahan yang saya dapatkan
+
+(mysite)zjm1126@zjm1126-G41MT-S2:~/zjm_test/mysite$ pip install mysql-python
+Downloading/unpacking mysql-python
+  Downloading MySQL-python-1.2.3.tar.gz (70Kb): 70Kb downloaded
+  Running setup.py egg_info for package mysql-python
+    sh: mysql_config: not found
+    Traceback (most recent call last):
+      File "<string>", line 14, in <module>
+      File "/home/zjm1126/zjm_test/mysite/build/mysql-python/setup.py", line 15, in <module>
+        metadata, options = get_config()
+      File "setup_posix.py", line 43, in get_config
+        libs = mysql_config("libs_r")
+      File "setup_posix.py", line 24, in mysql_config
+        raise EnvironmentError("%s not found" % (mysql_config.path,))
+    EnvironmentError: mysql_config not found
+    Complete output from command python setup.py egg_info:
+    sh: mysql_config: not found
+
+Traceback (most recent call last):
+
+  File "<string>", line 14, in <module>
+
+  File "/home/zjm1126/zjm_test/mysite/build/mysql-python/setup.py", line 15, in <module>
+
+    metadata, options = get_config()
+
+  File "setup_posix.py", line 43, in get_config
+
+    libs = mysql_config("libs_r")
+
+  File "setup_posix.py", line 24, in mysql_config
+
+    raise EnvironmentError("%s not found" % (mysql_config.path,))
+
+EnvironmentError: mysql_config not found
+
+----------------------------------------
+Command python setup.py egg_info failed with error code 1
+Storing complete log in /home/zjm1126/.pip/pip.log
+(mysite)zjm1126@zjm1126-G41MT-S2:~/zjm_test/mysite$ pip install mysql-python
+Downloading/unpacking mysql-python
+  Running setup.py egg_info for package mysql-python
+    sh: mysql_config: not found
+    Traceback (most recent call last):
+      File "<string>", line 14, in <module>
+      File "/home/zjm1126/zjm_test/mysite/build/mysql-python/setup.py", line 15, in <module>
+        metadata, options = get_config()
+      File "setup_posix.py", line 43, in get_config
+        libs = mysql_config("libs_r")
+      File "setup_posix.py", line 24, in mysql_config
+        raise EnvironmentError("%s not found" % (mysql_config.path,))
+    EnvironmentError: mysql_config not found
+    Complete output from command python setup.py egg_info:
+    sh: mysql_config: not found
+
+Traceback (most recent call last):
+
+  File "<string>", line 14, in <module>
+
+  File "/home/zjm1126/zjm_test/mysite/build/mysql-python/setup.py", line 15, in <module>
+
+    metadata, options = get_config()
+
+  File "setup_posix.py", line 43, in get_config
+
+    libs = mysql_config("libs_r")
+
+  File "setup_posix.py", line 24, in mysql_config
+
+    raise EnvironmentError("%s not found" % (mysql_config.path,))
+
+EnvironmentError: mysql_config not found
+
+----------------------------------------
+Command python setup.py egg_info failed with error code 1
+Storing complete log in /home/zjm1126/.pip/pip.log
+Apa yang bisa saya lakukan untuk menyelesaikan ini?
+
+ular piton
+pip
+mysql-python
+Bagikan
+Mengikuti
+diedit 26 Februari '13 jam 9:00
+
+lofidevops
+11.7k 11 11 lencana emas69 69 lencana perak103103 lencana perunggu
+tanya 3 Mar '11 jam 8:32
+
+zjm1126
+30.7k 52 52 lencana emas112 112 lencana perak161161 lencana perunggu
+2
+Lihat utas ini: [mysql_config tidak ditemukan saat menginstal antarmuka python mysqldb][1] bekerja untuk saya :) [1]: stackoverflow.com/questions/7475223/… –  staccato 9 Agustus '13 pukul 22:01
+1
+Saya pengguna MAC OS Saya memecahkan masalah ini dengan pertanyaan ini https://stackoverflow.com/questions/50940302/… –  PatricioS 29 Agustus '18 pukul 22:20
+Tambahkan komentar
+23 Jawaban
+
+1490
+
+Tampaknya mysql_config tidak ada di sistem Anda atau penginstal tidak dapat menemukannya. Pastikan mysql_config benar-benar terinstal.
+
+Misalnya di Debian/Ubuntu Anda harus menginstal paket:
+
+sudo apt-get install libmysqlclient-dev
+Mungkin mysql_config tidak ada di jalur Anda, itu akan terjadi ketika Anda mengkompilasi sendiri suite mysql.
+
+Pembaruan: Untuk versi terbaru dari debian/ubuntu (per 2018) adalah
+
+sudo apt install default-libmysqlclient-dev
+Bagikan
+Mengikuti
+diedit 4 Juli '18 pukul 16:05
+
+Antony Hatchkins
+25.6k 8 8 lencana emas96 96 lencana perak9898 lencana perunggu
+dijawab 3 Mar '11 jam 9:15
+
+Fbo
+15.3k 1 1 lencana emas15 15 lencana perak99 lencana perunggu
+25
+Itu masih membuat kesalahan bagi saya. Saya menggunakan apt-get install python-mysqldbsebagai gantinya. -  Jonatan Littke 25 Mei '12 pukul 13:58
+52
+pengalaman 2c saya: sudo apt-get install libmysqlclient-devbekerja untuk saya, sudo apt-get install python-mysqldbtidak membantu –  Anentropik 23 Juli '12 pukul 10:54
+23
+@JonatanLittke Menginstal jenis python-mysqldb global bertentangan dengan tujuan virtualenv IMO. -  fncomp 20 Maret '13 pukul 5:18
+44
+untuk Mariadb, sudo apt-get install libmariadbclient-devberhasil. -  yuvilio 21 Mei '13 jam 12:09
+11
+Jika solusi ini tidak berhasil untuk Anda, maka Anda mungkin masih perlu menginstal python-dev:apt-get install python-dev –  Anoyz 20 Agustus '13 jam 8:36 
+Tampilkan 17 komentar lagi
+
+307
+
+Di Mac OS, saya cukup menjalankan ini di terminal untuk memperbaiki:
+
+export PATH=$PATH:/usr/local/mysql/bin
+Ini adalah perbaikan tercepat yang saya temukan - ini menambahkannya ke jalur, tetapi saya pikir Anda lebih baik menambahkannya secara permanen (yaitu menambahkannya ke /etc/paths) jika Anda berencana untuk menginstal MySQL-python di lingkungan lain.
+
+(diuji di OSX Mountain Lion)
+
+Bagikan
+Mengikuti
+diedit 19 Mar '20 pada 11:04
+dijawab 27 Sep '12 jam 12:18
+
+Chris Villa
+3.701 1 1 lencana emas15 15 lencana perak1010 lencana perunggu
+6
+Jika Anda menggunakan tumpukan MAMP bitnami gunakan export PATH=$PATH:/Applications/mampstack-5.3.17-0/mysql/binJika Anda menggunakan tumpukan MAMP komersial ini , di sisi lain, hapus instalannya dan dapatkan yang bitnami karena itu sial dan tidak menyertakan header mysql. -  timmmmm 8 Okt '12 pukul 11:20
+3
+Untuk membuat jalur permanen tambahkan ke bagian bawah /etc/paths- Anda perlu membuka jendela terminal baru untuk mengakses jalur baru. -  rojoca 13 Agustus '13 pukul 21:36
+@Timmmm Solusi yang cukup mahal karena semua Basis Data saya ada di versi resmi: / apakah ada cara lain untuk menyelesaikannya? -  Volatil3 27 Februari '14 pukul 20:30
+1
+Sangat membantu. Jika Anda menggunakan XAMPP, gunakan sebagaiexport PATH=$PATH:/Applications/XAMPP/xamppfiles/bin –  Kevin London 31 Mei '14 pukul 0:29 
+10
+Ini akhirnya berhasil terima kasih! juga jika mysqltidak diinstal, gunakan di brew install mysqlmana lokasinya /usr/local/bin/mysql(atau /usr/local/Cellar/mysql/VERSION/bin/jika tidak disinkronkan). -  Aziz Alto Apr 6 '15 pada 22:47
+Tampilkan 3 komentar lainnya
+
+103
+
+apt-get install libmysqlclient-dev python-dev
+Tampaknya melakukan trik.
+
+Bagikan
+Mengikuti
+dijawab 4 Des '12 jam 6:51
+
+steve-gregory
+7.036 7 7 lencana emas34 34 lencana perak4747 lencana perunggu
+2
+ya, bagi saya hanya libmysqlclient-dev tidak cukup, python-dev juga hilang. -  Anderson Santos Jul 4 '13 jam 4:55
+Di Ubuntu 12,04 (tepat) (32-Bit) setelah peningkatan di tempat dari 10,04 (jelas) hanya ini yang menyelesaikan kesalahan ini. Khususnya "python-dev" tambahan! -  Es 19 Jan '14 pukul 14:43
+Bekerja untuk saya juga -- python-dev adalah bagian terakhir dari teka-teki. Sudah menginstal python-mysqldb, jadi jelas tidak hanya itu yang diperlukan. -  Tim S 19 Sep '14 pukul 17:44
+Pembaruan: untuk Python3 Anda harus menginstal python3-dev. -  cezar 6 Februari '18 pukul 14:48
+Saya perlu melakukan ini dan juga menginstal gccuntuk mendapatkan instalasi yang sukses. Juga, mungkin lebih baik untuk tidak melakukannya python-dev, tetapi tentukan versi tertentu seperti python2.7-dev, python3.6-dev, dll. –  Tim Tisdal 25 Januari '19 pukul 15:13
+Tampilkan 1 komentar lagi

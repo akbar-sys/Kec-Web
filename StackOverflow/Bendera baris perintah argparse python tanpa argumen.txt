@@ -1,0 +1,126 @@
+Bendera baris perintah argparse python tanpa argumen
+Ditanyakan 9 tahun, 6 bulan yang lalu
+Aktif 8 bulan yang lalu
+Dilihat 194k kali
+
+403
+
+
+43
+Bagaimana cara menambahkan bendera opsional ke argumen baris perintah saya?
+
+misalnya. jadi saya bisa menulis
+
+python myprog.py 
+atau
+
+python myprog.py -w
+Saya mencoba
+
+parser.add_argument('-w')
+Tapi saya baru saja mendapatkan pesan kesalahan yang mengatakan
+
+Usage [-w W]
+error: argument -w: expected one argument
+yang saya ambil itu berarti menginginkan nilai argumen untuk opsi -w. Apa cara hanya menerima bendera?
+
+Saya menemukan http://docs.python.org/library/argparse.html agak buram pada pertanyaan ini.
+
+ular piton
+argumen baris perintah
+argparse
+Bagikan
+Perbaiki pertanyaan ini
+Mengikuti
+tanya 24 Nov '11 jam 14:57
+
+antarbintang
+22,7k 31 31 lencana emas101 101 lencana perak161161 lencana perunggu
+4
+Jika Anda hanya ingin 1 bendera untuk skrip Anda, sys.argv akan jauh lebih mudah. Kecuali jika Anda secara khusus mencoba mempelajari argparse, yang bagus karena ini adalah modul yang berguna untuk diketahui. -  chown 24 Nov '11 pukul 15:08
+7
+Bahkan setelah saya tahu jawabannya sekarang, saya tidak melihat bagaimana saya bisa memahaminya dari dokumentasi. -  Andreas Haferburg 30 Juli '19 pukul 12:40
+Tambahkan komentar
+4 Jawaban
+
+639
+
+Seperti yang Anda miliki, argumen wmengharapkan nilai setelah -wdi baris perintah. Jika Anda hanya ingin membalik sakelar dengan menyetel variabel Trueatau False, lihat di sini (khususnya store_true dan store_false)
+
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument('-w', action='store_true')
+dimana action='store_true'menyiratkan default=False.
+
+Sebaliknya, Anda bisa memiliki action='store_false', yang menyiratkan default=True.
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 4 Okt '20 pada 22:11
+
+Yatin
+2,368 6 6 lencana emas20 20 lencana perak3838 lencana perunggu
+dijawab 24 Nov '11 pada 15:01
+
+Jdog
+8.455 4 4 lencana emas20 20 lencana perak4040 lencana perunggu
+4
+@Jdog, Adakah yang tahu mengapa ini tidak berhasil untuk saya? Itu wselalu False. -  Iulian Onofrei Apr 12 '15 pada 21:27
+Tambahkan komentar
+
+62
+
+Menambahkan cuplikan cepat agar siap dieksekusi:
+
+Sumber: myparser.py
+
+import argparse
+parser = argparse.ArgumentParser(description="Flip a switch by setting a flag")
+parser.add_argument('-w', action='store_true')
+
+args = parser.parse_args()
+print args.w
+Pemakaian:
+
+python myparser.py -w
+>> True
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+dijawab 19 Apr '16 pada 6:53
+
+pengguna1767754
+18.8k 14 14 lencana emas112 112 lencana perak133133 lencana perunggu
+Tambahkan komentar
+
+5
+
+Skrip Anda benar. Tetapi secara default adalah tipe None. Jadi itu dianggap benar dari nilai lain selain Tidak ada yang ditugaskan ke variabel args.argument_name.
+
+Saya menyarankan Anda untuk menambahkan action="store_true". Ini akan membuat jenis bendera Benar/Salah. Jika digunakan True else False.
+
+import argparse
+parser = argparse.ArgumentParser('parser-name')
+parser.add_argument("-f","--flag",action="store_true",help="just a flag argument")
+pemakaian
+
+$ python3 script.py -f
+Setelah parsing ketika diperiksa dengan args.f itu mengembalikan true,
+
+args = parser.parse_args()
+print(args.f)
+>>>true
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 28 Jul '20 pada 22:05
+
+pemain paruh baya
+18.7k 13 13 lencana emas79 79 lencana perak158158 lencana perunggu
+dijawab 25 Jul '20 jam 7:38
+
+vatsa287
+57 1 1 lencana perak77 lencana perunggu
+Tambahkan komentar

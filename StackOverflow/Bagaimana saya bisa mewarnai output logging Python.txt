@@ -1,0 +1,263 @@
+Bagaimana saya bisa mewarnai output logging Python?
+Ditanyakan 12 tahun, 5 bulan yang lalu
+Aktif 2 hari yang lalu
+Dilihat 200rb kali
+
+391
+
+
+183
+Beberapa waktu lalu, saya melihat aplikasi Mono dengan output berwarna, mungkin karena sistem log-nya (karena semua pesan sudah terstandarisasi).
+
+Sekarang, Python memiliki loggingmodul, yang memungkinkan Anda menentukan banyak opsi untuk menyesuaikan output. Jadi, saya membayangkan sesuatu yang serupa mungkin terjadi dengan Python, tetapi saya tidak dapat menemukan cara melakukan ini di mana pun.
+
+Apakah ada cara untuk membuat loggingoutput modul Python berwarna?
+
+Apa yang saya inginkan (misalnya) kesalahan dalam warna merah, pesan debug dengan warna biru atau kuning, dan sebagainya.
+
+Tentu saja ini mungkin memerlukan terminal yang kompatibel (kebanyakan terminal modern); tapi saya bisa mundur ke loggingoutput asli jika warna tidak didukung.
+
+Adakah ide bagaimana saya bisa mendapatkan output berwarna dengan modul logging?
+
+ular piton
+masuk
+warna
+Bagikan
+Perbaiki pertanyaan ini
+Mengikuti
+diedit 6 Januari '14 pukul 17:12
+
+HaskellGajah
+9,419 4 4 lencana emas34 34 lencana perak6666 lencana perunggu
+tanya 21 Des 08 jam 3:57
+
+pikiran udara
+5.995 4 4 lencana emas16 16 lencana perak66 lencana perunggu
+1
+Anda harus menentukan bahwa Anda menginginkan solusi multiplatform - baik Linux maupun Windows. -  sorin 25 Agustus '09 pukul 18:55
+1
+Terkait jika Anda menggunakan Eclipse/PyDev: Warnai log di konsol Eclipse –  Tobias Kienzler 16 Nov '12 pukul 9:18
+6
+Mungkin Anda juga bisa menggunakan colorlog –  Ehtesh Choudhury 14 Februari '14 pukul 21:19
+5
+Anda juga dapat mencoba chromalog yang saya tulis untuk mendukung semua sistem operasi dan versi Python (2.7 dan 3.*) –  ereOn 14 Mei '15 pukul 22:08
+1
+Solusi yang benar-benar membuang kode ANSI di file log adalah ide yang buruk, mereka akan menangkap Anda ketika Anda mengambil sesuatu dalam waktu enam bulan tetapi lupa untuk mengizinkan karakter ANSI dalam pola regex Anda. Ada beberapa solusi di bawah ini yang menambahkan warna saat Anda melihat log, bukan saat log ditulis... –  Jonathan Hartley 7 '16 Mei pukul 13:10
+Tampilkan 5 komentar lainnya
+32 Jawaban
+1
+2
+Lanjut
+
+206
+
+Saya sudah tahu tentang lolos warna, saya menggunakannya di bash Prompt saya beberapa waktu lalu. Terima kasih.
+Yang saya inginkan adalah mengintegrasikannya dengan modul logging, yang akhirnya saya lakukan setelah beberapa kali mencoba dan melakukan kesalahan.
+Inilah yang saya akhiri:
+
+BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE = range(8)
+
+#The background is set with 40 plus the number of the color, and the foreground with 30
+
+#These are the sequences need to get colored ouput
+RESET_SEQ = "\033[0m"
+COLOR_SEQ = "\033[1;%dm"
+BOLD_SEQ = "\033[1m"
+
+def formatter_message(message, use_color = True):
+    if use_color:
+        message = message.replace("$RESET", RESET_SEQ).replace("$BOLD", BOLD_SEQ)
+    else:
+        message = message.replace("$RESET", "").replace("$BOLD", "")
+    return message
+
+COLORS = {
+    'WARNING': YELLOW,
+    'INFO': WHITE,
+    'DEBUG': BLUE,
+    'CRITICAL': YELLOW,
+    'ERROR': RED
+}
+
+class ColoredFormatter(logging.Formatter):
+    def __init__(self, msg, use_color = True):
+        logging.Formatter.__init__(self, msg)
+        self.use_color = use_color
+
+    def format(self, record):
+        levelname = record.levelname
+        if self.use_color and levelname in COLORS:
+            levelname_color = COLOR_SEQ % (30 + COLORS[levelname]) + levelname + RESET_SEQ
+            record.levelname = levelname_color
+        return logging.Formatter.format(self, record)
+Dan untuk menggunakannya, buat Logger Anda sendiri:
+
+# Custom logger class with multiple destinations
+class ColoredLogger(logging.Logger):
+    FORMAT = "[$BOLD%(name)-20s$RESET][%(levelname)-18s]  %(message)s ($BOLD%(filename)s$RESET:%(lineno)d)"
+    COLOR_FORMAT = formatter_message(FORMAT, True)
+    def __init__(self, name):
+        logging.Logger.__init__(self, name, logging.DEBUG)                
+
+        color_formatter = ColoredFormatter(self.COLOR_FORMAT)
+
+        console = logging.StreamHandler()
+        console.setFormatter(color_formatter)
+
+        self.addHandler(console)
+        return
+
+
+logging.setLoggerClass(ColoredLogger)
+Kalau-kalau ada orang lain yang membutuhkannya.
+
+Berhati-hatilah jika Anda menggunakan lebih dari satu logger atau handler: ColoredFormattersedang mengubah objek record, yang diteruskan lebih jauh ke handler lain atau disebarkan ke logger lain. Jika Anda telah mengonfigurasi file logger dll. Anda mungkin tidak ingin memiliki warna dalam file log. Untuk menghindarinya, mungkin yang terbaik adalah membuat salinan recordwith copy.copy()sebelum memanipulasi atribut levelname, atau mengatur ulang levelname ke nilai sebelumnya, sebelum mengembalikan string yang diformat (kredit ke Michael di komentar).
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 3 Juli '15 pukul 14:51
+
+Guillaume Algis
+10k 5 5 lencana emas39 39 lencana perak6868 lencana perunggu
+dijawab 21 Des 08 jam 5:17
+
+pikiran udara
+5.995 4 4 lencana emas16 16 lencana perak66 lencana perunggu
+Dimana KUNING, PUTIH, BIRU, dll didefinisikan? -  Swaroop CH 22 Mei '09 pukul 16:20
+1
+@Swaroop - Itu adalah kode pelarian ANSI, yang dapat Anda baca cari di Google, atau temukan di sini: en.wikipedia.org/wiki/ANSI_escape_code , atau sebagai alternatif pueblo.sourceforge.net/doc/manual/ansi_color_codes.html –  Brian M. Hunt 16 Agustus '09 pukul 20:56
+54
+Saya tidak percaya bahwa Anda harus membuat subkelas logger hanya untuk ini - jawaban Anda baik-baik saja sejauh membuat khusus Formatterdan menentukan penggunaannya pada file StreamHandler. Tapi tidak perlu untuk subkelas logger. Sebenarnya penggunaan kelas logger menambahkan penangan ke setiap logger yang dibuat, yang biasanya tidak Anda inginkan. -  Vinay Sajipo 17 Agustus '09 pukul 12:17
+3
+@simon: tukang ledeng.blogspot.co.uk/2010/12/… –  Vinay Sajipo 22 Mar '12 pukul 23:08
+7
+Satu sisi catatan untuk ColoredFormatter. Itu mengubah objek rekaman, yang diteruskan lebih jauh ke penangan lain atau disebarkan ke penebang lain. Jika Anda telah mengonfigurasi file logger dll. Anda mungkin tidak ingin memiliki warna dalam file log. Untuk menghindarinya, mungkin yang terbaik adalah membuat salinan recordwith copy.copy()sebelum memanipulasi atribut levelname, atau menyetel ulang levelname ke nilai sebelumnya, sebelum mengembalikan string yang diformat. -  Michael 20 Apr '13 pukul 13:31
+Tampilkan 1 komentar lagi
+
+166
+
+Bertahun-tahun yang lalu saya menulis pengendali aliran berwarna untuk saya gunakan sendiri. Kemudian saya menemukan halaman ini dan menemukan kumpulan cuplikan kode yang disalin/ditempel orang :-(. Pengendali aliran saya saat ini hanya berfungsi di UNIX (Linux, Mac OS X) tetapi keuntungannya adalah tersedia di PyPI (dan GitHub ) dan sangat mudah digunakan. Ini juga memiliki mode sintaks Vim :-). Di masa depan saya mungkin memperluasnya untuk bekerja di Windows.
+
+Untuk menginstal paket:
+
+$ pip install coloredlogs
+Untuk mengonfirmasi bahwa itu berfungsi:
+
+$ coloredlogs --demo
+Untuk memulai dengan kode Anda sendiri:
+
+$ python
+> import coloredlogs, logging
+> coloredlogs.install()
+> logging.info("It works!")
+2014-07-30 21:21:26 peter-macbook root[7471] INFO It works!
+Format log default yang ditunjukkan pada contoh di atas berisi tanggal, waktu, nama host, nama logger, PID, level log, dan pesan log. Ini adalah apa yang tampak seperti dalam praktek:
+
+Tangkapan layar dari keluaran log berwarna
+
+CATATAN: Saat menggunakan Git Bash dengan MinTTY
+
+Git Bash di windows memiliki beberapa kebiasaan yang terdokumentasi: Winpty dan Git Bash
+
+Yang untuk kode pelarian ANSI dan untuk penulisan ulang dan animasi karakter gaya ncurses, Anda perlu mengawali perintah dengan winpty.
+
+$ winpty coloredlogs --demo
+$ winpty python your_colored_logs_script.py
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 3 Nov '19 pukul 23:27
+
+Puncak Josh
+4.120 3 3 lencana emas33 33 lencana perak4545 lencana perunggu
+dijawab 31 Mei '13 pukul 0:16
+
+xolox
+4.258 1 1 lencana emas21 21 lencana perak1414 lencana perunggu
+2
+cukup lucu, saya baru saja akan menambahkan tautan ke " pypi.python.org/pypi/coloredlogs/0.4.7 " di utas ini! -  Iosu S. 4 Mar '14 pada 15:29
+1
+Untuk beberapa alasan saya terus mendapatkan AttributeError: 'module' object has no attribute 'install'saat menggunakan coloredlogs.install(). Bisakah Anda mengonfirmasi itu dengan versi terbaru. -  membingungkan 1 Desember '15 pukul 16:23
+13
+Ini memang terlihat indah. Sayangnya, itu merusak banyak hal; khususnya, membatalkan panggilan ke logging.basicConfig. Ini membuat tidak mungkin untuk menggunakan formatter khusus, misalnya. -  Sejuk 14 Des '15 pukul 23:36
+@Clément: Dua (tumpang tindih?) pertanyaan: (1) Apa yang Anda maksud dengan "membatalkan panggilan ke logging.basicConfig" dan (2) apa alternatifnya? Keduanya logging.basicConfig()dan coloredlogs.install()menginstal pengendali aliran yang masuk ke konsol, jadi tanpa "membatalkan" Anda akan mendapatkan pesan duplikat... –  xolox 15 Desember '15 pukul 11:12
+1
+Bagus sekali!! dan mulai hari ini berfungsi di Windows seperti mimpi :) –  SkyWalker 9 April '20 pukul 14:20
+Tampilkan 7 komentar lainnya
+
+113
+
+Solusi 2021, tidak diperlukan paket tambahan, Python 3
+Tentukan kelas
+
+import logging
+
+class CustomFormatter(logging.Formatter):
+    """Logging Formatter to add colors and count warning / errors"""
+
+    grey = "\x1b[38;21m"
+    yellow = "\x1b[33;21m"
+    red = "\x1b[31;21m"
+    bold_red = "\x1b[31;1m"
+    reset = "\x1b[0m"
+    format = "%(asctime)s - %(name)s - %(levelname)s - %(message)s (%(filename)s:%(lineno)d)"
+
+    FORMATS = {
+        logging.DEBUG: grey + format + reset,
+        logging.INFO: grey + format + reset,
+        logging.WARNING: yellow + format + reset,
+        logging.ERROR: red + format + reset,
+        logging.CRITICAL: bold_red + format + reset
+    }
+
+    def format(self, record):
+        log_fmt = self.FORMATS.get(record.levelno)
+        formatter = logging.Formatter(log_fmt)
+        return formatter.format(record)
+Instankan pencatat
+
+# create logger with 'spam_application'
+logger = logging.getLogger("My_app")
+logger.setLevel(logging.DEBUG)
+
+# create console handler with a higher log level
+ch = logging.StreamHandler()
+ch.setLevel(logging.DEBUG)
+
+ch.setFormatter(CustomFormatter())
+
+logger.addHandler(ch)
+Dan gunakan!
+
+logger.debug("debug message")
+logger.info("info message")
+logger.warning("warning message")
+logger.error("error message")
+logger.critical("critical message")
+Hasil masukkan deskripsi gambar di sini
+
+Skema warna penuh masukkan deskripsi gambar di sini
+
+Untuk jendela
+
+Solusi ini berfungsi pada Mac OS, terminal IDE. Sepertinya prompt perintah Windows tidak memiliki warna sama sekali secara default. Berikut adalah instruksi tentang cara mengaktifkannya, yang belum saya coba https://www.howtogeek.com/322432/how-to-customize-your-command-prompts-color-scheme-with-microsofts-colortool/
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 4 Jan pukul 15:53
+dijawab 9 Jul '19 jam 1:24
+
+Sergey Pleshakov
+5.943 2 2 lencana emas10 10 lencana perak3030 lencana perunggu
+1
+Saya menjalankan tes (python 3.7, windows), tetapi logging tidak menunjukkan warna:←[38;21m2019-11-12 19:29:50,994 - My_app - DEBUG - debug message (test_colored_log.py:43)←[0m ←[38;21m2019-11-12 19:29:50,994 - My_app - INFO - info message (test_colored_log.py:44)←[0m ←[33;21m2019-11-12 19:29:50,994 - My_app - WARNING - warning message (test_colored_log.py:45)←[0m ←[31;21m2019-11-12 19:29:50,994 - My_app - ERROR - error message (test_colored_log.py:46)←[0m ←[31;1m2019-11-12 19:29:50,994 - My_app - CRITICAL - critical message (test_colored_log.py:47)←[0m –  constructor 12 Nov '19 pukul 17:30 
+2
+Saya sangat menyukai jawaban ini sehingga saya membuat repo untuk itu, dengan beberapa peningkatan dan lembar contekan warna ansi. -  Teodoro 30 April '20 pukul 21:34
+@constructor di mana Anda menjalankannya? Konsol IDE? terminal jendela? -  Sergey Pleshakov 3 Juni '20 pukul 13:44
+1
+Ups, baru saja bermain-main dengannya dan menemukan solusinya, ubah saja ...21mmenjadi 20mtampaknya berfungsi sempurna di milik saya. Kalau-kalau ada yang memiliki masalah yang sama. -  Darren Christopher 3 Des '20 pada 3:27
+1
+@SergeyPleshakov Diuji di Ubuntu. Beri tahu saya jika itu tidak berhasil di Windows. -  Darren Christopher 4 Desember '20 pada 1:32
+Tampilkan 6 komentar lainnya

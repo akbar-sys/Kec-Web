@@ -1,0 +1,149 @@
+Bagaimana cara menonaktifkan masuk pada aliran kesalahan standar dengan Python?
+Ditanyakan 11 tahun, 3 bulan yang lalu
+Aktif 1 bulan yang lalu
+Dilihat 192k kali
+
+173
+
+
+64
+Bagaimana cara menonaktifkan masuk pada aliran kesalahan standar dengan Python? Ini tidak bekerja:
+
+import logging
+
+logger = logging.getLogger()
+logger.removeHandler(sys.stderr)
+logger.warning('foobar')  # emits 'foobar' on sys.stderr
+ular piton
+masuk
+menghibur
+stdout
+Bagikan
+Mengikuti
+diedit 23 Nov '20 pukul 23:23
+
+Maggyero
+3.120 2 2 lencana emas24 24 lencana perak4343 lencana perunggu
+tanya 15 Feb '10 jam 14:48
+
+sorin
+137k 150 150 lencana emas472 472 lencana perak708708 lencana perunggu
+Bagi mereka yang bertanya-tanya mengapa ada orang yang ingin menonaktifkan pencatatan: Anda tidak ingin mencatat data pribadi seperti kata sandi atau kunci API. -  Stevoisiak 27 Apr '18 pukul 20:01 
+7
+@StevenVascellaro. Mengapa mereka dikirim ke logger di tempat pertama? Kedengarannya tidak benar... –  Fisikawan Gila 13 Juli '18 pukul 16:47
+2
+@MadPhysicist Saya memiliki aplikasi yang mengirimkan permintaan XML ke API eksternal. Secara default, permintaan ini dicatat ke file. Namun, login awal memerlukan otentikasi dengan nama pengguna dan kata sandi, yang saya tidak ingin login. -  Stevoisiak 13 Juli '18 pukul 16:53 
+@StevenVascellaro. Saya melihat. Terima kasih atas penjelasannya. -  Fisikawan Gila 13 Juli '18 pukul 17:17 
+2
+Anda tidak menunjukkan bagaimana/di mana Anda menambahkan penangan Anda. Jika mereka ditambahkan ke root logger, ini akan mencegah logging menambahkan StreamHandler default seperti yang dijelaskan di docs.python.org/3/library/logging.html#logging.basicConfig Juga, per deskripsi yang ditautkan, StreamHandler default hanya ditambahkan selama pertama panggilan memancarkan pesan log jadi ketika Anda mencetaknya logger.handlersharus kosong (karena mendahului logger.debug()panggilan). Kode yang dimaksud hanya ditampilkan [](daftar penangan kosong). Diverifikasi dengan Python 2.7.15 dan Python 3.6.6. -  Piotr Dobrogost 22 Agustus '18 pukul 10:07 
+Tampilkan 1 komentar lagi
+17 Jawaban
+
+209
+
+Saya menemukan solusi untuk ini:
+
+logger = logging.getLogger('my-logger')
+logger.propagate = False
+# now if you use logger it will not log to console.
+Ini akan mencegah logging dikirim ke logger atas yang menyertakan logging konsol.
+
+Bagikan
+Mengikuti
+diedit 14 Jun '12 pukul 13:43
+
+ereOn
+48.4k 33 33 lencana emas147 147 lencana perak228228 lencana perunggu
+dijawab 15 Februari '10 pukul 17:04
+
+sorin
+137k 150 150 lencana emas472 472 lencana perak708708 lencana perunggu
+10
+Saya tidak berpikir ini adalah solusi yang baik. Tidak menyebarkan ke penebang yang lebih tinggi dapat memiliki konsekuensi yang tidak diinginkan lainnya. -  lfk 31 Agustus '17 pukul 6:20
+4
+Jika Anda hanya ingin memfilter pesan di bawah level log tertentu (misalnya, semua INFOpesan), Anda dapat mengubah baris kedua menjadi sesuatu sepertilogger.setLevel(logging.WARNING) –  Hartley Brody 5 Jan '18 pukul 16:48
+2
+Bagaimana Anda mengaktifkan kembali log setelahnya? -  Stevoisiak 27 Apr '18 pukul 19:57
+8
+Bukan jawaban karena memblokir propagasi secara efektif menonaktifkan semua penangan logger root dan pertanyaannya dengan jelas menyatakan (...) tetapi saya mungkin memiliki penangan lain di sana yang ingin saya pertahankan yang menunjukkan maksudnya adalah untuk menonaktifkan StreamHandler default dari logger root saja . -  Piotr Dobrogost 22 Agustus '18 pukul 7:51
+1
+Menghentikan propagasi pesan tidak cukup. Sejak Python 3.2 , logging.lastResorthandler masih akan mencatat pesan yang lebih parah logging.WARNINGdan lebih besar sys.stderrjika tidak ada handler lain. Lihat jawaban saya . -  Maggyero 20 Apr '20 pada 22:34 
+Tambahkan komentar
+
+113
+
+Saya menggunakan:
+
+logger = logging.getLogger()
+logger.disabled = True
+... whatever you want ...
+logger.disabled = False
+Bagikan
+Mengikuti
+dijawab 25 Jun '10 jam 6:42
+
+tak terbatas
+1,579 1 1 lencana emas13 13 lencana perak1515 lencana perunggu
+14
+ini juga berfungsi pada loggingtingkat modul untuk menonaktifkan logging sepenuhnya , misalnya: import logging; logging.disable(logging.CRITICAL);: docs.python.org/2/library/logging.html#logging.disable –  lsh 9 '16 Mei pukul 15:35
+1
+Ini jauh lebih baik daripada menonaktifkan propagasi. -  Mátray Márk 17 Agustus '18 pukul 12:38
+9
+Bukan jawaban – pertanyaannya menanyakan cara menonaktifkan StreamHandler default saja . -  Piotr Dobrogost 22 Agustus '18 pukul 7:29 
+1
+The disabledatribut bukan bagian dari API publik. Lihat bugs.python.org/issue36318 . -  Maggyero 28 Maret '19 pukul 11:59
+haruskah ini dilampirkan dalam try/finally? Apa yang terjadi jika kode naik satu pengecualian? Apakah logger tetap dinonaktifkan? -  yucer 25 Nov '20 pada 9:23
+Tambahkan komentar
+
+72
+
+Kamu bisa memakai:
+
+logging.basicConfig(level=your_level)
+di mana your_level adalah salah satunya:
+
+'debug': logging.DEBUG,
+'info': logging.INFO,
+'warning': logging.WARNING,
+'error': logging.ERROR,
+'critical': logging.CRITICAL
+Jadi, jika Anda menyetel your_level ke logging.CRITICAL , Anda hanya akan menerima pesan penting yang dikirim oleh:
+
+logging.critical('This is a critical error message')
+Menyetel level_anda ke logging.DEBUG akan menampilkan semua level logging.
+
+Untuk lebih jelasnya, silakan lihat contoh logging.
+
+Dengan cara yang sama untuk mengubah level untuk setiap Handler gunakan fungsi Handler.setLevel() .
+
+import logging
+import logging.handlers
+
+LOG_FILENAME = '/tmp/logging_rotatingfile_example.out'
+
+# Set up a specific logger with our desired output level
+my_logger = logging.getLogger('MyLogger')
+my_logger.setLevel(logging.DEBUG)
+
+# Add the log message handler to the logger
+handler = logging.handlers.RotatingFileHandler(
+          LOG_FILENAME, maxBytes=20, backupCount=5)
+
+handler.setLevel(logging.CRITICAL)
+
+my_logger.addHandler(handler)
+Bagikan
+Mengikuti
+diedit 9 Januari pukul 11:44
+
+kasih sayang
+19.1k 6 6 lencana emas43 43 lencana perak6969 lencana perunggu
+dijawab 15 Feb '10 jam 16:25
+
+Vadikus
+931 5 5 lencana perak55 lencana perunggu
+8
+Ini umumnya info yang berguna, tetapi pertanyaan yang diajukan adalah cara menonaktifkan logging konsol, bukan cara menambahkan penangan tambahan. jika Anda memeriksa my_logger.handlers dengan kode di atas diterapkan pada contoh asli, Anda akan melihat dua penangan -- penangan file baru dan pengendali aliran asli. -  joe 12 Juli '17 pukul 18:07
+KRITIS adalah kata yang saya cari. Terima kasih. -  Nishant 29 April '19 pukul 12:59
+Saya ingin melihat tingkat debug OFF. Ini tidak ambigu dan sederhana. -  Bukan mesin 21 Agustus '19 pukul 19:53
+Tambahkan komentar

@@ -1,0 +1,75 @@
+Bisakah PyCharm mencantumkan semua kesalahan Python dalam suatu proyek?
+Ditanyakan 8 tahun, 3 bulan yang lalu
+Aktif 5 tahun, 1 bulan lalu
+Dilihat 23rb kali
+
+96
+
+
+8
+Saya menggunakan python 2.7 di lingkungan virtual dan PyCharm 2.7 (build baru pada 07 Februari 2013).
+
+Setiap kali saya membuka file python di dalamnya yang memiliki kesalahan yang tidak ambigu (setara dengan kesalahan kompilasi dalam bahasa lain, misalnya menggunakan variabel yang tidak dideklarasikan, memanggil fungsi yang tidak ada), itu menunjukkan garis merah di selokan file.
+
+Jadi, saya menemukan kesalahan secara acak ketika saya menavigasi ke file yang berisi kesalahan tersebut. Yang benar-benar saya inginkan adalah dapat membuat daftar semua kesalahan python di jendela terpisah. Visual Studio 2005/2008/2010/... IDE memiliki tampilan "Kesalahan" terpisah yang mencantumkan semuanya dengan nama file dan nomor baris, dan memberi saya kemampuan untuk mengklik salah satu dari kesalahan ini dan menavigasi langsung ke sumber.
+
+Apakah PyCharm memiliki yang seperti ini?
+
+ular piton
+python-2.7
+kompiler-kesalahan
+pycharm
+Bagikan
+Mengikuti
+diedit 15 Februari '13 pukul 20:08
+
+Nol Piraeus
+47.2k 24 24 lencana emas135 135 lencana perak148148 lencana perunggu
+ditanyakan 15 Februari '13 pukul 19:44
+
+Hamish Grubijan
+9.822 18 18 lencana emas89 89 lencana perak143143 lencana perunggu
+Tambahkan komentar
+3 Jawaban
+
+129
+
+Anda dapat menghubungi Code|Inspect Code (sebelumnya Analyze|Inspect Code, terima kasih kepada @CrackerJack9) untuk mendapatkan semua kesalahan dan peringatan serta cara untuk memperbaikinya. Di panel hasil, Anda dapat memilih untuk hanya melihat kesalahan (tombol merah/kuning di sisi kiri).
+
+Bagikan
+Mengikuti
+diedit 05 Mei 14 jam 8:48
+dijawab 15 Februari '13 pukul 19:46
+
+Vladimir
+8.223 4 4 lencana emas24 24 lencana perak3636 lencana perunggu
+Wow. Fitur ini mengagumkan. Saya tidak pernah menggunakannya sebelumnya. Sangat membantu! -  kevinarpe 12 Februari '15 pukul 8:12
+Apa yang menurut saya sangat menjengkelkan adalah ia menunjukkan kesalahan dalam ratusan file, saya belum menemukan pengaturan bahwa hanya file saya sendiri yang harus diperiksa. -  kap 19 Sep '19 jam 9:40
+@kap Saya pikir jika Anda mengikuti jawaban ini, itu akan menyaring direktori yang Anda pilih. Barusan coba dan sepertinya berhasil. -  Jason Capriotti 12 Nov '19 pukul 14:31
+@vladimir bagaimana melakukannya saat bepergian. Itu menunjukkannya di editor. PyCharm saya tidak menunjukkan kesalahan gulir kanan, misalnya, variabel tidak dideklarasikan dalam skrip saya. -  imsrgadich 3 Juni '20 pada 8:03
+Tambahkan komentar
+
+15
+
+Di Pycharm 2.6.3:
+Kode -> Periksa Kode
+
+Bagikan
+Mengikuti
+dijawab 27 Agustus '13 pukul 11:56
+
+meneruskan
+331 3 3 lencana perak44 lencana perunggu
+Tambahkan komentar
+
+14
+
+Ya, jalankan Analisis|Periksa Kode dan tentukan Seluruh proyek sebagai ruang lingkup analisis.
+
+Bagikan
+Mengikuti
+dijawab 15 Februari '13 pukul 19:49
+
+Andrey Vlasovskikh
+15.5k 6 6 lencana emas38 38 lencana perak5959 lencana perunggu
+Tambahkan komentar

@@ -1,0 +1,107 @@
+Cara mengubah string menjadi huruf besar
+Ditanyakan 9 tahun, 3 bulan yang lalu
+Aktif 6 bulan yang lalu
+Dilihat 1,3 juta kali
+
+780
+
+
+64
+Saya memiliki masalah dalam mengubah string menjadi huruf besar dengan Python. Dalam penelitian saya, saya mendapatkannya string.ascii_uppercasetetapi tidak berhasil.
+
+Kode berikut:
+
+ >>s = 'sdsd'
+ >>s.ascii_uppercase
+Memberikan pesan kesalahan ini:
+
+Traceback (most recent call last):
+  File "<console>", line 1, in <module>
+AttributeError: 'str' object has no attribute 'ascii_uppercase'
+Pertanyaan saya adalah: bagaimana saya bisa mengubah string menjadi huruf besar dengan Python?
+
+ular piton
+tali
+huruf besar
+Bagikan
+Perbaiki pertanyaan ini
+Mengikuti
+diedit 13 Mar '13 pada 11:01
+
+Nggak
+21.6k 7 7 lencana emas42 42 lencana perak7272 lencana perunggu
+ditanyakan 13 Februari '12 pukul 7:48
+
+gadss
+18.8k 34 34 lencana emas96 96 lencana perak139139 lencana perunggu
+1
+Tutorial mudah untuk melakukan ini: dreamyssoft.com/python-scripting-tutorial/strings-tutorial.php –  Katrol berbatu 15 Januari '13 pukul 18:05
+1
+Terkait: Bagaimana cara mengubah string menjadi huruf kecil dengan Python? :) –  Piotr Dobrogost 5 Mei 13 jam 14:09
+Tambahkan komentar
+6 Jawaban
+
+1293
+
+>>> s = 'sdsd'
+>>> s.upper()
+'SDSD'
+Lihat Metode String .
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 20 November '14 pukul 16:38
+dijawab 13 Februari '12 pukul 7:51
+
+Dan D.
+67.6k 13 13 lencana emas93 93 lencana perak109109 lencana perunggu
+156
+Juga layak disebut title(), 'abc def'.title()akan memberi AndaAbc Def –  Burhan Khalid 14 Jan '14 jam 12:34
+1
+Ini berfungsi untuk tipe char juga. Terima kasih atas jawaban Anda yang membantu. -  yves Baumes 16 Januari '16 pada 14:01
+2
+@yvesBaumes apa yang Anda maksud dengan "tipe char"? Python tidak memiliki karakter. Hanya string dengan panjang 1 –  Ayxan Haqverdili 26 Juli '19 pukul 19:19
+2
+Harap Dicatat: Fungsi .upper()dan .lower()tidak mengubah aslinya stryaitu gunakan s = s.upper()untuk hasil yang efektif –  Chaitanya 8 Jan '20 pukul 23:21
+Tambahkan komentar
+
+95
+
+Untuk mendapatkan versi huruf besar dari string, Anda dapat menggunakan str.upper:
+
+s = 'sdsd'
+s.upper()
+#=> 'SDSD'
+Di sisi lain string.ascii_uppercaseadalah string yang berisi semua huruf ASCII dalam huruf besar:
+
+import string
+string.ascii_uppercase
+#=> 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+dijawab 13 Februari '12 pukul 7:56
+
+KL-7
+40.5k 9 9 lencana emas83 83 lencana perak7474 lencana perunggu
+Tambahkan komentar
+
+17
+
+untuk membuat string menjadi huruf besar -- cukup ketik
+
+s.upper()
+sederhana dan mudah! Anda dapat melakukan hal yang sama untuk membuatnya lebih rendah juga
+
+s.lower()
+dll.
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+dijawab 27 Jun '16 pada 15:50
+
+Katie T
+221 2 2 lencana perak66 lencana perunggu
+Tambahkan komentar

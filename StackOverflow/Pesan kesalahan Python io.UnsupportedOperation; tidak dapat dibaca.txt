@@ -1,0 +1,118 @@
+Pesan kesalahan Python io.UnsupportedOperation: tidak dapat dibaca
+Ditanyakan 3 tahun, 11 bulan yang lalu
+Aktif 10 hari yang lalu
+Dilihat 126rb kali
+
+61
+
+
+12
+Saya membuat program sederhana tetapi ini menunjukkan kesalahan berikut ketika saya menjalankannya:
+
+line1 = []
+line1.append("xyz ")
+line1.append("abc")
+line1.append("mno")
+
+file = open("File.txt","w")
+for i in range(3):
+    file.write(line1[i])
+    file.write("\n")
+
+for line in file:
+    print(line)
+file.close()
+Ini menunjukkan pesan kesalahan ini:
+
+File "C:/Users/Sachin Patil/fourth,py.py", baris 18,
+untuk baris dalam file:
+
+Operasi yang tidak didukung: tidak dapat dibaca
+
+python-3.x
+mengajukan
+Bagikan
+Perbaiki pertanyaan ini
+Mengikuti
+diedit 4 Juli '17 jam 9:50
+
+Thierry Lathuille
+21.3k 10 10 lencana emas35 35 lencana perak3737 lencana perunggu
+tanya 4 Juli '17 jam 9:13
+
+Sachin Patili
+633 1 1 lencana emas5 5 lencana perak88 lencana perunggu
+Nah Anda tidak memberikan izin membaca file. Tetapi tidak ada gunanya di sini untuk melakukan itu karena kursor akan ditempatkan di akhir file. -  Willem Van Onsem 4 Juli '17 jam 9:15
+Saya mencoba mencari fungsi tetapi tidak berhasil dan apa yang Anda maksud dengan izin baca? -  Sachin Patili 4 Juli '17 pukul 9:19
+Tambahkan komentar
+5 Jawaban
+
+145
+
+Anda membuka file sebagai "w", yang berarti dapat ditulis.
+
+Menggunakan "w"Anda tidak akan dapat membaca file. Gunakan yang berikut ini sebagai gantinya:
+
+file = open("File.txt","r")
+Selain itu, berikut adalah opsi lainnya:
+
+"r"   Opens a file for reading only.
+"r+"  Opens a file for both reading and writing.
+"rb"  Opens a file for reading only in binary format.
+"rb+" Opens a file for both reading and writing in binary format.
+"w"   Opens a file for writing only.
+"a"   Open for writing.  The file is created if it does not exist.
+"a+"  Open for reading and writing.  The file is created if it does not exist.
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 26 Agustus '20 pada 8:33
+dijawab 4 Jul '17 jam 9:18
+
+Sreetam Daso
+2.236 2 2 lencana emas19 19 lencana perak3030 lencana perunggu
+Tambahkan komentar
+
+14
+
+Gunakan a+untuk membuka file untuk dibaca, ditulis, dan dibuat jika tidak ada.
+a+ Membuka file untuk menambahkan dan membaca. Penunjuk file berada di akhir file jika file tersebut ada. File terbuka dalam mode penambahan. Jika file tidak ada, itu membuat file baru untuk membaca dan menulis. - Mode file Python
+
+with open('"File.txt', 'a+') as file:
+    print(file.readlines())
+    file.write("test")
+Catatan: membuka file di withblok memastikan bahwa file ditutup dengan benar di ujung blok, bahkan jika pengecualian muncul di jalan. Ini setara dengan try-finally, tetapi jauh lebih pendek.
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 12 Mar '20 pada 8:23
+dijawab 21 Okt '18 jam 7:24
+
+Sapnesh Naik
+8.453 6 6 lencana emas43 43 lencana perak7676 lencana perunggu
+Tambahkan komentar
+
+7
+
+Ada beberapa mode untuk membuka file (baca, tulis, dll.)
+
+Jika Anda ingin membaca dari file Anda harus mengetik file = open("File.txt","r"), jika menulis dari file = open("File.txt","w"). Anda perlu memberikan izin yang tepat terkait penggunaan Anda.
+
+lebih banyak mode:
+
+r. Membuka file untuk dibaca saja.
+rb. Membuka file untuk dibaca hanya dalam format biner.
+r+ Membuka file untuk membaca dan menulis.
+rb+ Membuka file untuk membaca dan menulis dalam format biner.
+w. Membuka file untuk menulis saja.
+Anda dapat menemukan lebih banyak mode di sini
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 4 Juli '17 pada 9:23
+dijawab 4 Jul '17 jam 9:17
+
+omri_saadon
+8.843 5 5 lencana emas25 25 lencana perak5353 lencana perunggu
+Tambahkan komentar

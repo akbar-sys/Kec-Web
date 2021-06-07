@@ -1,0 +1,163 @@
+Unduh file dari web dengan Python 3
+Ditanyakan 9 tahun, 9 bulan yang lalu
+Aktif 7 bulan yang lalu
+Dilihat 347k kali
+
+372
+
+
+182
+Saya membuat program yang akan mengunduh file .jar (java) dari server web, dengan membaca URL yang ditentukan dalam file .jad dari game/aplikasi yang sama. Saya menggunakan Python 3.2.1
+
+Saya telah berhasil mengekstrak URL file JAR dari file JAD (setiap file JAD berisi URL ke file JAR), tetapi seperti yang Anda bayangkan, nilai yang diekstraksi adalah string type().
+
+Inilah fungsi yang relevan:
+
+def downloadFile(URL=None):
+    import httplib2
+    h = httplib2.Http(".cache")
+    resp, content = h.request(URL, "GET")
+    return content
+
+downloadFile(URL_from_file)
+Namun saya selalu mendapatkan kesalahan yang mengatakan bahwa jenis fungsi di atas harus byte, dan bukan string. Saya sudah mencoba menggunakan URL.encode('utf-8'), dan juga byte(URL,encoding='utf-8'), tetapi saya selalu mendapatkan kesalahan yang sama atau serupa.
+
+Jadi pada dasarnya pertanyaan saya adalah bagaimana cara mengunduh file dari server ketika URL disimpan dalam tipe string?
+
+ular piton
+python-3.x
+Bagikan
+Mengikuti
+ditanyakan 30 Agustus '11 pukul 13:16
+
+Bo Milanovich
+6.879 7 7 lencana emas40 40 lencana perak6060 lencana perunggu
+4
+@alvas, Hadiah untuk ini? Penjawab masih (dan cukup) aktif di SO. Mengapa tidak menambahkan komentar dan bertanya saja? -  Bhargav Rao ♦ 17 Jan '16 pada 14:34
+8
+Karena jawaban bagus yang bertahan dalam ujian waktu layak untuk diberikan. Juga, kita harus mulai melakukan ini untuk banyak pertanyaan lain untuk memeriksa apakah jawaban relevan hari ini. Terutama ketika penyortiran jawaban SO agak gila, terkadang jawaban yang ketinggalan zaman atau bahkan terburuk berada di atas. -  alva 17 Jan '16 pada 14:57
+Tambahkan komentar
+9 Jawaban
+
+719
+
++50
+Jika Anda ingin memasukkan konten halaman web ke dalam variabel, cukup readrespons urllib.request.urlopen:
+
+import urllib.request
+...
+url = 'http://example.com/'
+response = urllib.request.urlopen(url)
+data = response.read()      # a `bytes` object
+text = data.decode('utf-8') # a `str`; this step can't be used if data is binary
+Cara termudah untuk mengunduh dan menyimpan file adalah dengan menggunakan urllib.request.urlretrievefungsi:
+
+import urllib.request
+...
+# Download the file from `url` and save it locally under `file_name`:
+urllib.request.urlretrieve(url, file_name)
+import urllib.request
+...
+# Download the file from `url`, save it in a temporary directory and get the
+# path to it (e.g. '/tmp/tmpb48zma.txt') in the `file_name` variable:
+file_name, headers = urllib.request.urlretrieve(url)
+Namun perlu diingat bahwa urlretrieveitu dianggap warisan dan mungkin tidak digunakan lagi (meskipun tidak yakin mengapa).
+
+Jadi cara paling benar untuk melakukan ini adalah dengan menggunakan urllib.request.urlopenfungsi untuk mengembalikan objek seperti file yang mewakili respons HTTP dan menyalinnya ke file nyata menggunakan shutil.copyfileobj.
+
+import urllib.request
+import shutil
+...
+# Download the file from `url` and save it locally under `file_name`:
+with urllib.request.urlopen(url) as response, open(file_name, 'wb') as out_file:
+    shutil.copyfileobj(response, out_file)
+Jika ini tampak terlalu rumit, Anda mungkin ingin lebih sederhana dan menyimpan seluruh unduhan dalam sebuah bytesobjek dan kemudian menulisnya ke sebuah file. Tapi ini bekerja dengan baik hanya untuk file kecil.
+
+import urllib.request
+...
+# Download the file from `url` and save it locally under `file_name`:
+with urllib.request.urlopen(url) as response, open(file_name, 'wb') as out_file:
+    data = response.read() # a `bytes` object
+    out_file.write(data)
+Dimungkinkan untuk mengekstrak .gz(dan mungkin format lain) data terkompresi dengan cepat, tetapi operasi semacam itu mungkin memerlukan server HTTP untuk mendukung akses acak ke file.
+
+import urllib.request
+import gzip
+...
+# Read the first 64 bytes of the file inside the .gz archive located at `url`
+url = 'http://example.com/something.gz'
+with urllib.request.urlopen(url) as response:
+    with gzip.GzipFile(fileobj=response) as uncompressed:
+        file_header = uncompressed.read(64) # a `bytes` object
+        # Or do anything shown above using `uncompressed` instead of `response`.
+Bagikan
+Mengikuti
+diedit 20 Juni '20 pada 9:12
+
+komunitas ♦
+1 11 lencana perak
+dijawab 30 Agustus '11 pukul 13:49
+
+Oleh Prypin
+29.1k 9 9 lencana emas82 82 lencana perak9292 lencana perunggu
+7
+anda dapat menggunakan response.info().get_param('charset', 'utf-8')alih-alih hardcoding utf-8, untuk mendapatkan pengkodean karakter dari Content-Typeheader -  jfs 19 Mar '14 pukul 17:54
+3
+@OlehPrypin Mengapa outfile.write(data)hanya berfungsi dengan baik untuk file kecil? -  mulai 18 Mei '15 pukul 21:56
+"urlretrieve dianggap sebagai warisan dan mungkin tidak digunakan lagi" dari mana Anda mendapatkan ide itu? -  Corey Goldberg 16 Juni '15 pukul 11:16
+17
+@Corey: Langsung dari dokumen : "21.6.24. Antarmuka lama Fungsi dan kelas berikut di-porting dari urllib modul Python 2 (sebagai lawan dari urllib2). Mereka mungkin akan ditinggalkan di beberapa titik di masa mendatang." ...dan saya setuju dengan "tidak yakin mengapa" Oleh -  cfi 29 Sep '15 pukul 13:20
+@Oleh Prypin jika saya menggunakan dengan urllib.request.urlopen(url) sebagai respons, buka (nama_file, 'wb') sebagai file_out: shutil.copyfileobj(respons, out_file) lalu bagaimana saya bisa menemukan kode status HTTP dalam pernyataan tangkap untuk mengetahui file tidak ditemukan? -  Robert Achmann 8 Nov '17 pukul 17:46 
+Tampilkan 4 komentar lainnya
+
+165
+
+Saya menggunakan requestspaket setiap kali saya menginginkan sesuatu yang terkait dengan permintaan HTTP karena API-nya sangat mudah untuk memulai dengan:
+
+instal dulu requests
+
+$ pip install requests
+lalu kodenya:
+
+from requests import get  # to make GET request
+
+
+def download(url, file_name):
+    # open in binary mode
+    with open(file_name, "wb") as file:
+        # get request
+        response = get(url)
+        # write to file
+        file.write(response.content)
+Bagikan
+Mengikuti
+diedit 5 April '17 pukul 14:13
+dijawab 23 Jan '16 pada 14:21
+
+Ali Faki
+3.311 3 3 lencana emas13 13 lencana perak2323 lencana perunggu
+Tambahkan komentar
+
+20
+
+Saya harap saya mengerti pertanyaannya dengan benar, yaitu: bagaimana cara mengunduh file dari server ketika URL disimpan dalam tipe string?
+
+Saya mengunduh file dan menyimpannya secara lokal menggunakan kode di bawah ini:
+
+import requests
+
+url = 'https://www.python.org/static/img/python-logo.png'
+fileName = 'D:\Python\dwnldPythonLogo.png'
+req = requests.get(url)
+file = open(fileName, 'wb')
+for chunk in req.iter_content(100000):
+    file.write(chunk)
+file.close()
+Bagikan
+Mengikuti
+dijawab 18 Jan '16 pada 20:32
+
+Ranvijay Kumar
+301 2 2 lencana perak55 lencana perunggu
+hai, saya juga menggunakan jenis kode yang sama untuk mengunduh file tetapi beberapa kali saya menghadapi pengecualian seperti - codec 'charmap' tidak dapat menyandikan karakter '\u010c'..... dapatkah Anda membantu saya dengan itu –  Joyson 24 Februari '18 pukul 13:00
+Tambahkan komentar

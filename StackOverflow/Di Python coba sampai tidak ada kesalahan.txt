@@ -1,0 +1,143 @@
+Di Python coba sampai tidak ada kesalahan
+Ditanyakan 10 tahun, 5 bulan yang lalu
+Aktif 4 bulan yang lalu
+Dilihat 117rb kali
+
+86
+
+
+22
+Saya memiliki sepotong kode dalam Python yang tampaknya menyebabkan kesalahan secara probabilistik karena mengakses server dan terkadang server itu memiliki kesalahan server internal 500. Saya ingin terus mencoba sampai saya tidak mendapatkan kesalahan. Solusi saya adalah:
+
+while True:
+    try:
+        #code with possible error
+    except:
+         continue
+    else:
+         #the rest of the code
+         break
+Ini sepertinya peretasan bagi saya. Apakah ada cara yang lebih Pythonic untuk melakukan ini?
+
+ular piton
+penanganan kesalahan
+Bagikan
+Mengikuti
+tanya 5 Jan 11 jam 17:08
+
+murgatroid99
+15.3k 8 8 lencana emas52 52 lencana perak8888 lencana perunggu
+5
+Err... apa yang terjadi jika remote server mati? Apakah ini akan duduk di sana mengkonsumsi 100% dari inti CPU? -  pengguna9876 5 Januari '11 pukul 17:15
+terus harus di lain dan istirahat di kecuali. Apakah itu salah ketik? -  Ankit Jaiswal 5 Jan '11 pukul 17:17
+3
+@aand: Tidak. Jika pengecualian terjadi, dia ingin mencoba lagi (baca: continue), tetapi jika tidak ada pengecualian, dia ingin melakukan beberapa hal (digambarkan oleh komentar) dan keluar dari penyalahgunaan loop yang aneh itu. ( elseMengeksekusi jika tidak ada pengecualian terjadi, adalah bahwa bagian yang hilang?) -  user395760 5 Jan '11 di 17:24 
+1
+Kata peringatan: Anda harus menambahkan beberapa tingkat perlindungan terhadap kegagalan terus-menerus, seperti tidur atau batas upaya maksimum. Jika tidak, proses Anda akan menggunakan CPU tanpa batas waktu, seperti yang dicatat oleh @user9876. -  Brad Kocho 30 Mei '14 pukul 18:06
+1
+untuk apa nilainya, ada contoh yang kurang menakutkan dari persyaratan yang sama. Saya mencoba membuat direktori dengan nama baru, jadi saya akan menambahkan nomor ke basis dan menambah nomor itu sampai saya berhasil membuat direktori. Saya hanya akan menangkap kesalahan Sudah Ada. Kecuali folder saya memiliki direktori tak terbatas, ini jelas akan berhasil cepat atau lambat. -  kucing kikuk 12 Juni '19 pukul 17:32 
+Tampilkan 2 komentar lainnya
+12 Jawaban
+
+92
+
+Itu tidak akan menjadi jauh lebih bersih. Ini bukan hal yang sangat bersih untuk dilakukan. Paling-paling (yang akan lebih mudah dibaca, karena kondisinya breakada di sana dengan while), Anda bisa membuat variabel result = Nonedan loop saat itu is None. Anda juga harus menyesuaikan variabel dan Anda dapat mengganti continuedengan semantik mungkin benar pass(Anda tidak peduli jika terjadi kesalahan, Anda hanya ingin mengabaikannya) dan drop break- ini juga mendapatkan sisa kode, yang hanya dijalankan sekali , keluar dari lingkaran. Perhatikan juga bahwa except:klausa telanjang adalah jahat karena alasan yang diberikan dalam dokumentasi .
+
+Contoh menggabungkan semua hal di atas:
+
+result = None
+while result is None:
+    try:
+        # connect
+        result = get_data(...)
+    except:
+         pass
+# other code that uses result but is not involved in getting it
+Bagikan
+Mengikuti
+diedit 17 Feb '18 pukul 18:41
+
+Pulihkan Monica3167040
+610 9 9 lencana perak2323 lencana perunggu
+dijawab 5 Jan '11 jam 17:12
+pengguna395760
+8
+Jika ada alasan terus-menerus bahwa koneksi tidak berhasil, solusi ini akan hilang dalam loop tak terbatas. -  Brad Kocho 30 Mei '14 pukul 18:03
+4
+@BradKoch Tentu saja. Itu melekat pada pertanyaan, dan selanjutnya perbaikan apa pun (seperti batas waktu keseluruhan atau sejumlah percobaan) relatif ortogonal terhadap perubahan yang saya jelaskan. –  pengguna395760 30 Mei 14 jam 18:50 
+4
+Tetapi setiap jawaban yang diajukan harus aman, atau setidaknya perhatikan perangkapnya. Ini tidak menawarkan perlindungan terhadap konsumsi CPU 100% dan membahayakan pembaca di masa mendatang. -  Brad Kocho 30 Mei '14 pukul 19:03 
+@BradKoch apa yang akan Anda sarankan untuk menghentikan penggunaan cpu 100%, coba mungkin 5-10 kali sebelum mengakhiri loop? -  Umar.H 9 Juni '19 pukul 13:25
+1
+@Datanovice Ya, batas coba lagi sederhana dengan penundaan adalah solusi yang baik. Banyak jawaban lain menunjukkan bagaimana melakukan ini. Untuk skenario rumit seperti mencoba kembali permintaan HTTP, saya pribadi merekomendasikan menggunakan perpustakaan. -  Brad Kocho 9 Juni '19 pukul 19:35
+Tambahkan komentar
+
+36
+
+Ini adalah salah satu yang gagal keras setelah 4 upaya, dan menunggu 2 detik di antara upaya. Ubah sesuai keinginan Anda untuk mendapatkan apa yang Anda inginkan dari yang ini:
+
+from time import sleep
+
+for x in range(0, 4):  # try 4 times
+    try:
+        # msg.send()
+        # put your logic here
+        str_error = None
+    except Exception as str_error:
+        pass
+
+    if str_error:
+        sleep(2)  # wait for 2 seconds before trying to fetch the data again
+    else:
+        break
+Berikut adalah contoh dengan backoff:
+
+from time import sleep
+
+sleep_time = 2
+num_retries = 4
+for x in range(0, num_retries):  
+    try:
+        # put your logic here
+        str_error = None
+    except Exception as str_error:
+        pass
+
+    if str_error:
+        sleep(sleep_time)  # wait before trying to fetch the data again
+        sleep_time *= 2  # Implement your backoff algorithm here i.e. exponential backoff
+    else:
+        break
+Bagikan
+Mengikuti
+diedit 26 Sep '17 pukul 17:37
+dijawab 30 Mei '14 jam 18:33
+
+radtek
+26.6k 9 9 lencana emas126 126 lencana perak9797 lencana perunggu
+7
+Saya suka jawaban ini lebih baik daripada yang lain karena yang ini "bagus" untuk proses lain karena fungsi tidur dan juga memiliki percobaan terbatas. -  Ganesha Krishnan 18 Februari '18 pukul 22:44
+Tambahkan komentar
+
+28
+
+Mungkin seperti ini:
+
+connected = False
+
+while not connected:
+    try:
+        try_connect()
+        connected = True
+    except ...:
+        pass
+Bagikan
+Mengikuti
+dijawab 5 Jan '11 jam 17:12
+
+muad
+59.6k 15 15 lencana emas108 108 lencana perak104104 lencana perunggu
+7
+Setiap jawaban yang diajukan harus aman, atau setidaknya perhatikan perangkapnya. Ini tidak menawarkan perlindungan terhadap konsumsi CPU 100% dan membahayakan pembaca di masa mendatang. -  Brad Kocho 30 Mei '14 pukul 19:06
+Ini adalah solusi yang fantastis, Anda harus mematikan terminal setidaknya satu kali, bersiaplah: D –  bira 25 Mei pukul 2:18 
+Tambahkan komentar

@@ -1,0 +1,132 @@
+open() di Python tidak membuat file jika tidak ada
+Ditanyakan 11 tahun yang lalu
+Aktif 4 bulan yang lalu
+Dilihat 971k kali
+
+746
+
+
+105
+Apa cara terbaik untuk membuka file sebagai baca/tulis jika ada, atau jika tidak, lalu buat dan buka sebagai baca/tulis? Dari apa yang saya baca, file = open('myfile.dat', 'rw')harus melakukan ini, kan?
+
+Itu tidak berfungsi untuk saya (Python 2.6.2) dan saya bertanya-tanya apakah ini masalah versi, atau tidak seharusnya berfungsi seperti itu atau apa.
+
+Intinya adalah, saya hanya butuh solusi untuk masalah ini. Saya ingin tahu tentang hal-hal lain, tetapi yang saya butuhkan hanyalah cara yang bagus untuk melakukan bagian pembuka.
+
+Direktori terlampir dapat ditulis oleh pengguna dan grup, bukan yang lain (saya menggunakan sistem Linux ... jadi izin 775 dengan kata lain), dan kesalahan yang tepat adalah:
+
+IOError: tidak ada file atau direktori seperti itu.
+
+ular piton
+linux
+file-io
+izin file
+Bagikan
+Perbaiki pertanyaan ini
+Mengikuti
+diedit 21 Nov '19 pada 14:09
+
+neuron
+3.776 3 3 lencana emas24 24 lencana perak4444 lencana perunggu
+tanya 3 Jun 10 jam 15:05
+
+trh178
+9.093 4 4 lencana emas24 24 lencana perak3535 lencana perunggu
+2
+Seperti yang disebutkan S.Mark, ini seharusnya "berfungsi". Apakah direktori terlampir dapat ditulisi? -  Raki 3 Juni '10 pukul 15:12
+5
+jawaban muksie di bawah ini berfungsi (dan juga baloo dalam hal ini), tetapi hanya untuk kelengkapan, direktori terlampir dapat ditulis oleh pengguna dan grup, bukan yang lain (saya menggunakan sistem linux ... kesalahannya adalah IOError: tidak ada file atau direktori seperti itu. terima kasih atas bantuannya teman-teman. -  trh178 3 Juni '10 pukul 15:24
+@S.Lott: selesai. maaf tentang itu. -  trh178 8 Juni '10 pukul 14:32 
+pastikan semua terkemuka folder dari fileada. -  Jason Gol 4 Februari '20 pada 15:01
+Tambahkan komentar
+17 Jawaban
+
+907
+
+Anda harus menggunakan opendengan w+mode:
+
+file = open('myfile.dat', 'w+')
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 29 Jun '18 pukul 20:32
+
+Igor Chubin
+52k 8 8 lencana emas108 108 lencana perak128128 lencana perunggu
+dijawab 3 Jun '10 jam 15:12
+
+muksie
+10.7k 1 1 lencana emas17 17 lencana perak1414 lencana perunggu
+134
+wmemotong file yang ada. docs: Modes 'r+', 'w+'dan 'a+'buka file untuk memperbarui (perhatikan bahwa 'w+'memotong file). -  DiamHantu 3 Juni '10 pukul 15:16 
+5
+ini berhasil. Terima kasih. saya merasa seperti orang bodoh sekarang karena tidak membaca spesifikasinya. saya tidak berpikir 'rw' bahkan dapat diterima di sana. aku pasti sedang memikirkan hal lain. -  trh178 3 Juni '10 pukul 15:21
+81
+Perhatikan bahwa a+ membuat file jika tidak ada dan, yang terpenting, mencari file sampai akhir. Jadi jika Anda melakukan pembacaan segera setelah membuka cara ini, Anda tidak akan mendapatkan apa-apa. Anda harus mencari kembali ke awal terlebih dahulu: f.seek(0) –  Nick Zalutskiy 10 Januari '12 pukul 5:41 
+11
+Untuk dokumentasi verbose, tanpa contoh –  AJP 1 Agustus '12 pukul 23:58
+148
+Ini bukanlah solusinya. The masalah adalah direktori . Entah skrip tidak memiliki izin untuk membuat file di direktori itu, atau direktori itu tidak ada. open('myfile.dat', 'w')kemudian cukup. -  Daniel F 28 April '14 pukul 15:14
+Tampilkan 3 komentar lainnya
+
+157
+
+Keuntungan dari pendekatan berikut adalah bahwa file ditutup dengan benar di ujung blok, bahkan jika pengecualian muncul di jalan. Ini setara dengan try-finally, tetapi jauh lebih pendek.
+
+with open("file.dat","a+") as f:
+    f.write(...)
+    ...
+a+ Membuka file untuk menambahkan dan membaca. Penunjuk file berada di akhir file jika file tersebut ada. File terbuka dalam mode penambahan. Jika file tidak ada, itu membuat file baru untuk membaca dan menulis. - Mode file Python
+
+seek() metode menetapkan posisi file saat ini.
+
+f.seek(pos [, (0|1|2)])
+pos .. position of the r/w pointer
+[] .. optionally
+() .. one of ->
+  0 .. absolute position
+  1 .. relative position to current
+  2 .. relative position from end
+Hanya karakter "rwab+" yang diperbolehkan; harus ada tepat satu dari "rwa" - lihat Stack Overflow pertanyaan mode file Python detail .
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 23 Mei '17 pukul 11:55
+
+komunitas ♦
+1 11 lencana perak
+dijawab 13 Maret pukul 11:06
+
+Qwerty
+20.1k 16 16 lencana emas88 88 lencana perak108108 lencana perunggu
+1
+Saya mencoba ini dengan open(filename, 'a+') sebagai myfile: dan dapatkan IOError: [Errno 2] Tidak ada file atau direktori seperti itu: - mengapa tidak membuat file? -  Loretta 29 Juli '15 pukul 11:59
+@Loretta Sudahkah Anda memeriksa nilai filename? -  Qwerty 29 Juli '15 pukul 12:16
+Ya saya lakukan. Ini adalah string unicode. Saya juga mencoba dengan open('{}.txt'.format(filename), 'a+') sebagai myfile: –  Loretta 29 Juli '15 pukul 12:32 
+Saya tidak menggunakan jalan. dan saya mencoba open('test.txt', 'a+') ia mendapat pengecualian berikut 'TypeError: coercing to Unicode: need string or buffer, file found' di baris if os.stat(myfile).st_size == 0: -  Loretta 10 Agustus '15 pukul 8:20 
+Anda perlu mendefinisikan penyandian dengan benar agar ini berfungsi. stackoverflow.com/q/728891/3701431 –  Sergiy Kolodyazhnyy 8 Agustus '16 pukul 20:47
+Tambahkan komentar
+
+36
+
+Praktik yang baik adalah menggunakan yang berikut ini:
+
+import os
+
+writepath = 'some/path/to/file.txt'
+
+mode = 'a' if os.path.exists(writepath) else 'w'
+with open(writepath, mode) as f:
+    f.write('Hello, world!\n')
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+dijawab 04 Mei '15 jam 1:49
+
+lollercoaster
+13.4k 28 28 lencana emas94 94 lencana perak162162 lencana perunggu
+30
+Adalah buruk untuk menguji file sebelum membukanya, karena dapat menyebabkan kondisi balapan (file dihapus sebelum dibuka). Kondisi balapan terkadang dapat digunakan untuk mengeksploitasi kerentanan dalam suatu sistem. Mode "a+" adalah cara terbaik untuk membuka file: ini membuat file baru, dan menambahkan file yang ada. Jangan lupa untuk membungkus ini dalam percobaan/kecuali. -  sleblanc 21 Sep '17 pukul 21:45
+mode komputasi menulis atau menambahkan tidak tertarik. Jika file tidak ada, mode append membuatnya. -  Jean-François Fabre ♦ 22 Okt '19 pukul 11:49
+Tambahkan komentar

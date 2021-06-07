@@ -1,0 +1,100 @@
+Kesalahan python untuk loop
+Ditanyakan 7 tahun, 3 bulan yang lalu
+Aktif 7 tahun, 3 bulan lalu
+Dilihat 70 kali
+
+1
+
+
+Saya sangat baru dalam pemrograman dan Python!
+
+for i in range(0.6):
+print(i)
+Saya mendapatkan kesalahan:
+
+Traceback (most recent call last):
+  File "<pyshell#20>", line 1, in <module>
+    for i in range(0.6):
+TypeError: 'float' object cannot be interpreted as an integer
+ular piton
+Bagikan
+Mengikuti
+diedit 14 Mar '14 pukul 23:36
+
+Srivatsan
+7.923 6 6 lencana emas45 45 lencana perak7777 lencana perunggu
+tanya 8 Mar '14 jam 23:29
+
+pengguna3397243
+507 2 2 lencana emas8 8 lencana perak1818 lencana perunggu
+Tambahkan komentar
+3 Jawaban
+
+4
+
+Rentang mengambil dua nilai, bukan satu pelampung!
+
+Harus
+
+for i in range(0,6):
+    print(i)
+ini akan memberi Anda
+
+0
+1
+2
+3
+4
+5
+atau hanya range(6)
+
+Bagikan
+Mengikuti
+diedit 9 Maret '14 pukul 0:00
+dijawab 8 Mar '14 pukul 23:30
+
+Srivatsan
+7.923 6 6 lencana emas45 45 lencana perak7777 lencana perunggu
+Tambahkan komentar
+
+3
+
+Anda mungkin bermaksud ini:
+
+for i in range(0,6):
+    print(i)
+Anda perlu mengubah titik menjadi koma. Juga, Anda perlu membuat indentasi pernyataan cetak.
+
+Bagikan
+Mengikuti
+dijawab 8 Mar '14 pukul 23:31
+
+jh314
+24.6k 14 14 lencana emas58 58 lencana perak7979 lencana perunggu
+Tambahkan komentar
+
+1
+
+Anda mungkin salah ketik, dan bermaksud memberi koma alih-alih titik:
+
+for n in range(0,6):
+    print(n)
+sebenarnya, '0' dalam range() bahkan tidak diperlukan, Anda juga dapat melakukan ini, dan itu akan mencetak hal yang sama:
+
+for n in range(6):
+    print(n)
+keduanya akan menghasilkan:
+
+0
+1
+2
+3
+4
+5
+Bagikan
+Mengikuti
+dijawab 8 Mar '14 pukul 23:52
+
+wcb98
+128 1 1 lencana emas1 1 lencana perak1010 lencana perunggu
+Tambahkan komentar

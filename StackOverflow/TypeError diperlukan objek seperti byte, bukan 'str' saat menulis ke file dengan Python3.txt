@@ -1,0 +1,132 @@
+TypeError: diperlukan objek seperti byte, bukan 'str' saat menulis ke file dengan Python3
+Ditanyakan 5 tahun, 7 bulan yang lalu
+Aktif 8 bulan yang lalu
+Dilihat 1,5 juta kali
+
+717
+
+
+111
+Saya baru saja bermigrasi ke Py 3.5. Kode ini berfungsi dengan baik di Python 2.7:
+
+with open(fname, 'rb') as f:
+    lines = [x.strip() for x in f.readlines()]
+
+for line in lines:
+    tmp = line.strip().lower()
+    if 'some-pattern' in tmp: continue
+    # ... code
+Setelah memutakhirkan ke 3.5, saya mendapatkan:
+
+TypeError: a bytes-like object is required, not 'str'
+kesalahan pada baris terakhir (kode pencarian pola).
+
+Saya sudah mencoba menggunakan .decode()fungsi di kedua sisi pernyataan, juga mencoba:
+
+if tmp.find('some-pattern') != -1: continue
+- tidak berhasil.
+
+Saya dapat menyelesaikan hampir semua masalah 2:3 dengan cepat, tetapi pernyataan kecil ini mengganggu saya.
+
+ular piton
+python-3.x
+tali
+mengajukan
+byte
+Bagikan
+Perbaiki pertanyaan ini
+Mengikuti
+diedit 21 Agustus '19 pukul 11:30
+
+Martijn Pieters ♦
+890k 245 245 lencana emas3515 3515 lencana perak30013001 lencana perunggu
+tanya 10 Okt '15 jam 13:28
+
+masroore
+7.835 3 3 lencana emas15 15 lencana perak2121 lencana perunggu
+13
+Mengapa Anda membuka file dalam mode biner tetapi memperlakukannya sebagai teks? -  Martijn Pieters ♦ 10 Okt '15 pukul 13:28
+5
+@MartijnPieters terima kasih telah melihat mode buka file! Mengubahnya ke mode teks memecahkan masalah ... kode telah bekerja dengan andal di Py2k selama bertahun-tahun ... -  masroore 10 '15 Okt pukul 13:30 
+4
+@masroore lihat: python.org/dev/peps/pep-0404/#strings-and-bytes –  Roberto 10 Okt '15 pukul 13:56
+11
+Saya mengalami ini juga di mana saya memiliki permintaan result = requests.getdan saya mencoba untuk x = result.content.split("\n"). Saya sedikit bingung dengan pesan kesalahan karena sepertinya menyiratkan bahwa itu result.contentadalah string dan .split()membutuhkan objek seperti byte..?? ( "A byte-seperti objek diperlukan, tidak 'str"') .. -  user4805123 25 Feb '17 di 18:04
+Tambahkan komentar
+9 Jawaban
+
+659
+
+Anda membuka file dalam mode biner:
+
+with open(fname, 'rb') as f:
+Ini berarti bahwa semua data yang dibaca dari file dikembalikan sebagai bytesobjek, bukan str. Anda kemudian tidak dapat menggunakan string dalam tes penahanan:
+
+if 'some-pattern' in tmp: continue
+Anda harus menggunakan bytesobjek untuk diuji tmpsebagai gantinya:
+
+if b'some-pattern' in tmp: continue
+atau buka file sebagai file teks dengan mengganti 'rb'mode dengan 'r'.
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+dijawab 10 Okt '15 jam 13:30
+
+Martijn Pieters ♦
+890k 245 245 lencana emas3515 3515 lencana perak30013001 lencana perunggu
+16
+Jika Anda mengintip berbagai dokumen yang telah ditautkan oleh ppl, Anda akan melihat bahwa semuanya "berfungsi" di Py2 karena string default adalah byte sedangkan di Py3, string default adalah Unicode, artinya setiap kali Anda melakukan I/O, khususnya jaringan, string byte adalah standar, jadi Anda harus belajar untuk memindahkan b/w Unicode & string byte (en/decode). Untuk file, kami sekarang memiliki "r" vs. "rb" (dan untuk 'w' & 'a') untuk membantu membedakan. -  wescpy 6 Maret '17 pukul 6:24 
+4
+@wescpy: Python 2 memiliki 'r'vs 'rb' too , beralih antara perilaku biner dan file teks (seperti menerjemahkan baris baru dan pada platform tertentu, bagaimana penanda EOF diperlakukan). Bahwa ioperpustakaan (menyediakan fungsionalitas I/O default di Python 3 tetapi juga tersedia di Python 2) sekarang juga menerjemahkan file teks secara default adalah perubahan nyata. -  Martijn Pieters ♦ 6 Mar '17 pukul 7:44 
+2
+@MartijnPieters: Ya, setuju. Di 2.x, saya hanya menggunakan 'b'flag ketika harus bekerja dengan file biner di DOS/Windows (karena biner adalah default POSIX). Ada baiknya ada tujuan ganda saat menggunakan io3.x untuk akses file. -  wescpy 7 Mar '17 pada 2:14
+2
+@ericOnline ZipFile.open()docs secara eksplisit menyatakan bahwa hanya mode biner yang didukung ( Akses anggota arsip sebagai objek seperti file biner ). Anda dapat membungkus objek file io.TextIOWrapper()untuk mencapai efek yang sama. -  Martijn Pieters ♦ 7 Januari pukul 22:01 
+1
+@ericOnline juga, jangan gunakan .readlines()saat Anda dapat mengulangi objek file secara langsung. Apalagi jika Anda hanya membutuhkan info dari satu baris saja. Mengapa membaca semuanya ke dalam memori ketika info itu dapat ditemukan di blok buffer pertama? -  Martijn Pieters ♦ 7 Januari pukul 22:12
+Tampilkan 1 komentar lagi
+
+270
+
+Anda dapat menyandikan string Anda dengan menggunakan .encode()
+
+Contoh:
+
+'Hello World'.encode()
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 29 Desember '17 pukul 12:16
+
+Yahya
+645 6 6 lencana perak2121 lencana perunggu
+dijawab 22 Mei '16 pukul 16:17
+
+theofpa
+3.389 1 1 lencana emas12 12 lencana perak99 lencana perunggu
+Tambahkan komentar
+
+61
+
+Seperti yang telah disebutkan, Anda membaca file dalam mode biner dan kemudian membuat daftar byte. Dalam loop for berikut Anda, Anda membandingkan string dengan byte dan di situlah kode gagal.
+
+Decoding byte sambil menambahkan ke daftar harus bekerja. Kode yang diubah akan terlihat sebagai berikut:
+
+with open(fname, 'rb') as f:
+    lines = [x.decode('utf8').strip() for x in f.readlines()]
+Jenis byte diperkenalkan di Python 3 dan itulah sebabnya kode Anda berfungsi di Python 2. Di Python 2 tidak ada tipe data untuk byte:
+
+>>> s=bytes('hello')
+>>> type(s)
+<type 'str'>
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+dijawab 17 Mei '16 jam 2:15
+
+Suresh
+1,347 9 9 lencana perak77 lencana perunggu
+1
+Python 2 memang memiliki tipe untuk byte, hanya saja membingungkan dipanggil strsedangkan tipe untuk string teks disebut unicode. Di Python 3 mereka mengubah artinya strsehingga sama dengan unicodetipe lama , dan mengganti nama yang lama strmenjadi bytes. Mereka juga menghapus banyak kasus di mana ia akan secara otomatis mencoba mengonversi dari satu ke yang lain. -  Tandai tebusan 11 Februari pukul 18:38
+Tambahkan komentar

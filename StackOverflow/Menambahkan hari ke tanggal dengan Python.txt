@@ -1,0 +1,128 @@
+Menambahkan hari ke tanggal dengan Python
+Ditanyakan 9 tahun, 10 bulan yang lalu
+Aktif 1 bulan yang lalu
+Dilihat 540rb kali
+
+457
+
+
+51
+Saya punya tanggal "10/10/11(m-d-y)"dan saya ingin menambahkan 5 hari menggunakan skrip Python. Harap pertimbangkan solusi umum yang berfungsi pada akhir bulan juga.
+
+Saya menggunakan kode berikut:
+
+import re
+from datetime import datetime
+
+StartDate = "10/10/11"
+
+Date = datetime.strptime(StartDate, "%m/%d/%y")
+print Date -> sedang mencetak '2011-10-10 00:00:00'
+
+Sekarang saya ingin menambahkan 5 hari ke tanggal ini. Saya menggunakan kode berikut:
+
+EndDate = Date.today()+timedelta(days=10)
+Yang mengembalikan kesalahan ini:
+
+name 'timedelta' is not defined
+ular piton
+tanggal
+tanggal Waktu
+delta waktu
+Bagikan
+Mengikuti
+diedit 10 Agustus '20 pukul 12:36
+
+ehumoro
+98.2k 17 17 lencana emas183 183 lencana perak279279 lencana perunggu
+tanya 29 Jul '11 jam 9:17
+
+MuraliKrishna
+4.847 3 3 lencana emas15 15 lencana perak1111 lencana perunggu
+18
+Petunjuk umum: jika Anda mendapatkan kesalahan name 'timedelta' is not defined, itu berarti Anda belum menentukan di timedeltamana pun. Python biasanya cukup informatif tentang pesan kesalahannya. -  katriel 29 Juli '11 pukul 10:06 
+1
+Pencarian tidak berhasil? Semua contoh kode ini akan membantu: stackoverflow.com/search?q=python+timedelta . Tampaknya ada lebih dari 200 pertanyaan seperti ini. -  S.Lott 29 Juli '11 pukul 10:08
+1
+kemungkinan duplikat dari penambahan hari ke tanggal dengan Python menggunakan loop, rentang, dan irisan –  S.Lott 29 Juli '11 jam 10:11
+14
+Anda ingin menambahkan lima hari, tetapi kemudian Anda memiliki timedelta(days=10)…Saya bingung dari mana 10 itu berasal dan mengapa bukan 5 –  FeifanZ Jan 7 '13 jam 05:53 
+Tambahkan komentar
+14 Jawaban
+
+695
+
+Jawaban sebelumnya benar tetapi umumnya merupakan praktik yang lebih baik untuk dilakukan:
+
+import datetime
+Maka Anda akan memiliki, menggunakan datetime.timedelta:
+
+date_1 = datetime.datetime.strptime(start_date, "%m/%d/%y")
+
+end_date = date_1 + datetime.timedelta(days=10)
+Bagikan
+Mengikuti
+diedit 25 Sep '15 pada 9:43
+
+Mathieu Rodic
+6.120 2 2 lencana emas38 38 lencana perak4747 lencana perunggu
+dijawab 29 Jul '11 jam 10:03
+
+Botond Beres
+13.4k 2 2 lencana emas32 32 lencana perak4848 lencana perunggu
+9
+datetime.datetime - mengapa dua kali? -  paulmorriss 11 Agustus '14 jam 9:11
+79
+mengimpor seperti "dari datetime import datetime, timedelta" akan menambah keterbacaan kode –  Manel Tutup 12 Nov '14 pukul 13:31 
+10
+@paulmorriss: Anda memanggil strptimemetode pada datetimekelas dalam datetimemodul, jadi Anda perlu menentukan datetime.datetime. -  Graeme Perrow 06 Jan '15 pada 22:43
+12
+Bisakah kita semua setuju bahwa memberi nama kelas yang umum digunakan dengan nama yang sama dengan modul yang memuatnya adalah ide yang bodoh? Apa itu datetime? Anda tidak dapat mengandalkan konvensi untuk mengetahuinya, tetapi selalu harus melihat impornya. -  Xiong Chiamiov 5 Juni '17 pukul 17:47
+13
+Masalah warisan ekor panjang di sana. itu "seharusnya" from datetime import DateTimekarena kelas adalah CamelCased, tetapi datetime mendahului PEP8. -  Aaron McMillin 26 Juni '17 pukul 20:28
+Tampilkan 4 komentar lainnya
+
+142
+
+Impor timedeltadan datepertama.
+
+from datetime import timedelta, date
+Dan date.today()akan mengembalikan datetime hari ini, mungkin Anda mau
+
+EndDate = date.today() + timedelta(days=10)
+Bagikan
+Mengikuti
+diedit 23 Okt '19 pukul 18:25
+
+pieguy
+77 2 2 lencana perak88 lencana perunggu
+dijawab 29 Jul '11 jam 9:20
+
+DrTyrsa
+27.8k 7 7 lencana emas79 79 lencana perak8383 lencana perunggu
+11
+datetime.date.today() bukan Date.today() –  elsadek 6 Agustus '14 pukul 15:19
+2
+@dan-klasson Tidak berfungsi untuk saya, dateobjek tidak memiliki timedeltametode. Versi Python apa yang Anda gunakan? -  DrTyrsa 17 Juli '17 pukul 6:32
+@DrTyrsa Saya buruk. Seharusnya:from datetime import timedelta, date; date.today() + timedelta(days=10) –  dan-klasson 17 Juli '17 pukul 7:07
+Tambahkan komentar
+
+28
+
+Jika Anda sudah menggunakan pandas , Anda dapat menghemat sedikit ruang dengan tidak menentukan formatnya:
+
+import pandas as pd
+startdate = "10/10/2011"
+enddate = pd.to_datetime(startdate) + pd.DateOffset(days=5)
+Bagikan
+Mengikuti
+diedit 25 Nov '19 pukul 11:38
+dijawab 29 Agustus '14 jam 14:10
+
+luar biasa
+16k 5 5 lencana emas46 46 lencana perak4545 lencana perunggu
+Bekerja dengan baik untuk saya. Terima kasih -  renny 30 April '19 pukul 9:18
+Terima kasih, bekerja untuk saya -  siraj 24 Maret pukul 15:46
+2
+hanya ingin mencatat bahwa menginstal panda hanya untuk ini sangat berlebihan. -  Christopher Hunter 29 Maret pukul 22:04
+Tambahkan komentar

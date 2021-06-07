@@ -1,0 +1,109 @@
+Mendapatkan kesalahan Python "dari: tidak dapat membaca /var/mail/Bio"
+Ditanyakan 8 tahun, 1 bulan yang lalu
+Aktif 1 tahun, 1 bulan lalu
+Dilihat 133k kali
+
+97
+
+
+10
+Saya menjalankan skrip (bio)python yang menghasilkan kesalahan berikut:
+
+from: can't read /var/mail/Bio
+mengingat skrip saya tidak ada hubungannya dengan surat, saya tidak mengerti mengapa skrip saya mencari di /var/mail.
+
+Apa yang tampaknya menjadi masalah di sini? saya ragu itu akan membantu karena skrip sepertinya bukan masalah, tapi inilah skrip saya:
+
+from Bio import SeqIO
+from Bio.SeqUtils import ProtParam
+
+handle = open("examplefasta.fasta") 
+for record in SeqIO.parse(handle, "fasta"): 
+    seq = str(record.seq)
+    X = ProtParam.ProteinAnalysis(seq)
+    print X.count_amino_acids() 
+    print X.get_amino_acids_percent() 
+    print X.molecular_weight() 
+    print X.aromaticity() 
+    print X.instability_index() 
+    print X.flexibility() 
+    print X.isoelectric_point() 
+    print X.secondary_structure_fraction()
+Apa masalah yang terjadi di sini? pengaturan python yang buruk? Saya benar-benar tidak berpikir itu skrip.
+
+ular piton
+Bagikan
+Mengikuti
+diedit 17 Apr '13 pada 20:45
+
+loganfsmyth
+135k 25 25 lencana emas297 297 lencana perak232232 lencana perunggu
+tanya 17 Apr '13 jam 20:37
+
+brucezepplin
+7.412 18 18 lencana emas68 68 lencana perak115115 lencana perunggu
+Tambahkan komentar
+6 Jawaban
+
+199
+
+Tidak, ini bukan skripnya, itu fakta bahwa skrip Anda tidak dieksekusi oleh Python sama sekali. Jika skrip Anda disimpan dalam file bernama script.py, Anda harus menjalankannya sebagai python script.py, jika tidak, shell default akan mengeksekusinya dan akan menyelamatkan fromkata kunci. (Kebetulan, fromadalah nama utilitas baris perintah yang mencetak nama orang-orang yang telah mengirim email ke nama pengguna yang diberikan, jadi itu sebabnya ia mencoba mengakses kotak surat).
+
+Kemungkinan lain adalah menambahkan baris berikut ke bagian atas skrip:
+
+#!/usr/bin/env python
+Ini akan menginstruksikan Shell Anda untuk mengeksekusi skrip melalui pythonalih-alih mencoba menafsirkannya sendiri.
+
+Bagikan
+Mengikuti
+dijawab 17 Apr '13 pada 20:39
+
+Tamas
+44.1k 11 11 lencana emas94 94 lencana perak119119 lencana perunggu
+13
+Yup, kecuali pythonterletak di tempat lain. Saya lebih suka menggunakan envsolusi berbasis karena hanya mencari Python di jalur default pengguna. -  Tamas 17 Apr '13 pukul 20:42
+Hmm...Aku belum pernah mendengarnya. Sangat benar. -  kirbyfan64sos 17 Apr '13 pukul 20:46
+2
+luar biasa - terima kasih telah menunjukkan kesalahan anak sekolah saya. saya membuat transisi dari mengetik di command prompt python ke menjalankan skrip. -  brucezepplin Apr 18 '13 jam 9:25
+Terima kasih. Saya bukan pembuat kode python tetapi saya harus melakukan ini untuk tugas saya. -  arn-arn 18 Mei '20 pukul 21:22
+Tambahkan komentar
+
+14
+
+Saya mengalami kesalahan serupa
+
+"dari: tidak dapat membaca /var/mail/Django.test.utils"
+
+ketika mencoba menjalankan perintah
+
+>>> from django.test.utils import setup_test_environment
+>>> setup_test_environment()
+dalam tutorial di https://docs.djangoproject.com/en/1.8/intro/tutorial05/
+
+setelah membaca jawaban oleh Tamas saya menyadari bahwa saya tidak mencoba perintah ini di python Shell tetapi di terminal (ini bisa terjadi pada mereka yang baru mengenal linux)
+
+solusinya adalah pertama-tama masuk ke shell python dengan perintah python dan ketika Anda mendapatkan ini >>> lalu jalankan perintah python apa pun
+
+Bagikan
+Mengikuti
+dijawab 23 Jul '15 jam 12:05
+
+Ehsan Quranwala
+141 1 1 lencana perak44 lencana perunggu
+Tambahkan komentar
+
+5
+
+Sama disini. Saya mengalami kesalahan ini ketika menjalankan perintah impor dari terminal tanpa mengaktifkan python3 Shell melalui manage.py dalam proyek Django (ya, saya masih pemula). Seperti yang diharapkan, mengaktifkan shell memungkinkan perintah untuk ditafsirkan dengan benar.
+
+./manage.py shell
+dan hanya kemudian
+
+>>> from django.contrib.sites.models import Site
+Bagikan
+Mengikuti
+dijawab 24 Sep '16 pukul 11:38
+
+Sergii Shcherbak
+687 8 8 lencana perak1111 lencana perunggu
+Tambahkan komentar

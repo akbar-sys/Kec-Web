@@ -1,0 +1,180 @@
+Apakah ada cara untuk membuat komentar multiline dengan Python?
+Ditanyakan 9 tahun, 7 bulan yang lalu
+Aktif 4 bulan yang lalu
+Dilihat 1,7 juta kali
+
+1242
+
+
+190
+Saya baru-baru ini mulai mempelajari Python , tetapi saya tidak dapat menemukan cara menerapkan komentar multi-baris. Sebagian besar bahasa memiliki simbol komentar blokir seperti
+
+/*
+
+*/
+Saya mencoba ini dengan Python, tetapi menimbulkan kesalahan, jadi ini mungkin bukan cara yang benar. Apakah Python benar-benar memiliki fitur komentar multiline?
+
+ular piton
+komentar
+dokumentasi
+Bagikan
+Perbaiki pertanyaan ini
+Mengikuti
+diedit 20 Februari 20:43
+
+Georgia
+6.368 7 7 lencana emas46 46 lencana perak5858 lencana perunggu
+ditanyakan 8 Okt '11 jam 12:51
+
+Pemburu penjara bawah tanah
+17.9k 13 13 lencana emas53 53 lencana perak7878 lencana perunggu
+2
+Saya kira menjadi bahasa yang ditafsirkan, masuk akal, seperti dalam kasus sh atau bash atau zsh, itulah #satu-satunya cara untuk membuat komentar. Saya menduga itu membuatnya lebih mudah untuk menafsirkan skrip Python dengan cara ini. -  Victor Zamanian 14 Mar '17 pukul 16:29
+1
+Saya tahu jawaban ini sudah lama, tetapi saya menemukannya karena saya memiliki pertanyaan yang sama. Jawaban yang diterima TIDAK berfungsi, meskipun saya tidak cukup tahu tentang Python untuk mengetahui seluk-beluk mengapa itu mungkin tidak benar (per ADTC). -  Brandon Barney 7 Juli '17 pukul 12:55
+5
+@BrandonBarney Biarkan saya menjelaskan masalah ini kepada Anda. Jawaban yang diterima, yang menggunakan ''', sebenarnya membuat string multi-baris yang tidak melakukan apa-apa. Secara teknis, itu bukan komentar. Misalnya, Anda dapat menulis k = '''komentar palsu, string asli'''. Kemudian, print(k) untuk melihat apa arti ADTC. -  pinyotae 6 Agustus '17 pukul 3:13
+3
+Itu jauh lebih masuk akal sekarang. Saya terbiasa dengan vba di mana membuat string yang tidak digunakan menghasilkan kesalahan. Saya tidak menyadari python mengabaikannya. Ini masih berfungsi untuk debugging dan belajar setidaknya, tetapi bukan praktik yang baik untuk pengembangan aktual. -  Brandon Barney 6 Agustus '17 pukul 21:20
+Dalam kode sumber Python, jika Anda memutus garis panjang, editor secara otomatis membuat indentasi, untuk menunjukkan bahwa garis putus-putus itu benar-benar bagian dari baris sebelumnya? Apakah itu yang harus saya lakukan jika saya memecah garis pseudocode yang panjang? -  alfa_989 31 Jan '18 pukul 18:41
+Tampilkan 1 komentar lagi
+23 Jawaban
+
+1929
+
+Anda dapat menggunakan string yang dikutip tiga kali lipat. Ketika mereka bukan docstring (hal pertama dalam kelas/fungsi/modul), mereka diabaikan.
+
+'''
+This is a multiline
+comment.
+'''
+(Pastikan untuk membuat indentasi dengan '''tepat untuk menghindari IndentationError.)
+
+Guido van Rossum (pencipta Python) mentweet ini sebagai "tip pro".
+
+Namun, panduan gaya Python, PEP8, lebih suka menggunakan komentar satu baris berturut-turut , seperti ini:
+
+# This is a multiline
+# comment.
+...dan ini juga yang akan Anda temukan di banyak proyek. Editor teks biasanya memiliki jalan pintas untuk melakukan ini dengan mudah.
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 10 Januari pukul 3:28
+
+larsk
+194k 34 34 lencana emas298 298 lencana perak302302 lencana perunggu
+dijawab 8 Okt '11 jam 12:58
+
+Petr Viktorin
+58.6k 6 6 lencana emas72 72 lencana perak7777 lencana perunggu
+22
+Hm. Saya meletakkan string multiline besar dalam skrip python test.pyhanya untuk melihatnya. Ketika saya melakukannya import test, sebuah test.pycfile dibuat. Sayangnya, pycfile tersebut sangat besar dan berisi seluruh string sebagai teks biasa. Apakah saya salah memahami sesuatu, atau apakah tweet ini salah? -  unutbu 8 Okt '11 pukul 13:18 
+24
+@unutbu, jika itu satu-satunya dalam file, itu adalah docstring. Letakkan beberapa kode sebelum itu dan itu akan hilang dari file pyc. Saya mengedit jawabannya dan memasukkan "modul" ke daftar hal-hal yang memiliki docstrings. -  Petr Viktorin 8 Okt '11 pukul 13:21 
+37
+Saya tidak suka string multiline sebagai komentar. Penyorotan sintaks menandainya sebagai string, bukan sebagai komentar. Saya suka menggunakan editor yang layak yang secara otomatis menangani mengomentari wilayah dan membungkus komentar multiline saat saya mengetik. Tentu saja, ini masalah selera. -  Sven Marnach 8 Okt '11 pukul 13:31
+62
+Sebagai konvensi, saya merasa """terbantu untuk digunakan untuk docstrings dan '''untuk memblokir komentar. Dengan cara ini Anda dapat membungkus '''dokumen Anda yang biasa tanpa konflik. -  Roshambo 18 Des '12 pukul 20:03
+21
+Meskipun Anda dapat menggunakan string multi-baris sebagai komentar multi-baris, saya terkejut bahwa tidak satu pun dari jawaban ini merujuk pada subbagian PEP 8 yang secara khusus merekomendasikan pembuatan komentar multi-baris dari komentar satu baris berturut-turut, dengan #baris kosong untuk membedakan paragraf . -  Udara 21 Mei '14 pukul 19:32 
+Tampilkan 23 komentar lainnya
+
+85
+
+Python memang memiliki sintaks string/komentar multiline dalam arti bahwa kecuali digunakan sebagai docstrings, string multiline tidak menghasilkan bytecode -- seperti #komentar -prepended. Akibatnya, ia bertindak persis seperti komentar.
+
+Di sisi lain, jika Anda mengatakan perilaku ini harus didokumentasikan dalam dokumentasi resmi untuk menjadi sintaks komentar yang benar, maka ya, Anda akan benar untuk mengatakan itu tidak dijamin sebagai bagian dari spesifikasi bahasa.
+
+Bagaimanapun, editor teks Anda juga harus dapat dengan mudah mengomentari wilayah yang dipilih (dengan menempatkan a #di depan setiap baris satu per satu). Jika tidak, beralihlah ke editor teks yang melakukannya.
+
+Pemrograman dengan Python tanpa fitur pengeditan teks tertentu bisa menjadi pengalaman yang menyakitkan. Menemukan editor yang tepat (dan mengetahui cara menggunakannya) dapat membuat perbedaan besar dalam persepsi pengalaman pemrograman Python.
+
+Editor teks tidak hanya dapat mengomentari wilayah yang dipilih, tetapi juga dapat menggeser blok kode ke kiri dan kanan dengan mudah, dan secara otomatis menempatkan kursor pada tingkat lekukan saat ini saat Anda menekan Enter. Melipat kode juga bisa berguna.
+
+Untuk melindungi dari kerusakan tautan, berikut adalah isi dari tweet Guido van Rossum :
+
+@BSUCSClub Tip Python: Anda dapat menggunakan string multi-baris sebagai komentar multi-baris. Kecuali digunakan sebagai docstrings, mereka tidak menghasilkan kode! :-)
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 3 Februari '20 pukul 17:01
+
+Peter Mortensen
+28.3k 21 21 lencana emas95 95 lencana perak123123 lencana perunggu
+dijawab 8 Okt '11 jam 12:54
+
+unutbu
+712k 149 149 lencana emas1594 1594 lencana perak15471547 lencana perunggu
+3
+string yang dikutip tiga kali lipat (''') memang berfungsi untuk memenuhi komentar multi baris. -  Varun Bhatia 24 Juni '13 pukul 6:53 
+Terima kasih .. Digunakan (''') dan (""") untuk mengomentari blok tetapi itu tidak membantu saya untuk aplikasi Django. Jadi pilih IDLE dan ada opsi seperti Komentar keluar wilayah dan Hapus komentar (pintasan: Alt+ 3 dan Alt+4) di bawah menu Format Sekarang lebih mudah dari sebelumnya.. –  Saurav Kumar 11 Des '13 jam 6:53 
+Anda juga harus mempertimbangkan untuk menggunakan IDE. Ya, mereka besar dan kuat, tetapi jika digunakan dengan benar mereka benar-benar dapat meningkatkan waktu pengkodean. Saya pribadi dulu menggunakan PyDev, dan sekarang menggunakan PTVS (dengan visual studio). Saya pasti akan merekomendasikan PTVS, karena sangat menyenangkan untuk digunakan, berisi fitur-fitur di atas bersama dengan lebih banyak lagi - integrasi langsung dengan virtualenvs, dan debugging yang sangat bagus, untuk sedikitnya –  laba-laba Apr 11 '14 at 2:42
+2
+@HappyLeapSecond Saya pikir Anda harus mengklarifikasinya dengan mengatakan "Python tidak memiliki sintaks komentar multiline yang benar , tetapi mendukung string multiline yang dapat digunakan sebagai komentar." -  ADTC 18 Juli '15 pukul 10:31
+3
+Yang saya inginkan adalah cara mudah untuk mengomentari seluruh blok kode saat pengujian. Bahasa lain membuatnya mudah. Python hanya menyebalkan. -  Albert Godfrind 26 Februari '16 pukul 17:01
+Tampilkan 5 komentar lainnya
+
+52
+
+Dari jawaban yang diterima...
+
+Anda dapat menggunakan string yang dikutip tiga kali lipat. Ketika mereka bukan docstring (hal pertama dalam kelas/fungsi/modul), mereka diabaikan.
+
+Ini tidak benar. Tidak seperti komentar, string yang dikutip tiga kali masih diurai dan harus valid secara sintaksis, di mana pun mereka muncul dalam kode sumber.
+
+Jika Anda mencoba menjalankan kode ini...
+
+def parse_token(token):
+    """
+    This function parses a token.
+    TODO: write a decent docstring :-)
+    """
+
+    if token == '\\and':
+        do_something()
+
+    elif token == '\\or':
+        do_something_else()
+
+    elif token == '\\xor':
+        '''
+        Note that we still need to provide support for the deprecated
+        token \xor. Hopefully we can drop support in libfoo 2.0.
+        '''
+        do_a_different_thing()
+
+    else:
+        raise ValueError
+Anda akan mendapatkan baik...
+
+ValueError: invalid \x escape
+...di Python 2.x atau...
+
+SyntaxError: (unicode error) 'unicodeescape' codec can't decode bytes in position 79-80: truncated \xXX escape
+...di Python 3.x.
+
+Satu-satunya cara untuk melakukan komentar multi-baris yang diabaikan oleh parser adalah ...
+
+elif token == '\\xor':
+    # Note that we still need to provide support for the deprecated
+    # token \xor. Hopefully we can drop support in libfoo 2.0.
+    do_a_different_thing()
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+dijawab 29 Jun '16 jam 13:04
+
+Aya
+33.4k 6 6 lencana emas47 47 lencana perak5252 lencana perunggu
+Kemudian, Anda dapat menggunakan r'raw string'-- r'\xor' == '\\xor'. -  JahePlusPlus 29 Juni '16 pukul 14:13 
+2
+Nah, komentar multi-baris "benar" apa pun juga harus diuraikan dan valid secara sintaksis. Komentar gaya-C tidak boleh berisi a */karena akan menghentikan blok, misalnya. –  pengguna1919238 27 Jul '16 pada 9:31
+2
+@ dan1111 jelas bahwa komentar tidak dapat menyertakan penanda akhir, tetapi itulah satu-satunya batasan. -  el.pescado 29 Sep '16 pukul 5:50
+15
+'''"komentar" memiliki lebih banyak batasan. Anda hanya dapat mengomentari seluruh pernyataan, sedangkan komentar dapat mengomentari sebagian ekspresi. Contoh: Di C, Anda dapat mengomentari beberapa elemen daftar: int a[] = {1, 2, /* 3, 4, */ 5};. Dengan string Multi baris, Anda tidak dapat melakukannya, karena itu akan memasukkan string ke dalam daftar Anda. -  el.pescado 29 Sep '16 pukul 5:55
+Tambahkan komentar

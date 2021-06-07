@@ -1,0 +1,135 @@
+Tidak ada kesalahan/bug Python?
+Ditanyakan 7 tahun, 11 bulan yang lalu
+Aktif 5 tahun, 5 bulan lalu
+Dilihat 13rb kali
+
+20
+
+
+5
+Di Python Anda memiliki Nonesingleton, yang bertindak sangat aneh dalam keadaan tertentu:
+
+>>> a = None
+>>> type(a)
+<type 'NoneType'>
+>>> isinstance(a,None)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+TypeError: isinstance() arg 2 must be a class, type, or tuple of classes and types
+Jadi pertama-tama, <type 'NoneType'>tampilan itu Nonebukan tipe, tapi itu NoneType. Namun ketika Anda menjalankan isinstance(a,NoneType), itu merespons dengan kesalahan:NameError: name 'NoneType' is not defined
+
+Sekarang, mengingat ini, jika Anda memiliki fungsi dengan default input yang disetel ke None, dan perlu memeriksa, Anda akan melakukan hal berikut:
+
+if variable is None:
+    #do something
+else:
+    #do something
+apa alasan saya tidak dapat melakukan hal berikut sebagai gantinya:
+
+if isinstance(variable,None): #or NoneType
+    #do something
+else:
+    #do something
+Saya hanya mencari penjelasan rinci sehingga saya bisa lebih memahami ini
+
+Sunting: aplikasi bagus
+
+Katakanlah saya ingin menggunakan isinstancesehingga saya dapat melakukan sesuatu jika variablejenisnya beragam, termasuk None:
+
+if isinstance(variable,(None,str,float)):
+    #do something
+ular piton
+python-2.7
+python-3.x
+jenis
+Bagikan
+Mengikuti
+diedit 19 Des '15 pada 2:33
+
+karthikr
+87.6k 24 24 lencana emas183 183 lencana perak183183 lencana perunggu
+tanya 19 Jun '13 jam 18:18
+
+Ryan Saxe
+14.9k 19 19 lencana emas66 66 lencana perak116116 lencana perunggu
+2
+if variable == Noneadalah Python anti-idiomatik. Cara standar untuk melakukan tes ini adalah dengan memanfaatkan fakta yang Nonetunggal: gunakan if variable is Nonesebagai gantinya. -  Henry Keiter 19 Juni '13 pukul 18:21 
+Tambahkan komentar
+4 Jawaban
+
+32
+
+Anda dapat mencoba:
+
+>>> variable = None
+>>> isinstance(variable,type(None))
+True
+>>> variable = True
+>>> isinstance(variable,type(None))
+False
+isinstance membutuhkan 2 argumen isinstance(object, classinfo)Di sini, dengan melewatkan NoneAnda mengatur classinfoke Tidak Ada, maka kesalahannya. Anda perlu lulus dalam jenis.
+
+Bagikan
+Mengikuti
+dijawab 19 Jun '13 pukul 18:20
+
+karthikr
+87.6k 24 24 lencana emas183 183 lencana perak183183 lencana perunggu
+Tambahkan komentar
+
+24
+
+Nonebukan tipe, itu adalah instance tunggal itu sendiri - dan argumen kedua isinstanceharus berupa tipe, kelas, atau tupel dari mereka. Karenanya, Anda perlu menggunakan NoneTypefrom types.
+
+from types import NoneType
+print isinstance(None, NoneType)
+print isinstance(None, (NoneType, str, float))
+Benar
+Benar
+Meskipun, saya sering cenderung mengganti isinstance(x, (NoneType, str, float))dengan x is None or isinstance(x, (str, float)).
+
+Bagikan
+Mengikuti
+diedit 19 Juni '13 pukul 18:36
+dijawab 19 Jun '13 pukul 18:20
+
+arshajii
+119k 22 22 lencana emas219 219 lencana perak270270 lencana perunggu
+Jawaban dan penjelasan yang bagus, tetapi saya menerima karthikr karena tidak memerlukan impor –  Ryan Saxe 19 Juni '13 pukul 18:36
+2
+@RyanSaxe Tidak apa-apa, aku memaafkanmu. Tetapi jika Anda berencana untuk menggunakan NoneTypebanyak, saya hanya akan mengimpornya dari types. Tampaknya tidak perlu menelepon type(None)ketika Anda dapat dengan mudah mengakses nilai itu. -  arshajii 19 Juni '13 pukul 18:39
+3
+Tidak ada lagi referensi NoneType di types. Anda dapat menggunakanNoneType = type(None) -  Sadik 3 April '16 pukul 20:02
+Saya suka jawaban ini karena ini menormalkan kode saya, daripada menangani kasus None secara berbeda –  eigenfield 25 Januari '17 pukul 17:19
+Tambahkan komentar
+
+4
+
+Noneadalah hanya nilai types.NoneType, itu bukan tipe.
+
+Dan kesalahannya cukup jelas:
+
+TypeError: isinstance() arg 2 harus berupa class , type , atau tuple dari kelas dan tipe
+
+Dari dokumen :
+
+Noneadalah satu-satunya nilai dari types.NoneType. Nonesering digunakan untuk mewakili tidak adanya nilai, seperti ketika argumen default tidak diteruskan ke suatu fungsi.
+
+Kamu bisa memakai types.NoneType
+
+>>> from types import NoneType
+>>> isinstance(None, NoneType)
+True
+is operator juga berfungsi dengan baik:
+
+>>> a = None
+>>> a is None
+True
+Bagikan
+Mengikuti
+diedit 19 Juni '13 pukul 18:25
+dijawab 19 Jun '13 pukul 18:20
+
+Ashwini Chaudhary
+218k 48 48 lencana emas415 415 lencana perak462462 lencana perunggu
+Tambahkan komentar

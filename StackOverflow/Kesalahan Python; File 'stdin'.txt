@@ -1,0 +1,100 @@
+Kesalahan Python: File “<stdin>”
+Ditanyakan 6 tahun, 3 bulan yang lalu
+Aktif 1 tahun, 1 bulan lalu
+Dilihat 69rb kali
+
+2
+
+
+1
+Saya mencoba mempelajari Python dan mencoba mengeksekusi file python di terminal. Saya menggunakan versi python 2.7.3 di OS X saya. Saya telah mengubah direktori di terminal ke tempat file berada, tetapi saya mendapatkan kesalahan di terminal:
+
+>>> python ex1.py
+  File "<stdin>", line 1
+    python ex1.py
+         ^
+SyntaxError: invalid syntax
+File ex1.py berisi:
+
+print "Hello World!"
+print "Hello Again"
+print "I like typing this."
+print "This is fun."
+print 'Yay! Printing.'
+print "I'd much rather you 'not'."
+print 'I "said" do not touch this.'
+Adakah ide tentang cara memperbaikinya? Thx banyak.
+
+python-2.7
+Bagikan
+Mengikuti
+diedit 26 Februari '15 pada 22:16
+
+Tim
+38.3k 17 17 lencana emas116 116 lencana perak131131 lencana perunggu
+ditanyakan pada 26 Februari '15 pada 21:59
+
+Alina Tsui
+23 1 1 lencana emas1 1 lencana perak33 lencana perunggu
+2
+Harap perbaiki pemformatan Anda dan jelaskan bagaimana Anda "mencoba menjalankan file python di terminal" –  Alkemis Dua-Bit 26 Februari '15 pukul 22:02
+jika Anda belum pernah bekerja di terminal; coba Command Line Crash Course [1-2days] –  jfs 27 Februari '15 pada 0:41 
+Tambahkan komentar
+6 Jawaban
+
+14
+
+>>> python ex1.py
+Anda mencoba menjalankan skrip Anda dari dalam juru bahasa python. Anda tidak ingin melakukan itu.
+
+Sebagai gantinya, jalankan saja perintah itu di terminal, bukan di penerjemah interpret
+
+$ python ex1.py
+Jika Anda masih menggunakan juru bahasa, Anda dapat menekan ctrl+d untuk meninggalkannya dan kembali ke terminal 'normal'
+
+Bagikan
+Mengikuti
+dijawab 26 Feb '15 pada 22:17
+
+Tim
+38.3k 17 17 lencana emas116 116 lencana perak131131 lencana perunggu
+Terima kasih. Saya menyadari ini tetapi tidak tahu bagaimana tidak menjalankan juru bahasa python. Saya lakukan sekarang..Thx banyak! -  Alina Tsui 8 Mar '15 pada 20:22
+Ya, bagaimana saya "menerima" jawabannya? Maaf, saya baru mengenal Stack Overflow. -  Alina Tsui 10 Mar '15 pada 2:46
+Tambahkan komentar
+
+3
+
+Keluar dari juru bahasa python dengan mengetik exit()atau tekanCrtl+Z
+
+Anda akan melihat terminal sekarang.
+
+Ketik python file_name.pyuntuk menjalankan kode.
+
+Selamat mengkode!!!
+
+Bagikan
+Mengikuti
+diedit 4 Mei 20 jam 11:11
+dijawab 4 Mei '20 jam 10:18
+
+Ilmuwan Keputusan
+702 4 4 lencana perak1010 lencana perunggu
+Tambahkan komentar
+
+2
+
+Coba ketik
+
+exit()
+kembali; kemudian
+
+python ex1.py
+kembali
+
+Bagikan
+Mengikuti
+dijawab 18 Juli '17 pukul 13:56
+
+Josh
+1.152 15 15 lencana perak2020 lencana perunggu
+Tambahkan komentar

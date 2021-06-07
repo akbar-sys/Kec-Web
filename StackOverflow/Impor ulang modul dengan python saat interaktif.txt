@@ -1,0 +1,126 @@
+Impor ulang modul dengan python saat interaktif
+Ditanyakan 11 tahun, 9 bulan yang lalu
+Aktif 1 bulan yang lalu
+Dilihat 215rb kali
+
+461
+
+
+94
+Saya tahu itu bisa dilakukan, tetapi saya tidak pernah ingat caranya.
+
+Bagaimana Anda bisa mengimpor kembali modul dengan python? Skenarionya adalah sebagai berikut: Saya mengimpor modul secara interaktif dan mengotak-atiknya, tetapi kemudian saya menghadapi kesalahan. Saya memperbaiki kesalahan dalam file .py dan kemudian saya ingin mengimpor kembali modul yang diperbaiki tanpa keluar dari python. Bagaimana saya bisa melakukannya?
+
+ular piton
+Bagikan
+Perbaiki pertanyaan ini
+Mengikuti
+ditanyakan 10 Agustus '09 pukul 11:24
+
+Stefano Borini
+126k 87 87 lencana emas277 277 lencana perak404404 lencana perunggu
+2
+Kemungkinan duplikat dari Bagaimana cara saya membongkar (memuat ulang) modul Python? -  Walter 18 Mei '17 jam 9:33
+impor ulang modul python –  LF00 10 Juni '17 pukul 1:19
+Tambahkan komentar
+7 Jawaban
+
+439
+
+Ini seharusnya berfungsi ( untuk Python <3.4 ):
+
+reload(my.module)
+Dari dokumen Python
+
+Muat ulang modul yang diimpor sebelumnya. Argumen harus berupa objek modul, sehingga harus berhasil diimpor sebelumnya. Ini berguna jika Anda telah mengedit file sumber modul menggunakan editor eksternal dan ingin mencoba versi baru tanpa meninggalkan interpreter Python.
+
+Jika menjalankan Python 3.4 dan lebih tinggi , lakukanimport importlib, lalu lakukanimportlib.reload(nameOfModule).
+
+Jangan lupa peringatan menggunakan metode ini:
+
+Saat modul dimuat ulang, kamusnya (berisi variabel global modul) dipertahankan. Pendefinisian ulang nama akan menggantikan definisi lama, jadi ini umumnya tidak menjadi masalah, tetapi jika versi baru dari sebuah modul tidak mendefinisikan nama yang didefinisikan oleh versi lama, definisi lama tidak akan dihapus.
+
+Jika sebuah modul mengimpor objek dari modul lain menggunakan from ... import ..., memanggil reload()modul lain tidak mendefinisikan ulang objek yang diimpor darinya — salah satu cara mengatasinya adalah dengan mengeksekusi ulang frompernyataan, yang lain adalah dengan menggunakan importdan memenuhi syarat nama ( module.*name*) sebagai gantinya.
+
+Jika sebuah modul membuat instance dari suatu kelas, memuat ulang modul yang mendefinisikan kelas tidak memengaruhi definisi metode dari instance — mereka terus menggunakan definisi kelas yang lama. Hal yang sama berlaku untuk kelas turunan.
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 24 April pukul 15:16
+
+Tomerikoo
+12.1k 9 9 lencana emas27 27 lencana perak3737 lencana perunggu
+dijawab 10 Agustus '09 pukul 11:29
+
+Benjamin Wohlwend
+28.4k 10 10 lencana emas83 83 lencana perak9595 lencana perunggu
+39
+jika saya memuat modul saya menggunakan from filename import *. Bagaimana cara memuat ulang? -  Peter Zhu 23 Juli '15 pukul 5:22
+6
+@PeterZhu untuk kasus "from mod import fcn", objek modul tidak ditambahkan ke ruang nama. Jadi Anda perlu mengimpor modul secara eksplisit, sehingga Anda dapat memuatnya kembali nanti. import foo; from foo import bar; reload(foo)-  Tedi 5 Juni '18 pukul 23:59 
+1
+Saya mencoba memuat ulang, serta keajaiban pemuatan ulang otomatis, dan saya melihat perubahan kode saya tercermin dalam tumpukan pesan kesalahan, tetapi kesalahan itu sendiri tampaknya masih keluar dari kode basi (mis. baris seperti sebelumnya, yang telah saya ubah menjadi komentar, dan komentar jelas tidak dapat menyebabkan kesalahan). Modul saya dimuat sebagai Ekstensi Jupyter, mungkin ada yang tahu jika ini memerlukan pekerjaan yang berbeda? Terima kasih! -  yifanwu 30 Juli '19 pukul 20:21
+1
+Jika Anda mengimpor fungsi Anda sebagai berikut "impor mod as name", maka Anda perlu melakukan hal berikut: 'import importlib importlib.reload(name)' –  Tidak Jan 6 '20 pada 23:34
+Metode ini mungkin tidak mengesampingkan referensi modul lain ke modul yang dimuat ulang. Lihat stackoverflow.com/a/61617169/2642356 untuk solusi untuk itu. -  EZLearner 5 '20 Mei pukul 15:51 
+Tambahkan komentar
+
+322
+
+Di python 3, reloadbukan lagi fungsi bawaan.
+
+Jika Anda menggunakan python 3.4+, Anda harus menggunakan reloaddari importlibperpustakaan sebagai gantinya:
+
+import importlib
+importlib.reload(some_module)
+Jika Anda menggunakan python 3.2 atau 3.3 Anda harus:
+
+import imp  
+imp.reload(module)  
+sebagai gantinya. Lihat http://docs.python.org/3.0/library/imp.html#imp.reload
+
+Jika Anda menggunakan ipython, pertimbangkan untuk menggunakan autoreloadekstensi:
+
+%load_ext autoreload
+%autoreload 2
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 25 Okt '17 pada 2:46
+dijawab 18 Jan '13 pada 0:35
+
+Andrew
+3.891 2 2 lencana emas23 23 lencana perak2929 lencana perunggu
+Meskipun banyak kode Python ditulis dalam Python 2, Python 3 menjadi pilihan yang lebih layak setiap hari. Terima kasih atas tipnya! -  Aaron Johnson 20 Februari '13 pukul 3:16
+44
+imp.reloadsudah usang sejak Python 3.4, gunakan importlib.reloadfungsi sebagai gantinya. -  jfs 7 November '13 pukul 4:03
+1
+@Andrew terima kasih! Saya menggunakan %autoreload, itu luar biasa, objek saya yang sudah dibuat secara otomatis mendapatkan implementasi metode kelas yang dikoreksi tanpa harus membuatnya kembali –  jeanmi 3 April '19 pukul 15:17
+4
+Saya agak terlambat, tetapi saya pikir ini tidak berfungsi jika yang perlu Anda muat ulang adalah fungsi atau kelas dari dalam modul: if my import statment was from mymodule import myfunc, then importlib.reload(myfunc), importlib.reload(mymodule.myfunc), importlib.reload(mymodule)all give a NameError. -  Engah 11 Juli '19 pukul 22:40 
+@Puff lihat jawaban saya di bawah ini untuk cara mengimpor ulang suatu fungsi –  jss367 30 Mar '20 pukul 17:34
+Tambahkan komentar
+
+46
+
+Sebenarnya, dalam Python 3 modul impditandai sebagai DEPRECATED. Yah, setidaknya itu benar untuk 3.4.
+
+Alih-alih, reloadfungsi dari importlibmodul harus digunakan:
+
+https://docs.python.org/3/library/importlib.html#importlib.reload
+
+Namun perlu diketahui bahwa perpustakaan ini memiliki beberapa perubahan API dengan dua versi minor terakhir.
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 8 Apr '15 pada 19:16
+
+CivFan
+10.1k 9 9 lencana emas34 34 lencana perak5555 lencana perunggu
+dijawab 28 Mei '14 jam 0:39
+
+masa depan yang funky
+2,861 1 1 lencana emas25 25 lencana perak3939 lencana perunggu
+Tambahkan komentar

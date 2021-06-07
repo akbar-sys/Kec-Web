@@ -1,0 +1,102 @@
+Kesalahan python "impor: tidak dapat membuka server X"
+Ditanyakan 7 tahun, 7 bulan yang lalu
+Aktif 2 tahun yang lalu
+Dilihat 68k kali
+
+52
+
+
+4
+Saya mendapatkan kesalahan berikut ketika mencoba menjalankan sepotong kode python:
+
+import: unable to open X server `' @ error/import.c/ImportImageCommand/366.
+from: can't read /var/mail/datetime
+./mixcloud.py: line 3: syntax error near unexpected token `('
+./mixcloud.py: line 3: `now = datetime.now()'
+Kode:
+
+import requests
+from datetime import datetime,date,timedelta
+
+now = datetime.now()
+Saya benar-benar kurang melihat masalah. Apakah ini sesuatu yang hanya bermasalah dengan server saya dan bukan kode itu sendiri?
+
+ular piton
+Bagikan
+Mengikuti
+diedit 22 Jun '15 pada 23:57
+
+John Kugelman
+308k 65 65 lencana emas474 474 lencana perak520520 lencana perunggu
+tanya 22 Okt '13 jam 0:32
+
+KomputerLokus
+2,789 9 9 lencana emas41 41 lencana perak8080 lencana perunggu
+Sebagai catatan, ini berfungsi di komputer saya. Linux Mint 15, python 2.7.5 anaconda. -  kevinsa5 22 Okt '13 pukul 0:42
+Tambahkan komentar
+3 Jawaban
+
+90
+
+itu adalah kesalahan dari shell perintah Anda. Anda menjalankan kode melalui Shell, bukan python.
+
+coba dari juru bahasa python ;)
+
+$ python
+Python 2.7.5+ (default, Sep 19 2013, 13:48:49) 
+[GCC 4.8.1] on linux2
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import requests
+>>> from datetime import datetime,date,timedelta
+>>> 
+>>> now = datetime.now()
+>>> 
+jika Anda menggunakan skrip, Anda dapat memanggil langsung dengan python:
+
+$ python mixcloud.py
+jika tidak, pastikan itu dimulai dengan baris Shebang yang tepat:
+
+#!/usr/bin/env python
+... dan kemudian Anda dapat memanggilnya dengan nama saja (dengan asumsi itu ditandai sebagai dapat dieksekusi):
+
+$ ./mixcloud.py
+Bagikan
+Mengikuti
+diedit 22 Okt '13 pada 0:46
+dijawab 22 Okt '13 jam 0:41
+
+Corey Goldberg
+53.5k 24 24 lencana emas119 119 lencana perak137137 lencana perunggu
+4
+Untuk penjelasan lebih lanjut: Hanya menamai file something.pytidak menyebabkannya dijalankan sebagai Python saat Anda mengeksekusi something.py. Segala sesuatu yang bukan biner (ELF, Mach-O, apa pun yang sesuai untuk platform Anda) dijalankan seperti dengan Shell default (biasanya /bin/sh something.py) sebagai penerjemah, kecuali jika baris pertama adalah baris Shebang seperti #!/usr/bin/env python, dalam hal ini akan dijalankan dengan yang Anda tentukan ( /usr/bin/env python something.py). -  abarnert 22 Okt '13 pada 0:44
+1
+Satu hal lagi: Semua ini berlaku hanya untuk sistem POSIX dan POSIX—artinya hampir setiap platform yang Anda pedulikan kecuali Windows. -  abarnert 22 Okt '13 pada 0:44
+Terima kasih. Itulah masalahnya. -  KomputerLokus 22 Okt '13 jam 0:45
+Tambahkan komentar
+
+8
+
+Periksa apakah # Anda ! baris ada di baris pertama file python Anda. Saya mendapatkan kesalahan ini karena saya memasukkan baris ini ke baris kedua file.
+
+Bagikan
+Mengikuti
+dijawab 27 Mar '17 pada 21:52
+
+Izana
+1,255 16 16 lencana perak1919 lencana perunggu
+2
+Saya mendapatkan kesalahan ini karena saya memiliki spasi sebelum#! –  tom Feb 6 '19 jam 8:57
+Tambahkan komentar
+
+0
+
+Saya mendapatkan kesalahan ini ketika saya mencoba menjalankan skrip python saya di docker dengan docker run . Pastikan dalam hal ini bahwa Anda mengatur titik masuk diatur dengan benar:
+
+--entrypoint /usr/bin/python
+Bagikan
+Mengikuti
+dijawab 14 Feb '18 pada 1:21
+
+misi
+1
+Tambahkan komentar

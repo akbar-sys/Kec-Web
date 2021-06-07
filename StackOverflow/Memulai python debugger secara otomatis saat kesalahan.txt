@@ -1,0 +1,149 @@
+Memulai python debugger secara otomatis saat kesalahan
+Ditanyakan 12 tahun, 7 bulan yang lalu
+Aktif 1 bulan yang lalu
+Dilihat 88k kali
+
+239
+
+
+141
+Ini adalah pertanyaan yang sudah lama saya pikirkan, namun saya tidak pernah menemukan solusi yang cocok. Jika saya menjalankan skrip dan saya menemukan, katakanlah IndexError, python mencetak baris, lokasi, dan deskripsi cepat tentang kesalahan dan keluar. Apakah mungkin untuk memulai pdb secara otomatis ketika terjadi kesalahan? Saya tidak menentang memiliki pernyataan impor tambahan di bagian atas file, atau beberapa baris kode tambahan.
+
+ular piton
+debugging
+Bagikan
+Perbaiki pertanyaan ini
+Mengikuti
+tanya 28 Okt 08 jam 7:37
+
+jeremy
+3.799 4 4 lencana emas21 21 lencana perak2323 lencana perunggu
+Tambahkan komentar
+14 Jawaban
+
+144
+
+Anda dapat menggunakan traceback.print_exc untuk mencetak pengecualian traceback. Kemudian gunakan sys.exc_info untuk mengekstrak traceback dan akhirnya panggil pdb.post_mortem dengan traceback itu
+
+import pdb, traceback, sys
+
+def bombs():
+    a = []
+    print a[0]
+
+if __name__ == '__main__':
+    try:
+        bombs()
+    except:
+        extype, value, tb = sys.exc_info()
+        traceback.print_exc()
+        pdb.post_mortem(tb)
+Jika Anda ingin memulai baris perintah interaktif dengan code.interact menggunakan lokal dari bingkai tempat pengecualian berasal, Anda dapat melakukannya
+
+import traceback, sys, code
+
+def bombs():
+    a = []
+    print a[0]
+
+if __name__ == '__main__':
+    try:
+        bombs()
+    except:
+        type, value, tb = sys.exc_info()
+        traceback.print_exc()
+        last_frame = lambda tb=tb: last_frame(tb.tb_next) if tb.tb_next else tb
+        frame = last_frame().tb_frame
+        ns = dict(frame.f_globals)
+        ns.update(frame.f_locals)
+        code.interact(local=ns)
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 16 April pukul 3:12
+
+Yatin
+2,358 6 6 lencana emas20 20 lencana perak3838 lencana perunggu
+dijawab 28 Okt '08 jam 7:56
+
+Florian Bosch
+26k 11 11 lencana emas45 45 lencana perak5252 lencana perunggu
+solusi pertama dibahas lebih lanjut di buku masak python –  dirkjot 27 Juni '12 pukul 20:12
+3
+mengapa ada orang yang lebih memilih codelebih pdbkarena yang terakhir tampaknya memperluas mantan? -  K3---rnc 25 Agustus '14 pukul 21:49
+Saya punya pertanyaan yang sama? Mengapa Anda lebih suka code? -  ARH 19 Februari '15 pukul 23:06
+4
+Kemudian gunakan sys.exc_infountuk mengekstrak traceback dan akhirnya memanggil pdb.post_mortemdengan traceback itu . Anda tidak perlu meneruskan objek traceback ke pdb.post_mortem. Dari dokumen : Jika tidak ada traceback yang diberikan, ia menggunakan salah satu pengecualian yang sedang ditangani (pengecualian harus ditangani jika default akan digunakan). -  Piotr Dobrogost 21 Apr '15 jam 8:13
+2
+@PiotrDobrogost Poin bagus. Saya pikir akan lebih membantu untuk mengetahui bahwa Anda dapat memasukkan objek tb, karena ini menunjukkan API dengan lebih baik. Senang mengetahui kedua opsi itu ada. -  davidA 18 Des '16 pukul 23:35
+Tampilkan 3 komentar lainnya
+
+523
+
+python -m pdb -c continue myscript.py
+Jika Anda tidak memberikan -c continuetanda tersebut maka Anda harus memasukkan 'c' (untuk Lanjutkan) saat eksekusi dimulai. Kemudian itu akan berjalan ke titik kesalahan dan memberi Anda kendali di sana. Seperti yang disebutkan oleh eqzx , flag ini adalah tambahan baru di python 3.2 sehingga memasukkan 'c' diperlukan untuk versi Python sebelumnya (lihat https://docs.python.org/3/library/pdb.html ).
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 18 Sep '17 pada 2:01
+
+Antony Hatchkins
+25.6k 8 8 lencana emas96 96 lencana perak9898 lencana perunggu
+dijawab 13 Mar '10 pukul 15:20
+
+Catherine Devlin
+6.293 2 2 lencana emas22 22 lencana perak1616 lencana perunggu
+6
+Terima kasih telah menyebutkan " enter 'c' " - Saya biasanya memasukkan 'r' (untuk "run"), yang digunakan untuk itu dari gdb; dan ketika Anda memasukkan 'r' di pdb, program memang berjalan, tetapi TIDAK berhenti (atau menghasilkan jejak balik) pada kesalahan; membuat saya bingung sampai saya membaca ini. Bersulang! -  sdaau 2 Agustus '13 pukul 20:58
+3
+Vineet, itu akan memulai Anda dengan debugger, jadi masukkan "cont" dan itu akan berjalan sampai kesalahan ditemukan. Dari sana Anda dapat memeriksa variabel, dll. seperti di sesi pdb lainnya. -  Catherine Devlin 17 Des '14 pukul 16:41
+55
+Tolong OP, terima ini sebagai jawaban. Ini adalah yang paling berguna dan saya telah membuang 5 menit untuk membaca yang lain sampai saya mencapai yang ini ... ini harus menjadi yang pertama! -  jhegedus 17 Sep '15 pukul 19:46
+4
+Ini juga bekerja sama dengan ipdb; dan tentu saja argumen dapat ditambahkan setelah skrip! -  tutuDajuju 14 Des '15 jam 10:03
+21
+Ini tidak berfungsi dengan Python 2.7. docs.python.org/3/library/pdb.html : "Baru di versi 3.2: pdb.py sekarang menerima opsi -c yang menjalankan perintah" –  eqzx 10 April '17 pukul 18:29
+Tampilkan 11 komentar lainnya
+
+73
+
+Gunakan modul berikut:
+
+import sys
+
+def info(type, value, tb):
+    if hasattr(sys, 'ps1') or not sys.stderr.isatty():
+    # we are in interactive mode or we don't have a tty-like
+    # device, so we call the default hook
+        sys.__excepthook__(type, value, tb)
+    else:
+        import traceback, pdb
+        # we are NOT in interactive mode, print the exception...
+        traceback.print_exception(type, value, tb)
+        print
+        # ...then start the debugger in post-mortem mode.
+        # pdb.pm() # deprecated
+        pdb.post_mortem(tb) # more "modern"
+
+sys.excepthook = info
+Beri nama debug(atau apa pun yang Anda suka) dan letakkan di suatu tempat di jalur python Anda.
+
+Sekarang, di awal skrip Anda, cukup tambahkan file import debug.
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 3 Nov '16 pukul 12:10
+
+compie
+9,459 15 15 lencana emas51 51 lencana perak7373 lencana perunggu
+dijawab 28 Okt '08 jam 8:14
+
+tzot.dll
+81.3k 25 25 lencana emas129 129 lencana perak197197 lencana perunggu
+4
+Ini harus menjadi jawaban yang diterima - itu tidak memerlukan modifikasi kode yang ada atau membungkus semuanya dengan try-catchIMO yang jelek. -  siphar Sep 7 '15 pada 15:01
+1
+Ini terlihat bagus, tetapi perhatikan bahwa beberapa kerangka kerja (mis. labu) sudah disetel sys.excepthook. Mereka sering memiliki pendekatan mereka sendiri yang lebih baik seperti werkzeug, tetapi lihat juga python - Flask dan sys\.excepthook - Stack Overflow –  nealmcb 6 November '20 pukul 2:11 
+Tambahkan komentar

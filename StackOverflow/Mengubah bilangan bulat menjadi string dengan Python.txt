@@ -1,0 +1,98 @@
+Mengubah bilangan bulat menjadi string dengan Python
+Ditanyakan 11 tahun, 11 bulan yang lalu
+Aktif 5 bulan yang lalu
+Dilihat 3,5 juta kali
+
+1453
+
+
+176
+Saya ingin mengonversi integer menjadi string dengan Python. Saya mengetiknya dengan sia-sia:
+
+d = 15
+d.str()
+Ketika saya mencoba mengubahnya menjadi string, itu menunjukkan kesalahan seperti inttidak memiliki atribut yang disebut str.
+
+ular piton
+tali
+bilangan bulat
+Bagikan
+Perbaiki pertanyaan ini
+Mengikuti
+diedit 18 Agustus '20 pukul 12:22
+
+Peter Mortensen
+28.3k 21 21 lencana emas95 95 lencana perak123123 lencana perunggu
+tanya 7 Jun 09 jam 10:22
+
+Orang udik
+31.9k 44 44 lencana emas140 140 lencana perak235235 lencana perunggu
+1
+Untuk jenis konversi ini, solusi yang baik adalah menggunakan situs seperti converttypes.com tempat Anda dapat melihat semua konversi untuk hampir semua bahasa pemrograman. -  Firzok Nadeem 15 Juni '20 pukul 18:34 
+Tambahkan komentar
+14 Jawaban
+
+2206
+
+>>> str(10)
+'10'
+>>> int('10')
+10
+Tautan ke dokumentasi:
+
+int()
+str()
+Konversi ke string dilakukan dengan str()fungsi bawaan , yang pada dasarnya memanggil __str__()metode parameternya.
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 4 Jun '20 pada 14:26
+
+Adriana
+16k 7 7 lencana emas35 35 lencana perak6767 lencana perunggu
+dijawab 7 Jun '09 jam 10:24
+
+Bastien Leonard
+55.4k 18 18 lencana emas76 76 lencana perak9292 lencana perunggu
+Tambahkan komentar
+
+133
+
+Coba ini:
+
+str(i)
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+dijawab 7 Jun '09 jam 10:23
+
+Lasse V. Karlsen
+350k 94 94 lencana emas583 583 lencana perak780780 lencana perunggu
+Tambahkan komentar
+
+64
+
+Tidak ada typecast dan tidak ada paksaan tipe di Python. Anda harus mengonversi variabel Anda secara eksplisit.
+
+Untuk mengonversi objek dalam string, Anda menggunakan str()fungsi. Ia bekerja dengan objek apa pun yang memiliki metode yang disebut __str__()didefinisikan. Faktanya
+
+str(a)
+setara dengan
+
+a.__str__()
+Hal yang sama jika Anda ingin mengonversi sesuatu menjadi int, float, dll.
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 27 Mei '17 pada 21:41
+
+Peter Mortensen
+28.3k 21 21 lencana emas95 95 lencana perak123123 lencana perunggu
+dijawab 7 Jun '09 jam 10:30
+
+Andrea Ambu
+34.2k 14 14 lencana emas51 51 lencana perak7676 lencana perunggu
+solusi ini membantu saya, saya mengubah string alfanumerik menjadi string numerik, mengganti huruf dengan nilai ascii mereka, namun langsung menggunakan fungsi str() tidak berfungsi, tetapi __str__() berfungsi. Contoh (python2.7); s = "14.2.2.10a2" kode tidak berfungsi: print "".join([ str(ord(c)) if (c.isalpha()) else c for c in s ]) kode kerja: print "".join ([ ord(c).__str__() if (c.isalpha()) else c for c in s ]) Output yang diharapkan: 14.2.2.10972 –  Jayant 7 '20 Mei pukul 5:49 
+Tambahkan komentar

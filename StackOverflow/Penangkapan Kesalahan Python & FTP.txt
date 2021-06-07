@@ -1,0 +1,132 @@
+Penangkapan Kesalahan Python & FTP
+Ditanyakan 10 tahun, 11 bulan yang lalu
+Aktif 1 tahun, 11 bulan yang lalu
+Dilihat 23rb kali
+
+9
+
+
+4
+Mencoba menangani perpustakaan FTP dengan Python. :)
+
+Punya ini sejauh ini.
+
+from ftplib import FTP
+
+server = '127.0.0.1'
+port = '57422'
+
+print 'FTP Client (' + server + ') port: ' + port
+
+try:
+    ftp = FTP()
+    ftp.connect(server, port, 3)
+    print 'Connected! Welcome msg is \"' + ftp.getwelcome() + '\"'
+
+    ftp.cwd('\\')
+
+    x = '1'
+    currentDir = ''
+
+except: //***What do I put here?***
+http://docs.python.org/library/ftplib.html mengatakan ada beberapa kode kesalahan yang dapat saya tangkap tetapi saya tidak dapat melakukannya
+
+kecuali: ftplib.all_errors
+
+Pertanyaan kedua. :P Bagaimana saya dapat mengambil informasi yang lebih spesifik tentang kesalahan? Mungkin kode kesalahannya?
+
+Sangat baru untuk python (satu jam atau lebih).
+
+ular piton
+ftp
+Bagikan
+Perbaiki pertanyaan ini
+Mengikuti
+tanya 2 Jul '10 pukul 23:48
+
+bobber205
+11.6k 25 25 lencana emas71 71 lencana perak9797 lencana perunggu
+Tambahkan komentar
+3 Jawaban
+
+3
+
+Anda menulis
+
+except Exception, e:  #you can specify type of Exception also
+   print str(e)
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+dijawab 2 Juli '10 pukul 23:54
+
+jcao219
+2.520 3 3 lencana emas19 19 lencana perak2222 lencana perunggu
+Ini terlalu umum, except ftblib.all_errorsmerupakan jawaban yang lebih benar sambil tetap menutupi semua kesalahan ftp –  guival 22 Februari '17 pukul 16:34
+Tambahkan komentar
+
+21
+
+Saya tidak bisa melakukannya
+
+except: ftplib.all_errors
+Tentu saja tidak, itu sintaks yang buruk! Tapi tentu saja Anda bisa melakukannya dengan sintaks yang tepat:
+
+except ftplib.all_errors:
+yaitu, titik dua setelah tupel pengecualian.
+
+Bagaimana saya bisa mengambil informasi yang lebih spesifik tentang kesalahan? Mungkin kode kesalahannya?
+
+except ftplib.all_errors as e:
+  errorcode_string = str(e).split(None, 1)[0]
+Misalnya, '530'sekarang akan menjadi nilai errorcode_stringketika pesan kesalahan lengkap adalah '530 Login authentication failed'.
+
+Anda dapat menemukan pengecualian lainnya di dokumen .
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 25 Juni '19 pukul 5:50
+
+Corey Goldberg
+53.5k 24 24 lencana emas119 119 lencana perak137137 lencana perunggu
+dijawab 2 Juli '10 pukul 23:57
+
+Alex Martelli
+764k 157 157 lencana emas1161 1161 lencana perak13461346 lencana perunggu
+nama 'ftplib' tidak ditentukan ketika saya mencoba apa yang Anda sarankan (kesalahan awal adalah salah ketik) Tidak yakin apa yang harus dilakukan sejauh ini. Saya pikir saya sudah mengimpor 'namespace'. -  bobber205 3 Juli '10 pada 1:02
+3
+@bobber, tidak, Anda perlu menambahkan import ftplibpernyataan. Anda tidak mengimpor modul -- Anda hanya mengimpor kelas dari dalam modul (praktik yang saya benci secara pribadi, tapi itu masalah lain); jadi, untuk mengakses nama yang memenuhi syarat seperti ftplib.all_errors, Anda juga perlu import ftplib. -  Alex Martelli 3 Juli '10 pukul 2:44
+Tambahkan komentar
+
+2
+
+Anda tidak ingin mencoba menangkap kelas Pengecualian kecuali Anda harus melakukannya. Pengecualian adalah menangkap semua, alih-alih menangkap kelas tertentu yang dilemparkan, socket.error
+
+  import ftplib
+  import socket <--
+
+  server = '127.0.0.1'
+  port = '57422'
+
+  print 'FTP Client (' + server + ') port: ' + port
+
+  ftp = ftplib.FTP()
+  try:
+    ftp.connect(server, port, 3)
+    print 'Connected! Welcome msg is \"' + ftp.getwelcome() + '\"'
+
+    ftp.cwd('\\')
+
+    x = '1'
+    currentDir = ''
+  except socket.error,e: <--
+    print 'unable to connect!,%s'%e
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+dijawab 2 Juli '10 pukul 23:56
+
+ebt
+1,362 1 1 lencana emas13 13 lencana perak1818 lencana perunggu
+Tambahkan komentar

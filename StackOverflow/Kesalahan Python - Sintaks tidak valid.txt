@@ -1,0 +1,79 @@
+Kesalahan Python - Sintaks tidak valid
+Ditanyakan 7 tahun, 10 bulan yang lalu
+Aktif 7 tahun, 10 bulan yang lalu
+Dilihat 222 kali
+
+0
+
+
+Saya baru mengenal python dan pemrograman, saya memiliki tugas untuk menjalankan file berikut: http://Pastebin.com/UmheVyvV dengan Python, tetapi saya mendapatkan kesalahan pada baris 163:
+
+line 163
+print filename + " "*(80 - len(filename) - len(ln)) + ln + delim,
+
+SyntaxError: invalid syntax
+Ada '^' di bawah nama file dalam pesan kesalahan.
+
+Adakah yang bisa memberi tahu saya cara mengatasi masalah ini dan dapat menjalankan file? Terima kasih!
+
+ular piton
+Bagikan
+Perbaiki pertanyaan ini
+Mengikuti
+diedit 28 Jul '13 pukul 17:57
+tanya 28 Jul '13 jam 17:47
+
+Pavel Angelov
+1 11 lencana perunggu
+1
+python versi apa? Jika 3.x , printadalah suatu fungsi. JADI, Anda perlu melakukanprint(...) -  karthikr 28 Juli '13 pukul 17:51 
+Tambahkan komentar
+3 Jawaban
+
+1
+
+Ganti <dengan (:
+
+print filename + " "*(80 - len(filename) - len(ln)) + ln + delim,
+#                    ^
+MEMPERBARUI
+
+Kode dalam url yang diberikan ditulis untuk Python 2.x. Ini tidak akan bekerja di Python 3.x.
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+dijawab 28 Jul '13 pukul 17:48
+
+palsu
+315k 49 49 lencana emas610 610 lencana perak552552 lencana perunggu
+Tambahkan komentar
+
+1
+
+Jika Anda menggunakan python 3. pernyataan cetak menjadi fungsi sehingga Anda harus meletakkan tanda kurung. contoh:
+
+print (1+3)
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+dijawab 28 Jul '13 pukul 17:53
+
+med_alpa
+311 1 1 lencana emas5 5 lencana perak1717 lencana perunggu
+Tambahkan komentar
+
+0
+
+'^' menunjukkan kepada Anda di mana sintaksnya salah. Bergantung pada tanda kurung versi python harus digunakan.
+
+doc http://docs.python.org/2/tutorial/errors.html
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+dijawab 28 Jul '13 pukul 17:56
+
+kul_mi
+1.071 4 4 lencana emas15 15 lencana perak3232 lencana perunggu
+Tambahkan komentar

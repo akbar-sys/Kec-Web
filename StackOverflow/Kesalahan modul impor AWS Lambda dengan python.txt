@@ -1,0 +1,129 @@
+Kesalahan modul impor AWS Lambda dengan python
+Ditanyakan 5 tahun, 3 bulan yang lalu
+Aktif 1 bulan yang lalu
+Dilihat 184k kali
+
+106
+
+
+15
+Saya membuat paket penerapan python AWS Lambda. Saya menggunakan satu permintaan ketergantungan eksternal . Saya menginstal ketergantungan eksternal menggunakan dokumentasi AWS http://docs.aws.amazon.com/lambda/latest/dg/lambda-python-how-to-create-deployment-package.html . Di bawah ini adalah kode python saya.
+
+import requests
+
+print('Loading function')
+
+s3 = boto3.client('s3')
+
+
+def lambda_handler(event, context):
+    #print("Received event: " + json.dumps(event, indent=2))
+
+    # Get the object from the event and show its content type
+    bucket = event['Records'][0]['s3']['bucket']['name']
+    key = urllib.unquote_plus(event['Records'][0]['s3']['object']['key']).decode('utf8')
+    try:
+        response = s3.get_object(Bucket=bucket, Key=key)
+        s3.download_file(bucket,key, '/tmp/data.txt')
+        lines = [line.rstrip('\n') for line in open('/tmp/data.txt')]
+        for line in lines:
+            col=line.split(',')
+            print(col[5],col[6])
+        print("CONTENT TYPE: " + response['ContentType'])
+        return response['ContentType']
+    except Exception as e:
+        print(e)
+        print('Error getting object {} from bucket {}. Make sure they exist and your bucket is in the same region as this function.'.format(key, bucket))
+        raise e
+Membuat Zip konten direktori project-dir dan mengunggah ke lambda (Zip konten direktori, bukan direktori). Ketika saya menjalankan fungsi saya mendapatkan kesalahan yang disebutkan di bawah ini.
+
+START RequestId: 9e64e2c7-d0c3-11e5-b34e-75c7fb49d058 Version: $LATEST
+**Unable to import module 'lambda_function': No module named lambda_function**
+
+END RequestId: 9e64e2c7-d0c3-11e5-b34e-75c7fb49d058
+REPORT RequestId: 9e64e2c7-d0c3-11e5-b34e-75c7fb49d058  Duration: 19.63 ms  Billed Duration: 100 ms     Memory Size: 128 MB Max Memory Used: 9 MB
+Mohon bantu saya untuk men-debug kesalahan.
+
+ular piton
+amazon-web-services
+aws-lambda
+Bagikan
+Perbaiki pertanyaan ini
+Mengikuti
+diedit 13 Februari '16 pada 11:27
+
+Dan D.
+67.6k 13 13 lencana emas93 93 lencana perak109109 lencana perunggu
+tanya 11 Feb '16 jam 13:40
+
+Nithin K Anil
+7.747 12 12 lencana emas38 38 lencana perak5959 lencana perunggu
+Apakah itu kode lengkap Anda? Dengan kesalahan itu, tampaknya di suatu tempat ada sesuatu yang ingin import lambda_functionyang tidak ditemukan. Mungkin Anda mau from future import lambda_function? Atau cukup pip install lambda_function pada baris cmd. -  Berci 11 Februari '16 pukul 13:45
+@Berci Saya menjalankan kode python ini di platform AWS. Saya tidak bisa menggunakan pip. di mana saja dalam kode saya menggunakan lambda_function. JIKA saya menyalin tempel kode yang sama di konsol AWS itu akan berfungsi –  Nithin K Anil 11 Februari '16 pukul 13:49
+Lihat komentar terakhir di utas ini — mungkin berlaku untuk Anda? -  kwinkunks 11 Februari '16 pukul 13:50
+@kwinkunks saya mencobanya. Sebenarnya saya zip konten bukan direktori!! -  Nithin K Anil 11 Februari '16 pukul 13:52
+3
+Dugaan saya adalah opsi "penangan" di fungsi Anda salah. Periksa apakah nama file Anda bernama "lambda_function.py" dan metode handlernya adalah "lambda_handler" –  Vor Feb 11 '16 pada 15:19
+Tampilkan 3 komentar lainnya
+24 Jawaban
+
+126
+
+Kesalahan itu karena nama file dari fungsi lambda. Saat membuat fungsi lambda, ia akan meminta pengendali fungsi Lambda. Anda harus menamainya sebagai Python_File_Name.Method_Name Anda . Dalam skenario ini saya menamakannya sebagai lambda.lambda_handler (lambda.py adalah nama file).
+
+Silakan temukan di bawah snapshot. masukkan deskripsi gambar di sini
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+dijawab 12 Februari '16 pukul 5:58
+
+Nithin K Anil
+7.747 12 12 lencana emas38 38 lencana perak5959 lencana perunggu
+1
+Kode saya hanya dalam lambda sebagai kode -- bukan sebagai file. -  Ben Wheeler 29 Agustus '17 pukul 18:35
+4
+@BenWheeler: Meskipun ini adalah kode sebaris, ini adalah file yang Anda tulis. Anda dapat melihat nama file dan seluruh struktur direktori di sebelah kiri jendela. -  Vineeth 31 Januari '18 pukul 6:13
+Jadi saya menamai kode saya sebagai "lambda_function.py", haruskah saya memberi nama pawang sebagai Python_lambda_function.lambda_handler? -  RB17 26 Agustus '19 pukul 00:05
+1
+@RahulBanerjee Tidak. Anda akan menyebutnya sebagai lambda_function.lambda_handler –  Dinesh 27 Nov '19 pukul 18:43
+Tambahkan komentar
+
+106
+
+Jika Anda mengunggah file zip. Pastikan Anda melakukan zip isi direktori dan bukan direktori itu sendiri.
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 11 Jan '18 pukul 15:55
+dijawab 5 Jun '17 jam 20:50
+
+2ank3th
+2.280 1 1 lencana emas17 17 lencana perak3333 lencana perunggu
+3
+Saat melakukan zip, pastikan Anda menggunakan flag -r juga! -  Grant Robert Smith 29 Okt '18 pukul 19:41 
+@2ank3th kamu yang terbaik –  Sethuraman Srinivasan Apr 18 '20 pada 11:51
+Terima kasih untuk ini. -  JamesG 11 Okt '20 pukul 23:58
+Tambahkan komentar
+
+28
+
+Sumber lain dari masalah ini adalah izin pada file yang di-zip. Itu HARUS setidaknya dapat dibaca di seluruh dunia. (menit chmod 444)
+
+Saya menjalankan yang berikut ini pada file python sebelum melakukan zip dan itu berfungsi dengan baik.
+
+chmod u=rwx,go=r
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+dijawab 5 Sep '16 pada 14:40
+
+Catalin Ciurea
+611 1 1 lencana emas9 9 lencana perak77 lencana perunggu
+4
+Ini. Saya menggunakan ZipFile Python untuk secara terprogram mengemas fungsi lambda ke dalam ZIP, secara default memiliki 0600yang seperti yang Anda sebutkan tidak cukup. Selanjutnya, editor kode sumber Lambda terintegrasi (di halaman web Amazon) akan dengan senang hati membaca file tanpa peringatan masalah izin. -  cjhanks 25 Sep '16 pada 21:54
+2
+Kedua. Saya membuatnya bekerja dengan mengatur izin file menggunakan metode yang ditunjukkan di sini: https://stackoverflow.com/a/434689/931277 –  dokkaebi 15 Februari '17 pukul 19:59
+Ini memperbaikinya untuk saya juga! Terima kasih!! -  AndyW 26 Mei pukul 19:33
+Tambahkan komentar

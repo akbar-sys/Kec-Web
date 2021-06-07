@@ -1,0 +1,228 @@
+Menghasilkan PNG dengan matplotlib saat DISPLAY tidak ditentukan
+Ditanyakan 11 tahun, 1 bulan yang lalu
+Aktif 1 tahun, 4 bulan lalu
+Dilihat 177k kali
+
+326
+
+
+113
+Saya mencoba menggunakan networkx dengan Python. Ketika saya menjalankan program ini mendapatkan kesalahan ini. Apakah ada sesuatu yang hilang?
+
+#!/usr/bin/env python
+
+import networkx as nx
+import matplotlib
+import matplotlib.pyplot
+import matplotlib.pyplot as plt
+
+G=nx.Graph()
+G.add_node(1)
+G.add_nodes_from([2,3,4,5,6,7,8,9,10])
+#nx.draw_graphviz(G)
+#nx_write_dot(G, 'node.png')
+nx.draw(G)
+plt.savefig("/var/www/node.png")
+
+
+Traceback (most recent call last):
+  File "graph.py", line 13, in <module>
+    nx.draw(G)
+  File "/usr/lib/pymodules/python2.5/networkx/drawing/nx_pylab.py", line 124, in draw
+    cf=pylab.gcf()
+  File "/usr/lib/pymodules/python2.5/matplotlib/pyplot.py", line 276, in gcf
+    return figure()
+  File "/usr/lib/pymodules/python2.5/matplotlib/pyplot.py", line 254, in figure
+    **kwargs)
+  File "/usr/lib/pymodules/python2.5/matplotlib/backends/backend_tkagg.py", line 90, in new_figure_manager
+    window = Tk.Tk()
+  File "/usr/lib/python2.5/lib-tk/Tkinter.py", line 1650, in __init__
+    self.tk = _tkinter.create(screenName, baseName, className, interactive, wantobjects, useTk, sync, use)
+_tkinter.TclError: no display name and no $DISPLAY environment variable
+Saya mendapatkan kesalahan yang berbeda sekarang:
+
+#!/usr/bin/env python
+
+import networkx as nx
+import matplotlib
+import matplotlib.pyplot
+import matplotlib.pyplot as plt
+
+matplotlib.use('Agg')
+
+G=nx.Graph()
+G.add_node(1)
+G.add_nodes_from([2,3,4,5,6,7,8,9,10])
+#nx.draw_graphviz(G)
+#nx_write_dot(G, 'node.png')
+nx.draw(G)
+plt.savefig("/var/www/node.png")
+/usr/lib/pymodules/python2.5/matplotlib/__init__.py:835: UserWarning:  This call to matplotlib.use() has no effect
+because the the backend has already been chosen;
+matplotlib.use() must be called *before* pylab, matplotlib.pyplot,
+or matplotlib.backends is imported for the first time.
+
+  if warn: warnings.warn(_use_error_msg)
+Traceback (most recent call last):
+  File "graph.py", line 15, in <module>
+    nx.draw(G)
+  File "/usr/lib/python2.5/site-packages/networkx-1.2.dev-py2.5.egg/networkx/drawing/nx_pylab.py", line 124, in draw
+    cf=pylab.gcf()
+  File "/usr/lib/pymodules/python2.5/matplotlib/pyplot.py", line 276, in gcf
+    return figure()
+  File "/usr/lib/pymodules/python2.5/matplotlib/pyplot.py", line 254, in figure
+    **kwargs)
+  File "/usr/lib/pymodules/python2.5/matplotlib/backends/backend_tkagg.py", line 90, in new_figure_manager
+    window = Tk.Tk()
+  File "/usr/lib/python2.5/lib-tk/Tkinter.py", line 1650, in __init__
+    self.tk = _tkinter.create(screenName, baseName, className, interactive, wantobjects, useTk, sync, use)
+_tkinter.TclError: no display name and no $DISPLAY environment variable
+Saya mendapatkan kesalahan yang berbeda sekarang:
+
+#!/usr/bin/env python
+
+import networkx as nx
+import matplotlib
+import matplotlib.pyplot
+import matplotlib.pyplot as plt
+
+matplotlib.use('Agg')
+
+G=nx.Graph()
+G.add_node(1)
+G.add_nodes_from([2,3,4,5,6,7,8,9,10])
+#nx.draw_graphviz(G)
+#nx_write_dot(G, 'node.png')
+nx.draw(G)
+plt.savefig("/var/www/node.png")
+/usr/lib/pymodules/python2.5/matplotlib/__init__.py:835: UserWarning:  This call to matplotlib.use() has no effect
+because the the backend has already been chosen;
+matplotlib.use() must be called *before* pylab, matplotlib.pyplot,
+or matplotlib.backends is imported for the first time.
+
+  if warn: warnings.warn(_use_error_msg)
+Traceback (most recent call last):
+  File "graph.py", line 15, in <module>
+    nx.draw(G)
+  File "/usr/lib/python2.5/site-packages/networkx-1.2.dev-py2.5.egg/networkx/drawing/nx_pylab.py", line 124, in draw
+    cf=pylab.gcf()
+  File "/usr/lib/pymodules/python2.5/matplotlib/pyplot.py", line 276, in gcf
+    return figure()
+  File "/usr/lib/pymodules/python2.5/matplotlib/pyplot.py", line 254, in figure
+    **kwargs)
+  File "/usr/lib/pymodules/python2.5/matplotlib/backends/backend_tkagg.py", line 90, in new_figure_manager
+    window = Tk.Tk()
+  File "/usr/lib/python2.5/lib-tk/Tkinter.py", line 1650, in __init__
+    self.tk = _tkinter.create(screenName, baseName, className, interactive, wantobjects, useTk, sync, use)
+_tkinter.TclError: no display name and no $DISPLAY environment variable
+ular piton
+matplotlib
+grafik
+Bagikan
+Perbaiki pertanyaan ini
+Mengikuti
+diedit 8 Agustus '16 pukul 23:37
+
+Joel
+17.5k 3 3 lencana emas50 50 lencana perak8181 lencana perunggu
+tanya 10 Mei '10 jam 10:22
+
+krisdigitx
+6,517 17 17 lencana emas56 56 lencana perak9191 lencana perunggu
+3
+kemungkinan duplikat dari Menghasilkan grafik matplotlib tanpa menjalankan X server –  Jouni K. Seppänen 21 Februari '11 pukul 21:26
+9
+Pindahkan panggilan ke matplotlib.use('Agg') di atas impor Anda yang lain, khususnya sebelum impor matplotlib.pyplot –  Ivo Bosticky 25 Juni '11 pukul 1:18
+Komentar @IvoBosticky menyelesaikannya untuk saya juga: Satu-satunya hal yang menyesatkan adalah "di atas impor Anda yang lain". Seharusnya jelas bahwa Anda perlu mengimpor matplotlib sebelum... Ini adalah seluruh pengaturan yang bekerja untuk saya: import matplotlib // matplotlib.use('Agg') // import matplotlib.pyplot as plt –  mrk 20 Juni '17 pukul 7:52 
+Tambahkan komentar
+12 Jawaban
+
+523
+
+Masalah utamanya adalah (di sistem Anda) matplotlib memilih backend x-using secara default. Saya baru saja mengalami masalah yang sama di salah satu server saya. Solusi bagi saya adalah menambahkan kode berikut di tempat yang dibaca sebelum impor pylab/matplotlib/ pyplot lainnya :
+
+import matplotlib
+# Force matplotlib to not use any Xwindows backend.
+matplotlib.use('Agg')
+Alternatifnya adalah mengaturnya di .matplotlibrc . Anda
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 19 Agustus '15 pada 5:58
+dijawab 16 Jun '10 jam 14:41
+
+Reinout van Rees
+12.9k 1 1 lencana emas32 32 lencana perak6464 lencana perunggu
+188
+Catatan penting: .use perlu dipanggil sebelum pyplot diimpor. Jadi jika Anda, misalnya, hanya mencoba mengimpor pyplot, Anda perlu mengimpor matplotlib terlebih dahulu, memanggil use, dan kemudian mengimpor pyplot. -  seaotternerd 8 November '13 jam 9:15
+9
+Komentar di atas dijelaskan lebih lanjut oleh jawaban ini . -  Ioannis Filippidis 28 Februari '14 jam 6:15
+2
+Bagaimana Anda "mengaturnya di .matplotlibrc Anda"? -  tommy.carstensen 05 Juli '15 pukul 20:32
+18
+backend: aggdi ~/.config/matplotlib'/matplotlibrc(sebagai contoh, lihat http://matplotlib.org/faq/troubleshooting_faq.html#locating-matplotlib-config-dir). Lihat juga matplotlib.org/users/customizing.html , yang memiliki contoh file konfigurasi di bagian bawah halaman. Temukan "agg" di halaman itu dan Anda akan melihat opsi konfigurasi yang Anda butuhkan. -  Reinout van Rees 06 Juli '15 jam 8:48
+4
+Untuk referensi, berikut adalah tautan ke dokumentasi matplotlib yang menjelaskan hal ini. (+1, jawaban yang bagus, sangat membantu saya!) –  Tim S 4 Feb '16 pada 20:24
+Tampilkan 12 komentar lainnya
+
+74
+
+Hanya sebagai pelengkap jawaban Reinout.
+
+Cara permanen untuk mengatasi masalah seperti ini adalah dengan mengedit file .matplotlibrc. Temukan melalui
+
+>>> import matplotlib
+>>> matplotlib.matplotlib_fname()
+# This is the file location in Ubuntu
+'/etc/matplotlibrc'
+Kemudian ubah backend dalam file itu menjadi backend : Agg. Hanya itu saja.
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 29 Nov '16 pada 9:12
+
+Devendra Desale
+23 44 lencana perunggu
+dijawab 17 Nov '12 pukul 23:07
+
+Chris.Q
+1.270 14 14 lencana perak1818 lencana perunggu
+5
+Kiat pro: atur $MATPLOTLIBRCke direktori tempat Anda ingin memasukkan matplotlibrc Anda sendiri. –  Kenneth Host 29 Agustus '13 pukul 18:19
+Agak berlebihan untuk masalah seperti ini, tetapi saya kira jika server selalu bekerja tanpa kepala, masuk akal untuk memodifikasi file konfigurasi. Apakah ini memiliki efek samping pada bagaimana matplotlib akan berfungsi? -  BruceJohnJennerLawso 13 Sep '16 pada 1:45 
+Saya menjalankan matplotlib di server web jadi ini adalah jawaban untuk saya. Saya belum melihat adanya efek samping. -  spitz 25 Nov '17 pukul 12:14
+Tambahkan komentar
+
+44
+
+Jawaban bersihnya adalah meluangkan sedikit waktu untuk mempersiapkan lingkungan eksekusi Anda dengan benar.
+
+Teknik pertama yang harus Anda persiapkan lingkungan eksekusi Anda adalah dengan menggunakan matplotlibrcfile, seperti yang direkomendasikan oleh Chris Q. , pengaturan
+
+backend : Agg
+dalam file itu. Anda bahkan dapat mengontrol — tanpa perubahan kode — bagaimana dan di mana matplotlib mencari dan menemukan matplotlibrcfile .
+
+Teknik kedua yang harus Anda siapkan untuk lingkungan eksekusi adalah dengan menggunakan MPLBACKENDvariabel lingkungan (dan beri tahu pengguna Anda untuk memanfaatkannya):
+
+export MPLBACKEND="agg"
+python <program_using_matplotlib.py>
+Ini berguna karena Anda bahkan tidak perlu menyediakan file lain di disk untuk membuatnya berfungsi. Saya telah menggunakan pendekatan ini dengan, misalnya, pengujian dalam integrasi berkelanjutan, dan berjalan pada mesin jarak jauh yang tidak memiliki tampilan.
+
+Hard-coding backend matplotlib Anda ke "Agg" dalam kode Python Anda seperti memukul pasak persegi ke dalam lubang bundar dengan palu besar, ketika, sebaliknya, Anda bisa saja memberi tahu matplotlib bahwa itu perlu lubang persegi.
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 23 Mei '17 jam 12:02
+
+komunitas ♦
+1 11 lencana perak
+dijawab 28 Mar '16 pada 21:53
+
+punya gen
+34.4k 27 27 lencana emas93 93 lencana perak119119 lencana perunggu
+Teknik kedua terlihat paling elegan dalam situasi ini. -  Dmitry Kabanov 17 Okt '17 pukul 20:22
+Menggunakan MPLBACKEND menyelesaikannya untuk saya. Pasti cara yang paling elegan! -  SaturnusDariTitan 18 Mei '18 jam 4:32
+Tambahkan komentar

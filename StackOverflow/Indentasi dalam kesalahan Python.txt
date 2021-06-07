@@ -1,0 +1,149 @@
+Indentasi dalam kesalahan Python
+Ditanyakan 6 tahun, 1 bulan yang lalu
+Aktif 6 tahun, 1 bulan lalu
+Dilihat 167 kali
+
+1
+
+
+Saya baru mengenal python dan mencoba membuat game tictactoe untuk mempelajari sintaks dan terus mengalami masalah dengan lekukan. Pemahaman saya adalah bahwa selama spasi putih konsisten maka program harus dijalankan? Berikut kodenya:
+
+board = [ 
+            ['|', '|', '|' ],
+            ['|', '|', '|'],
+            ['|', '|', '|'] 
+        ] 
+
+player1 = ''
+player2 = ''
+
+
+def tictactoe ():
+
+    player1 = raw_input('What is player one name?')
+    print(player1)
+    player2 = raw_input('What is player two name?')
+    print(player2)
+
+
+
+def getMove ():
+# get move and pass it to testMove
+
+def getMove ():
+# get move and pass it to testMove
+
+# def testMove():
+# test for moves and pass to make move
+
+# def makeMove ():
+#make move and loop back to getMove
+Saya melakukan ini dengan luhur. Ada ide mengapa saya mendapatkan kesalahan ini:
+
+"  File "test.py", line 27
+
+    ^
+IndentationError: expected an indented block
+"
+ular piton
+Bagikan
+Perbaiki pertanyaan ini
+Mengikuti
+tanya 18 Apr '15 jam 23:24
+
+rahul2001
+1,217 1 1 lencana emas15 15 lencana perak2626 lencana perunggu
+Silakan baca panduan gaya Python, PEP-8 . Indentasi harus 4 spasi, dan tab harus dihindari, karena editor yang berbeda memperlakukannya dengan cara yang berbeda (Sublime, misalnya, memungkinkan Anda menentukan berapa banyak spasi yang digunakan tab), sedangkan juru bahasa Python melihatnya sebagai 8 spasi. Untuk menghindari kebingungan dan kesalahan yang tidak berguna, harap gunakan 4 spasi saja. Itu terlihat bagus, mudah dibaca, dan konsisten dengan seberapa banyak orang lain melakukannya. -  MattDMo 18 Apr '15 pukul 23:32
+Tambahkan komentar
+5 Jawaban
+
+1
+
+Anda perlu menentukan konten dalam fungsi Anda atau gunakan passuntuk membiarkannya tidak diterapkan:
+
+def getMove ():
+    pass
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+dijawab 18 Apr '15 pukul 23:27
+
+Malik Brahimi
+15.3k 4 4 lencana emas28 28 lencana perak6262 lencana perunggu
+Terima kasih. Adakah cara untuk mendapatkan petunjuk sintaks atau pemeriksaan kesalahan? Ada paket di sublime atau iPython? -  rahul2001 18 Apr '15 pukul 23:34
+Tidak yang saya tahu. Bagian dari menjadi programmer yang baik adalah mampu men-debug dan memahami kode kesalahan. Kesalahan seperti ini merupakan indikasi yang baik untuk melihat sebelum baris, baris, dan setelah baris untuk setiap kesalahan dalam kode Anda. -  Malik Brahimi 18 Apr '15 pukul 23:35
+Dan jika ini berguna bagi Anda, harap tandai sebagai jawaban dengan tanda centang di sebelah jawaban saya. -  Malik Brahimi 18 Apr '15 pukul 23:36
+Tambahkan komentar
+
+5
+
+Jika ini adalah kode lengkap Anda, Anda tidak dapat melakukan ini:
+
+def getMove ():
+# get move and pass it to testMove
+
+# def testMove():
+# test for moves and pass to make move
+Fungsi harus memiliki beberapa konten. Anda dapat membuat fungsi kosong, tetapi setidaknya satu baris harus ditulis, misalnya:
+
+def getMove():
+#get move and pass it to testMove
+    pass
+EDIT
+Seperti yang dinyatakan oleh @SethMMorton , Anda juga dapat melakukan ini tanpa menggunakan pass, dan mempertahankan struktur kode yang sama, hanya mengubah
+
+def getMove():
+#get move and pass it to testMove
+    pass
+untuk
+
+def getMove():
+    """Get move and pass it to testMove"""
+Ini disebut docstrings, dan digunakan untuk menjelaskan tidak hanya bagaimana menggunakan fungsi tetapi juga untuk menjelaskan hal-hal lain, seperti konten dan atribut kelas. Dengan cara ini, Anda juga tidak akan mendapatkan kesalahan identifikasi.
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 18 Apr '15 pada 23:39
+dijawab 18 Apr '15 pukul 23:26
+
+rafaelc
+48.3k 12 12 lencana emas46 46 lencana perak7272 lencana perunggu
+1
+Atau, jika komentar diganti dengan docstring pada tingkat lekukan yang benar , komentar akan berfungsi tanpa pass. Saya akan menganjurkan bahwa OP melakukan ini sebagai gantinya, karena dostrings harus digunakan untuk menjelaskan cara menggunakan suatu fungsi dan maksudnya bukan komentar. -  SethMMorton 18 Apr '15 pukul 23:32
+@SethMMorton Sangat diperhatikan! Saya akan menambahkan itu ke jawabannya. -  rafaelc 18 Apr '15 pukul 23:37
+Tambahkan komentar
+
+0
+
+Definisi fungsi Anda harus memiliki setidaknya satu pernyataan kode. Harap dicatat bahwa Anda juga mendefinisikan getMove() dua kali dan Anda harus menghapus salah satunya.
+
+board = [ 
+        ['|', '|', '|' ],
+        ['|', '|', '|'],
+        ['|', '|', '|'] 
+    ] 
+
+player1 = ''
+player2 = ''
+
+
+def tictactoe ():
+
+   player1 = raw_input('What is player one name?')
+   print(player1)
+   player2 = raw_input('What is player two name?')
+   print(player2)
+
+
+
+def getMove ():
+   pass
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+dijawab 18 Apr '15 pukul 23:30
+
+Alex
+19.1k 10 10 lencana emas50 50 lencana perak6666 lencana perunggu
+Tambahkan komentar

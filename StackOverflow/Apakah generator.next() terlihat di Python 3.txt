@@ -1,0 +1,121 @@
+Apakah generator.next() terlihat di Python 3?
+Ditanyakan 11 tahun, 11 bulan yang lalu
+Aktif 11 bulan yang lalu
+Dilihat 137k kali
+
+272
+
+
+39
+Saya memiliki generator yang menghasilkan seri, misalnya:
+
+def triangle_nums():
+    '''Generates a series of triangle numbers'''
+    tn = 0
+    counter = 1
+    while True:
+        tn += counter
+        yield tn
+        counter += + 1
+Di Python 2 saya dapat melakukan panggilan berikut:
+
+g = triangle_nums()  # get the generator
+g.next()             # get the next value
+namun dalam Python 3 jika saya menjalankan dua baris kode yang sama saya mendapatkan kesalahan berikut:
+
+AttributeError: 'generator' object has no attribute 'next'
+tetapi, sintaks iterator loop berfungsi di Python 3
+
+for n in triangle_nums():
+    if not exit_cond:
+       do_something()...
+Saya belum dapat menemukan apa pun yang menjelaskan perbedaan perilaku ini untuk Python 3.
+
+ular piton
+python-3.x
+pengulangan
+Bagikan
+Perbaiki pertanyaan ini
+Mengikuti
+diedit 18 Juni '20 pada 1:49
+
+Boris
+7.091 6 6 lencana emas62 62 lencana perak6363 lencana perunggu
+tanya 2 Jul '09 jam 9:29
+
+jotos
+19k 9 9 lencana emas28 28 lencana perak2626 lencana perunggu
+Tambahkan komentar
+3 Jawaban
+
+446
+
+g.next()telah diubah namanya menjadi g.__next__(). Alasan untuk ini adalah konsistensi: metode khusus seperti __init__()dan __del__()semua memiliki garis bawah ganda (atau "dunder" dalam bahasa sehari-hari saat ini), dan .next()merupakan salah satu dari sedikit pengecualian untuk aturan itu. Ini diperbaiki di Python 3.0. [*]
+
+Tapi alih-alih menelepon g.__next__(), gunakan next(g).
+
+[*] Ada atribut khusus lainnya yang mendapatkan perbaikan ini; func_name, sekarang __name__, dll.
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 18 Juni '20 pada 1:44
+
+Boris
+7.091 6 6 lencana emas62 62 lencana perak6363 lencana perunggu
+dijawab 2 Jul '09 jam 10:15
+
+Lennart Regebro
+148k 40 40 lencana emas207 207 lencana perak241241 lencana perunggu
+adakah yang tahu mengapa python 2 menghindari konvensi dunder untuk metode ini? -  Rick mendukung Monica 29 Mar '16 pukul 14:47
+Itu mungkin hanya kekhilafan. -  Lennart Regebro 31 Mar '16 pukul 11:49
+Bagaimana ketika Anda menimpa __ str __ di kelas? Apakah itu mengubah str(obj) atau __str__(obj) ? -  Tanpa nama 27 Okt '19 jam 4:00 
+1
+@NoName Ya, Anda tahu. -  Lennart Regebro 30 Okt '19 jam 9:56
+1
+@MatthewMilone Disebutkan dalam PEP tempat perubahan diusulkan, yaitu lima tahun kemudian. python.org/dev/peps/pep-3114 –  Lennart Regebro 8 Okt '20 pada 16:56
+Tampilkan 3 komentar lainnya
+
+151
+
+Mencoba:
+
+next(g)
+Lihat tabel rapi ini yang menunjukkan perbedaan sintaks antara 2 dan 3 dalam hal ini.
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 27 Jul '13 jam 3:52
+
+Lennart Regebro
+148k 40 40 lencana emas207 207 lencana perak241241 lencana perunggu
+dijawab 2 Jul '09 jam 9:31
+
+Paolo Bergantino
+450k 76 76 lencana emas510 510 lencana perak431431 lencana perunggu
+1
+@MaikuMori Saya memperbaiki tautannya (menunggu revisi rekan) (Situs diveintopython3.org tampaknya tidak aktif . Situs cermin diveintopython3.ep.io masih hidup) –  tokek 5 Januari '12 pukul 20:59 
+1
+Memperbaiki tautan lagi. python3porting.com/differences.html lebih lengkap, btw. -  Lennart Regebro 27 Juli '13 jam 3:53
+Apakah ada pembenaran untuk beralih dari metode ke fungsi, di luar g.next()seharusnya g.__next__(), dan kita perlu memiliki sesuatu yang bukan metode dunder dengan fungsi g.next()? -  Pengawas TC 17 Desember '19 pukul 23:25
+Berfungsi untuk kesalahan `'generator' objek tidak memiliki atribut 'berikutnya' `. -  Yugendran 13 April pukul 11:51
+Tambahkan komentar
+
+12
+
+Jika kode Anda harus berjalan di bawah Python2 dan Python3, gunakan perpustakaan 2to3 six seperti ini:
+
+import six
+
+six.next(g)  # on PY2K: 'g.next()' and onPY3K: 'next(g)'
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+dijawab 17 Sep '15 pukul 17:09
+
+danius
+2,353 23 23 lencana perak3131 lencana perunggu
+18
+Tidak banyak kebutuhan untuk ini kecuali Anda perlu mendukung versi Python lebih awal dari 2.6. Python 2.6 dan 2.7 memiliki nextfungsi bawaan. -  Mark Dickinson 17 Sep '15 pukul 17:15 
+Tambahkan komentar

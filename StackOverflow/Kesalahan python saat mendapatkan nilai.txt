@@ -1,0 +1,85 @@
+Kesalahan python saat mendapatkan nilai
+Ditanyakan 5 tahun, 11 bulan yang lalu
+Aktif 5 tahun, 11 bulan yang lalu
+Dilihat 870 kali
+
+1
+
+
+Saya menggunakan Python versi 2.7.3. Ketika saya mencoba menjalankan kode di bawah ini, kesalahan muncul,
+
+>>> value = input("get value: ")
+
+    get value: hello
+
+    Traceback (most recent call last):
+
+    File "<stdin>", line 1, in <module>
+
+    File "<string>", line 1, in <module>
+
+    NameError: name 'hello' is not defined
+ular piton
+runtime-error
+Bagikan
+Mengikuti
+tanya 30 Jun '15 jam 6:40
+
+hijau
+465 3 3 lencana emas7 7 lencana perak2222 lencana perunggu
+Setara dengan eval(raw_input(Prompt)). -  pengguna3159253 30 Juni '15 pada 6:43
+1
+kemungkinan duplikat kesalahan input () Python - NameError: nama '...' tidak ditentukan -  ukasz Rogalski 30 Juni '15 pada 7:02
+Tambahkan komentar
+3 Jawaban
+
+1
+
+Seperti yang disarankan dalam jawaban sebelumnya gunakan raw_input()alih-alih input(). Alasan untuk ini adalah bahwa input()metode menginterpretasikan nilai yang diberikan oleh pengguna. Jika pengguna misalnya memasukkan nilai integer, fungsi input mengembalikan nilai integer ini. Jika pengguna di sisi lain memasukkan daftar, fungsi akan mengembalikan daftar. Karena Anda ingin memasukkan string. Jika Anda tidak membungkus nama Anda menjadi tanda kutip, Python mengambil nama Anda sebagai variable. Jadi, pesan kesalahan masuk akal.
+
+Bagikan
+Mengikuti
+dijawab 30 Jun '15 pada 7:04
+
+saktimaan
+1,406 12 12 lencana perak1212 lencana perunggu
+oh!!! terima kasih shakthimaan ... sekarang saya mendapatkan perbedaan antara nama variabel dan nilai string saat meneruskan sebagai input .... –  hijau 1 Juli '15 pada 6:08
+@Green Juga ini hanya berlaku untuk Python 2.x. Dalam Python 3.x input()mengembalikan string. -  saktimaan 1 Juli '15 pukul 6:58
+Tambahkan komentar
+
+5
+
+Saat melewati string gunakan "atau masukkan ke hellodalam ". "hello"sesuatu seperti ini.
+
+atau
+
+cukup gunakan raw_input()
+
+Bagikan
+Mengikuti
+diedit 30 Juni '15 pada 6:55
+dijawab 30 Jun '15 jam 6:42
+
+vks
+63.3k 10 10 lencana emas79 79 lencana perak110110 lencana perunggu
+Tambahkan komentar
+
+2
+
+Jika Anda ingin memasukkan angka gunakan input()Jika Anda ingin memasukkan string (seperti nama) gunakan raw_input():
+
+>>> val = input('get value:')
+get value:100
+>>> val
+100
+>>> string = raw_input("get value:")
+get value:hello
+>>> string
+'hello'
+Bagikan
+Mengikuti
+dijawab 30 Jun '15 jam 6:44
+
+lqhcpsgbl
+3.394 2 2 lencana emas19 19 lencana perak3030 lencana perunggu
+Tambahkan komentar

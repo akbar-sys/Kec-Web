@@ -1,0 +1,116 @@
+NameError: nama global 'xrange' tidak didefinisikan dalam Python 3
+Ditanyakan 7 tahun, 11 bulan yang lalu
+Aktif 1 tahun, 3 bulan lalu
+Dilihat 448k kali
+
+340
+
+
+45
+Saya mendapatkan kesalahan saat menjalankan program python:
+
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Wing IDE 101 4.1\src\debug\tserver\_sandbox.py", line 110, in <module>
+  File "C:\Program Files (x86)\Wing IDE 101 4.1\src\debug\tserver\_sandbox.py", line 27, in __init__
+  File "C:\Program Files (x86)\Wing IDE 101 4.1\src\debug\tserver\class\inventory.py", line 17, in __init__
+builtins.NameError: global name 'xrange' is not defined
+Permainannya dari sini .
+
+Apa yang menyebabkan kesalahan ini?
+
+ular piton
+python-3.x
+jarak
+pengecualian runtime
+xrange
+Bagikan
+Perbaiki pertanyaan ini
+Mengikuti
+diedit 28 Jun '15 pada 21:13
+
+smci
+26.1k 16 16 lencana emas96 96 lencana perak138138 lencana perunggu
+tanya 19 Jun '13 jam 13:13
+
+pip
+3.887 4 4 lencana emas20 20 lencana perak3030 lencana perunggu
+Tambahkan komentar
+6 Jawaban
+
+657
+
+Anda mencoba menjalankan basis kode Python 2 dengan Python 3. xrange()diubah namanya menjadi range()di Python 3.
+
+Jalankan game dengan Python 2 sebagai gantinya. Jangan mencoba mem-port-nya kecuali Anda tahu apa yang Anda lakukan, kemungkinan besar akan ada lebih banyak masalah di luar xrange()vs. range().
+
+Sebagai catatan, apa yang Anda lihat bukanlah kesalahan sintaks tetapi pengecualian runtime.
+
+Jika Anda tahu apa yang Anda lakukan dan secara aktif membuat basis kode Python 2 yang kompatibel dengan Python 3, Anda dapat menjembatani kode dengan menambahkan nama global ke modul Anda sebagai alias untuk range. (Perhatikan bahwa Anda mungkin harus memperbarui range()penggunaan yang ada di basis kode Python 2 list(range(...))untuk memastikan Anda masih mendapatkan objek daftar di Python 3):
+
+try:
+    # Python 2
+    xrange
+except NameError:
+    # Python 3, xrange is now named range
+    xrange = range
+
+# Python 2 code that uses xrange(...) unchanged, and any
+# range(...) replaced with list(range(...))
+atau ganti semua penggunaan xrange(...)with range(...)dalam basis kode dan kemudian gunakan shim yang berbeda untuk membuat sintaks Python 3 kompatibel dengan Python 2:
+
+try:
+    # Python 2 forward compatibility
+    range = xrange
+except NameError:
+    pass
+
+# Python 2 code transformed from range(...) -> list(range(...)) and
+# xrange(...) -> range(...).
+Yang terakhir lebih disukai untuk basis kode yang ingin bertujuan agar Python 3 kompatibel hanya dalam jangka panjang, lebih mudah untuk menggunakan sintaks Python 3 bila memungkinkan.
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 9 Februari '19 jam 10:17
+dijawab 19 Jun '13 jam 13:14
+
+Martijn Pieters ♦
+890k 245 245 lencana emas3518 3518 lencana perak30023002 lencana perunggu
+9
+Terima kasih telah mencatat perbedaan antara kesalahan sintaks dan pengecualian runtime. Belajar sesuatu yang baru! -  Pithikos 4 Nov '14 jam 10:30
+Tambahkan komentar
+
+23
+
+tambahkan xrange=rangekode Anda :) Ini berfungsi untuk saya.
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+dijawab 7 Februari '18 jam 7:15
+
+Frost Xu
+255 2 2 lencana perak22 lencana perunggu
+7
+Seperti yang dikatakan dalam jawaban yang diterima, jangan lakukan itu, kemungkinan akan ada masalah lain. Jalankan saja kode itu dengan python 2. –  RobinFrcd 7 Februari '18 pukul 7:21
+2
+@Frost Xu ... tolong pertimbangkan Robin Fourcade komentarnya dan hapus jawaban Anda. Ini adalah IDE untuk pemula dan Anda tidak ingin memulai dengan mendalami debugging dan hanya belajar tentang perubahan python 2/3. Agak pinggang waktu Anda. -  ZF007 7 Februari '18 pukul 7:38 
+Tambahkan komentar
+
+15
+
+Saya memecahkan masalah dengan menambahkan impor ini Info
+lebih lanjut
+
+from past.builtins import xrange
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+dijawab 13 Mei 19 jam 15:48
+
+Andres Gutierrez
+151 1 1 lencana perak33 lencana perunggu
+2
+-------------------------------------------------- ------------------------- ModuleNotFoundError Traceback (panggilan terakhir terakhir) <ipython-input-21-bcd3600b3604> di <module>() -- --> 1 from past.builtins import xrange 2 for i in xrange(10): 3 print(i) ModuleNotFoundError: Tidak ada modul bernama 'past' –  rsc05 23 Okt '19 pukul 11:44
+@rsc05 Anda harus kembali ke masa depan! pip3 install future-  KejutanAnjing 29 April pukul 15:03
+Tambahkan komentar

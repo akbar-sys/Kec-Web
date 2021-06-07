@@ -1,0 +1,168 @@
+Dapatkan deskripsi pengecualian dan jejak tumpukan yang menyebabkan pengecualian, semuanya sebagai string
+Ditanyakan 10 tahun, 5 bulan yang lalu
+Aktif 1 tahun, 6 bulan lalu
+Dilihat 266k kali
+
+487
+
+
+90
+Saya telah melihat banyak posting tentang jejak tumpukan dan pengecualian di Python. Tapi belum menemukan apa yang saya butuhkan.
+
+Saya memiliki sepotong kode Python 2.7 yang dapat menimbulkan pengecualian. Saya ingin menangkapnya dan menetapkan ke string deskripsi lengkapnya dan jejak tumpukan yang menyebabkan kesalahan (hanya semua yang kami gunakan untuk melihat di konsol). Saya memerlukan string ini untuk mencetaknya ke kotak teks di GUI.
+
+Sesuatu seperti ini:
+
+try:
+    method_that_can_raise_an_exception(params)
+except Exception as e:
+    print_to_textbox(complete_exception_description(e))
+Masalahnya adalah: apa fungsinya complete_exception_description?
+
+ular piton
+python-2.7
+penanganan pengecualian
+jejak-tumpukan
+Bagikan
+Mengikuti
+diedit 16 Jan '19 pada 7:53
+
+ianace
+1,606 2 2 lencana emas17 17 lencana perak3131 lencana perunggu
+ditanyakan 30 Des '10 jam 16:59
+
+kebiruan
+23.1k 23 23 lencana emas110 110 lencana perak171171 lencana perunggu
+Tambahkan komentar
+11 Jawaban
+
+718
+
+Lihat tracebackmodul, khususnya format_exc()fungsinya. Di sini .
+
+import traceback
+
+try:
+    raise ValueError
+except ValueError:
+    tb = traceback.format_exc()
+else:
+    tb = "No error"
+finally:
+    print tb
+Bagikan
+Mengikuti
+diedit 16 Jan '19 pada 7:55
+
+ianace
+1,606 2 2 lencana emas17 17 lencana perak3131 lencana perunggu
+dijawab 30 Des '10 pukul 17:05
+
+baik-baik saja
+158k 31 31 lencana emas244 244 lencana perak289289 lencana perunggu
+5
+Apakah ini hanya berfungsi dengan kesalahan terakhir? Apa yang terjadi jika Anda mulai meneruskan kesalahan ke bit kode lainnya? Saya sedang menulis sebuah log_error(err)fungsi. -  AnnanFay 4 Okt '19 jam 1:23
+Ia bekerja dengan kesalahan yang ditangkap dan ditangani. -  baik-baik saja 4 Okt '19 pukul 16:42
+9
+Selain apa yang saya cari, saya baru belajar bahwa trydapat mengambil elseklausa. -  jlh 29 Juni '20 pada 7:34
+Tambahkan komentar
+
+92
+
+Mari kita buat stacktrace yang cukup rumit, untuk menunjukkan bahwa kita mendapatkan stacktrace lengkap:
+
+def raise_error():
+    raise RuntimeError('something bad happened!')
+
+def do_something_that_might_error():
+    raise_error()
+Mencatat stacktrace penuh
+Praktik terbaik adalah menyiapkan logger untuk modul Anda. Itu akan mengetahui nama modul dan dapat mengubah level (di antara atribut lainnya, seperti penangan)
+
+import logging
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
+Dan kita dapat menggunakan logger ini untuk mendapatkan kesalahan:
+
+try:
+    do_something_that_might_error()
+except Exception as error:
+    logger.exception(error)
+Log mana:
+
+ERROR:__main__:something bad happened!
+Traceback (most recent call last):
+  File "<stdin>", line 2, in <module>
+  File "<stdin>", line 2, in do_something_that_might_error
+  File "<stdin>", line 2, in raise_error
+RuntimeError: something bad happened!
+Jadi kita mendapatkan output yang sama seperti ketika kita memiliki kesalahan:
+
+>>> do_something_that_might_error()
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "<stdin>", line 2, in do_something_that_might_error
+  File "<stdin>", line 2, in raise_error
+RuntimeError: something bad happened!
+Mendapatkan hanya string
+Jika Anda benar-benar hanya menginginkan string, gunakan traceback.format_excfungsi sebagai gantinya, tunjukkan logging string di sini:
+
+import traceback
+try:
+    do_something_that_might_error()
+except Exception as error:
+    just_the_string = traceback.format_exc()
+    logger.debug(just_the_string)
+Log mana:
+
+DEBUG:__main__:Traceback (most recent call last):
+  File "<stdin>", line 2, in <module>
+  File "<stdin>", line 2, in do_something_that_might_error
+  File "<stdin>", line 2, in raise_error
+RuntimeError: something bad happened!
+Bagikan
+Mengikuti
+diedit 26 Juni '19 pukul 14:32
+
+Lundin
+155k 33 33 lencana emas214 214 lencana perak341341 lencana perunggu
+dijawab 16 Jul '15 jam 3:47
+
+Aaron Balai ♦
+292k 75 75 lencana emas369 369 lencana perak312312 lencana perunggu
+1
+apakah ini metode terbaik saat menggunakan python 3 (dibandingkan dengan misalnya beberapa jawaban di bawah)? -  Yunti 3 Mei '19 pukul 16:34
+1
+@Yunti Saya percaya API ini telah konsisten di Python 2 dan 3. –  Aaron Balai ♦ 3 '19 Mei pukul 17:09
+Pemformatan jawaban ini telah dibahas di meta: meta.stackoverflow.com/questions/386477/… . -  Lundin 26 Juni '19 pukul 14:33
+Saya mengirim suntingan ke yang berikut ini tetapi tidak masuk sehingga ditampilkan sebagai anonim:except Exception as e: logger.exception("<<clearly and distinctly describe what failed here>>", exc_info=e) –  arntg 19 Nov '19 pukul 18:52 
+@arntg Saya menghargai bahwa Anda mencoba membantu, tetapi pengeditan itu akan menjadi perubahan yang berbahaya. Harap lebih berhati-hati di masa mendatang untuk memahami sepenuhnya API yang Anda coba gunakan. Dalam hal ini, exc_infoargumen mengharapkan "tupel pengecualian" sedangkan the erroradalah turunan dari Exceptionobjek (atau subkelas), dan tidak perlu mengubah errorke e. -  Aaron Balai ♦ 19 Nov '19 pukul 19:16
+Tambahkan komentar
+
+55
+
+Dengan Python 3, kode berikut akan memformat Exceptionobjek persis seperti yang diperoleh dengan menggunakan traceback.format_exc():
+
+import traceback
+
+try: 
+    method_that_can_raise_an_exception(params)
+except Exception as ex:
+    print(''.join(traceback.format_exception(etype=type(ex), value=ex, tb=ex.__traceback__)))
+Keuntungannya adalah hanya Exceptionobjek yang diperlukan (berkat __traceback__atribut yang direkam ), dan oleh karena itu dapat lebih mudah diteruskan sebagai argumen ke fungsi lain untuk diproses lebih lanjut.
+
+Bagikan
+Mengikuti
+diedit 1 Nov '17 jam 3:56
+
+komunitas ♦
+1 11 lencana perak
+dijawab 1 Mar '16 pada 0:57
+
+Erwin Mayer
+15.9k 9 9 lencana emas79 79 lencana perak117117 lencana perunggu
+2
+Ini lebih baik daripada sys.exc_info() yang bukan gaya OO yang baik dan menggunakan variabel global. -  Wei Ching 20 Mei '16 pukul 4:00
+Ini menanyakan secara khusus bagaimana mendapatkan traceback dari objek pengecualian seperti yang telah Anda lakukan di sini: stackoverflow.com/questions/11414894/… –  Ciro Santilli新疆棉花TRUMP BAN BURUK 18 '19 Mei pukul 13:09
+Ada cara sederhana Python3 tanpa menggunakan .__traceback__dan type, melihat stackoverflow.com/a/58764987/5717886 -  don_vanchos 8 November '19 pukul 11:18
+Tambahkan komentar

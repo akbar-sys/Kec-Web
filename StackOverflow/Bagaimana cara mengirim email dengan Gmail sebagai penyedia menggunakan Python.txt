@@ -1,0 +1,214 @@
+Bagaimana cara mengirim email dengan Gmail sebagai penyedia menggunakan Python?
+Ditanyakan 9 tahun, 1 bulan yang lalu
+Aktif 5 bulan yang lalu
+Dilihat 360k kali
+
+304
+
+
+148
+Saya mencoba mengirim email (Gmail) menggunakan python, tetapi saya mendapatkan kesalahan berikut.
+
+Traceback (most recent call last):  
+File "emailSend.py", line 14, in <module>  
+server.login(username,password)  
+File "/usr/lib/python2.5/smtplib.py", line 554, in login  
+raise SMTPException("SMTP AUTH extension not supported by server.")  
+smtplib.SMTPException: SMTP AUTH extension not supported by server.
+Skrip Python adalah sebagai berikut.
+
+import smtplib
+fromaddr = 'user_me@gmail.com'
+toaddrs  = 'user_you@gmail.com'
+msg = 'Why,Oh why!'
+username = 'user_me@gmail.com'
+password = 'pwd'
+server = smtplib.SMTP('smtp.gmail.com:587')
+server.starttls()
+server.login(username,password)
+server.sendmail(fromaddr, toaddrs, msg)
+server.quit()
+ular piton
+surel
+smtp
+gmail
+Bagikan
+Perbaiki pertanyaan ini
+Mengikuti
+diedit 21 Des 15 '14:07
+
+Ciro Santilli新疆棉花TRUMP BAN BURUK
+257k 72 72 lencana emas962 962 lencana perak767767 lencana perunggu
+tanya 13 Apr '12 jam 19:54
+
+Mahori
+3.977 3 3 lencana emas15 15 lencana perak2626 lencana perunggu
+18
+Pertanyaan ini harus dibuka sekarang karena google sedang bergerak menuju API internal untuk mengirim pesan melalui gmail. Langkah ini membuat semua kecuali satu dari jawaban ini ketinggalan zaman, dan satu jawaban yang relevan sangat ringan untuk benar-benar menyelesaikan masalah. -  Andrew 30 Des '16 pukul 21:34
+Juga, untuk pengguna VPN, jika masalah masih berlanjut, matikan VPN Anda. Itu berhasil untuk saya. -  Paulus 8 Desember '19 pukul 18:38
+Tambahkan komentar
+14 Jawaban
+
+219
+
+Anda perlu mengatakan EHLOsebelum langsung berlari ke STARTTLS:
+
+server = smtplib.SMTP('smtp.gmail.com:587')
+server.ehlo()
+server.starttls()
+Anda juga harus benar-benar membuat From:, To:dan Subject:header pesan, dipisahkan dari badan pesan dengan baris kosong dan digunakan CRLFsebagai penanda EOL.
+
+Misalnya
+
+msg = "\r\n".join([
+  "From: user_me@gmail.com",
+  "To: user_you@gmail.com",
+  "Subject: Just a message",
+  "",
+  "Why, oh why"
+  ])
+catatan:
+
+Agar ini berfungsi, Anda harus mengaktifkan opsi "Izinkan aplikasi yang kurang aman" di konfigurasi akun gmail Anda. Jika tidak, Anda akan mendapatkan "peringatan keamanan kritis" ketika gmail mendeteksi bahwa aplikasi non-Google mencoba masuk ke akun Anda.
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 22 Des '20 pada 14:59
+
+rkachach
+13.9k 5 5 lencana emas35 35 lencana perak5555 lencana perunggu
+dijawab 13 Apr '12 pukul 19:57
+
+MattH
+33.4k 9 9 lencana emas80 80 lencana perak8383 lencana perunggu
+2
+memanggil server.sendmail(fromaddr, toaddrs, msg) parameter kedua, toaddrs harus berupa daftar, toaddrs = ['user_me@gmail.com'] –  Massimo Fazzolari 20 Agustus '13 pukul 6:59 
+14
+Pada Agustus 2014 ini sekarang memunculkan smtplib.SMTPAuthenticationError: (534, '5.7.9 Kata sandi khusus aplikasi diperlukan. –  langsung 58192932 27 Agustus '14 pukul 18:06
+8
+Bagi saya, saya harus mengaktifkan kata sandi 'aplikasi' untuk masuk menggunakan akun @google untuk mengirim email melalui python: support.google.com/accounts/answer/… –  langsung 58192932 27 Agustus '14 pukul 18:13
+1
+Berikut ini tautan tentang cara mengirim email ke banyak orang: stackoverflow.com/questions/8856117/… –  langsung 58192932 27 Agustus '14 pukul 18:43
+1
+Saya pernah masuk ke server SMTP melalui telnet dan dikirim EHLOmelalui kesalahan ketik. Setelah saya mencoba HELO berkali-kali tetapi responnya berbeda. Butuh waktu berjam-jam untuk mengetahui bahwa EHLO sebenarnya adalah perintah yang dipahami SMTP dan saya salah ketik. -  Shiplu Mokaddim 26 Januari '17 pukul 11:03
+Tampilkan 13 komentar lainnya
+
+308
+
+def send_email(user, pwd, recipient, subject, body):
+    import smtplib
+
+    FROM = user
+    TO = recipient if isinstance(recipient, list) else [recipient]
+    SUBJECT = subject
+    TEXT = body
+
+    # Prepare actual message
+    message = """From: %s\nTo: %s\nSubject: %s\n\n%s
+    """ % (FROM, ", ".join(TO), SUBJECT, TEXT)
+    try:
+        server = smtplib.SMTP("smtp.gmail.com", 587)
+        server.ehlo()
+        server.starttls()
+        server.login(user, pwd)
+        server.sendmail(FROM, TO, message)
+        server.close()
+        print 'successfully sent the mail'
+    except:
+        print "failed to send mail"
+jika Anda ingin menggunakan Port 465 Anda harus membuat SMTP_SSLobjek:
+
+# SMTP_SSL Example
+server_ssl = smtplib.SMTP_SSL("smtp.gmail.com", 465)
+server_ssl.ehlo() # optional, called by login()
+server_ssl.login(gmail_user, gmail_pwd)  
+# ssl server doesn't support or need tls, so don't call server_ssl.starttls() 
+server_ssl.sendmail(FROM, TO, message)
+#server_ssl.quit()
+server_ssl.close()
+print 'successfully sent the mail'
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 9 Mei '18 pukul 17:46
+
+Brad Salomo
+29.2k 20 20 lencana emas104 104 lencana perak176176 lencana perunggu
+dijawab 14 Sep '12 jam 12:19
+
+David Okwii
+6.299 2 2 lencana emas29 29 lencana perak2525 lencana perunggu
+2
+Sampel yang sangat bagus terima kasih. Satu hal yang saya perhatikan adalah jika saya ingin menggunakan koneksi SSL saya harus menghapus server.starttls() –  Dowler 14 April '14 pukul 20:13
+21
+Sayangnya tidak berfungsi lagi: smtplib.SMTPAuthenticationError: (534, '5.7.14 < accounts.google.com/… ... Harap masuk melalui browser web Anda dan\n5.7.14 lalu coba lagi.\n5.7.14 Pelajari selengkapnya di\n5.7.14 support.google.com/mail/bin/answer.py?answer=78754 ... Kemudian saya mendapat email dari google, bahwa ada upaya koneksi yang mencurigakan. –  royskatt 13 Februari '15 pukul 17:00
+13
+@royskatt - yang perlu Anda lakukan hanyalah membuat kata sandi aplikasi dan menggunakannya sebagai pengganti kata sandi akun Anda. Buat kata sandi aplikasi di sini: security.google.com/settings/security/apppasswords –  Jared 15 April '15 pada 1:14
+16
+@royskatt: Saya baru saja memperbaiki masalah yang Anda hadapi. Google memiliki pengaturan untuk mengizinkan akses untuk aplikasi yang kurang aman, Anda hanya perlu mengaktifkannya 'Aktif'. Anda bisa mendapatkannya dari: Google-->akun saya -->Masuk & keamanan--> Aplikasi & situs yang terhubung--> gulir ke bawah dan Anda akan menemukan 'Izinkan aplikasi yang kurang aman' –  shaleen mohan 7 Agustus '15 pukul 21:16 
+2
+Jika gmail Anda diamankan dengan Otentikasi Dua Faktor, Anda harus terlebih dahulu membuat kata sandi khusus aplikasi -> kemudian gunakan kata sandi aplikasi itu untuk dalam kode contoh di atas (ini sangat penting karena Anda tidak menuliskan kata sandi Anda di mana pun di cleartext DAN Anda dapat mencabut kata sandi aplikasi kapan saja). -  Trevor Boyd Smith 12 Nov '16 pukul 16:46 
+Tampilkan 7 komentar lainnya
+
+143
+
+Saya mengalami masalah yang sama dan menemukan pertanyaan ini. Saya mendapatkan Kesalahan Otentikasi SMTP tetapi nama pengguna/pass saya benar. Inilah yang memperbaikinya. Saya membaca ini:
+
+https://support.google.com/accounts/answer/6010255
+
+Singkatnya, google tidak mengizinkan Anda untuk masuk melalui smtplib karena telah menandai jenis masuk ini sebagai "kurang aman", jadi yang harus Anda lakukan adalah membuka tautan ini saat Anda masuk ke akun google Anda, dan izinkan akses:
+
+https://www.google.com/settings/security/lesssecureapps
+
+Setelah itu diatur (lihat tangkapan layar saya di bawah), itu akan berfungsi.
+
+masukkan deskripsi gambar di sini
+
+Masuk sekarang berfungsi:
+
+smtpserver = smtplib.SMTP("smtp.gmail.com", 587)
+smtpserver.ehlo()
+smtpserver.starttls()
+smtpserver.ehlo()
+smtpserver.login('me@gmail.com', 'me_pass')
+Respon setelah perubahan:
+
+(235, '2.7.0 Accepted')
+Tanggapan sebelumnya:
+
+smtplib.SMTPAuthenticationError: (535, '5.7.8 Username and Password not accepted. Learn more at\n5.7.8 http://support.google.com/mail/bin/answer.py?answer=14257 g66sm2224117qgf.37 - gsmtp')
+Masih tidak bekerja? Jika Anda masih mendapatkan SMTPAuthenticationError tetapi sekarang kodenya adalah 534, itu karena lokasinya tidak diketahui. Ikuti tautan ini:
+
+https://accounts.google.com/DisplayUnlockCaptcha
+
+Klik lanjutkan dan ini akan memberi Anda 10 menit untuk mendaftarkan aplikasi baru Anda. Jadi lanjutkan untuk melakukan upaya login lain sekarang dan itu akan berhasil.
+
+PEMBARUAN : Ini sepertinya tidak langsung berfungsi, Anda mungkin macet untuk sementara mendapatkan kesalahan ini di smptlib:
+
+235 == 'Authentication successful'
+503 == 'Error: already authenticated'
+Pesan tersebut mengatakan untuk menggunakan browser untuk masuk:
+
+SMTPAuthenticationError: (534, '5.7.9 Please log in with your web browser and then try again. Learn more at\n5.7.9 https://support.google.com/mail/bin/answer.py?answer=78754 qo11sm4014232igb.17 - gsmtp')
+Setelah mengaktifkan 'lesssecureapps', minum kopi, kembali, dan coba lagi tautan 'DisplayUnlockCaptcha'. Dari pengalaman pengguna, mungkin diperlukan waktu hingga satu jam agar perubahan diterapkan. Kemudian coba proses masuk lagi.
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 29 Mar '16 pada 17:49
+dijawab 16 Des '14 jam 23:27
+
+radtek
+26.6k 9 9 lencana emas126 126 lencana perak9797 lencana perunggu
+4
+YA TERIMA KASIH ! Terjadi saat menggunakan flask-mail –  Giannis 25 Desember '14 pukul 16:12
+1
+terima kasih satu-satunya masalah bagi saya: accounts.google.com/DisplayUnlockCaptcha –  Isa tanpa batas 27 Juni '15 pukul 10:56
+6
+Selain itu, silakan tinggalkan setengah jam hingga satu jam agar pengaturan berubah. Saya membuat akun baru, menonaktifkan semua keamanan tambahan, dan masih mendapatkan kesalahan yang sama. Sekitar satu jam kemudian, semuanya berhasil. -  jkgeyti 29 Mar '16 pada 14:05
+2
+Mengaktifkan aplikasi yang kurang aman tidak dimungkinkan jika Anda mengaktifkan "Verifikasi 2 Langkah". Opsi terbaik dan paling aman adalah mengaktifkan "apppassword" security.google.com/settings/security/apppasswords seperti yang telah disarankan, dan itu berfungsi seperti pesona –  Omiod 3 Juli '16 pukul 7:59 
+2
+Ketika saya mengikuti tautan kata sandi aplikasi, semua akun Google saya mendapatkan kesalahan "Pengaturan yang Anda cari tidak tersedia untuk akun Anda". -  Suzanne 30 Juni '17 pukul 20:04
+Tampilkan 4 komentar lainnya

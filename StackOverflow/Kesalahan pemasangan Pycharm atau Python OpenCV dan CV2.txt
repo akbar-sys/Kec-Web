@@ -1,0 +1,105 @@
+Kesalahan pemasangan Pycharm/Python OpenCV dan CV2
+Ditanyakan 4 tahun, 11 bulan yang lalu
+Aktif 4 bulan yang lalu
+Dilihat 179k kali
+
+92
+
+
+14
+Saya sudah mencoba menginstal OpenCV dan cv2 dari Pycharm dan dari terminal seperti yang disarankan menggunakan:
+
+pip install --user opencv
+pip install --user cv2
+tapi saya mendapatkan kesalahan berikut untuk mereka:
+
+Collecting opencv
+  Could not find a version that satisfies the requirement opencv (from versions: )
+No matching distribution found for opencv
+dan
+
+Collecting cv2
+  Could not find a version that satisfies the requirement cv2 (from versions: )
+No matching distribution found for cv2
+Bagaimana saya bisa memperbaiki ini dan menginstal paket dengan benar? Saya menggunakan python 3.4.
+
+ular piton
+opencv
+pycharm
+Bagikan
+Mengikuti
+tanya 12 Jun '16 jam 15:54
+
+Sibi
+1,651 2 2 lencana emas19 19 lencana perak3434 lencana perunggu
+3
+Jika Anda menggunakan Ubuntu, cobasudo apt-get install python3-opencv -  tes3awy Sep 7 '16 pada 4:16
+Jawaban ini bekerja untuk saya di Mac OS. -  pencipta 28 Sep '17 pukul 23:37 
+1
+Anda harus menerima jawaban –  Mr_and_Mrs_D 25 Mar '18 pukul 20:24
+Jawaban ini bekerja untuk saya di Raspberry Pi 3B –  Gabriel Cavalcante 31 Juli '19 pukul 5:39
+Tambahkan komentar
+17 Jawaban
+
+200
+
+Anda mendapatkan kesalahan itu karena opencvdan cv2bukan nama paket python.
+
+Keduanya disertakan sebagai bagian dari opencv-pythonpaket yang tersedia untuk diinstal dari pip.
+
+Jika Anda menggunakan python 2, Anda dapat menginstal dengan pip:
+
+ pip install opencv-python
+Atau gunakan yang setara untuk python 3:
+
+pip3 install opencv-python
+Setelah menjalankan perintah pip yang sesuai, paket Anda akan tersedia untuk digunakan dari python.
+
+Bagikan
+Mengikuti
+diedit 31 Jan '18 pukul 20:43
+dijawab 31 Jan '18 jam 1:40
+
+Ryan Tamu
+5,153 2 2 lencana emas30 30 lencana perak3939 lencana perunggu
+3
+Ini adalah jawaban yang benar untuk pertanyaan lihat stackoverflow.com/a/39308557/281545 di bawah juga - mengapa ditandai sebagai tidak ada jawaban dalam ulasan di luar jangkauan saya -  Mr_and_Mrs_D 25 Mar '18 pukul 20:24
+2
+Perhatikan bahwa tergantung pada bagaimana instalasi python Anda diatur pip install package-namemungkin menginstalnya untuk python3, dan Anda harus melakukannya pip2untuk menginstal python 2.x. pipharus cocok dengan apa pun pythondari baris perintah. -  kabdulla 20 Nov '18 pukul 18:54
+Tambahkan komentar
+
+15
+
+Ini perintah yang benar yang Anda butuhkan untuk menginstal opencv
+
+pip install opencv-python
+jika Anda mendapatkan kesalahan saat mencoba menginstal paket "opencv-python" di pycharm, pastikan Anda telah menambahkan jalur python Anda ke bagian ' Variabel Sistem ' dari variabel Lingkungan di Windows. Dan juga periksa apakah Anda telah mengonfigurasi penerjemah yang valid untuk proyek Anda your
+
+Bagikan
+Mengikuti
+diedit 15 April '20 pukul 10:33
+dijawab 5 Apr '20 pada 6:37
+
+Sankha Ratnayake
+503 5 5 lencana perak1313 lencana perunggu
+Tambahkan komentar
+
+10
+
+Saya mengalami masalah yang sama. Satu masalah mungkin OpenCV dibuat untuk Python 2.7, bukan 3 (tidak semua pustaka python 2.7 akan berfungsi di python 3 atau lebih tinggi). Saya juga tidak percaya Anda dapat mengunduh OpenCV secara langsung melalui penginstal paket PyCharm. Saya telah menemukan keberuntungan mengikuti instruksi: OpenCV Python . Secara khusus:
+
+Mengunduh dan menginstal OpenCV dari SourceForge
+Menyalin file cv2.pyd dari unduhan (opencv\build\python\2.7\x64) ke folder paket situs Python (seperti: C:\Python27\Lib\site-packages)
+Di PyCharm, buka python Console (Tools>Python Console) dan ketik: import cv2, dan anggap tidak ada kesalahanprint cv2.__version__
+Atau, saya beruntung menggunakan paket ini opencv-python , yang dapat langsung Anda instal menggunakan pippip install opencv-python
+
+Semoga berhasil!
+
+Bagikan
+Mengikuti
+diedit 4 Oktober '17 pukul 20:03
+dijawab 3 Sep '16 pada 15:31
+
+mdoc-2011
+1,965 3 3 lencana emas18 18 lencana perak3636 lencana perunggu
+Tambahkan komentar

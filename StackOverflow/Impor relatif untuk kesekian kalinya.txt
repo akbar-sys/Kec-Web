@@ -1,0 +1,291 @@
+Impor relatif untuk kesekian kalinya
+Ditanyakan 8 tahun, 5 bulan yang lalu
+Aktif 2 bulan lalu
+Dilihat 311rb kali
+
+974
+
+
+652
+Saya pernah ke sini:
+
+http://www.python.org/dev/peps/pep-0328/
+http://docs.python.org/2/tutorial/modules.html#packages
+Paket Python: impor relatif
+kode contoh impor relatif python tidak berfungsi
+Impor relatif dalam python 2.5
+Impor relatif dengan Python
+Python: Menonaktifkan impor relatif
+dan banyak URL yang tidak saya salin, beberapa di SO, beberapa di situs lain, ketika saya pikir saya akan memiliki solusinya dengan cepat.
+
+Pertanyaan yang selalu berulang adalah ini: Dengan Windows 7, 32-bit Python 2.7.3, bagaimana cara mengatasi pesan "Upaya impor relatif dalam non-paket" ini? Saya membuat replika paket yang tepat di pep-0328:
+
+package/
+    __init__.py
+    subpackage1/
+        __init__.py
+        moduleX.py
+        moduleY.py
+    subpackage2/
+        __init__.py
+        moduleZ.py
+    moduleA.py
+Impor dilakukan dari konsol.
+
+Saya memang membuat fungsi bernama spam dan telur di modul yang sesuai. Secara alami, itu tidak berhasil. Jawabannya ternyata ada di URL ke-4 yang saya daftarkan, tapi itu semua alumni saya. Ada tanggapan ini di salah satu URL yang saya kunjungi:
+
+Impor relatif menggunakan atribut nama modul untuk menentukan posisi modul tersebut dalam hierarki paket. Jika nama modul tidak berisi informasi paket apa pun (misalnya diatur ke 'utama') maka impor relatif diselesaikan seolah-olah modul tersebut adalah modul tingkat atas, di mana pun modul tersebut sebenarnya berada di sistem file.
+
+Respons di atas terlihat menjanjikan, tetapi bagi saya itu semua hieroglif. Jadi pertanyaan saya, bagaimana cara membuat Python tidak kembali kepada saya "Upaya impor relatif dalam non-paket"? memiliki jawaban yang melibatkan -m, seharusnya.
+
+Dapatkah seseorang tolong beri tahu saya mengapa Python memberikan pesan kesalahan itu, apa artinya dengan "non-paket", mengapa dan bagaimana Anda mendefinisikan 'paket', dan jawaban yang tepat dimasukkan ke dalam istilah yang cukup mudah untuk dipahami oleh anak TK .
+
+ular piton
+python-2.7
+impor
+python-2.x
+Jalur relatif
+Bagikan
+Perbaiki pertanyaan ini
+Mengikuti
+diedit 28 Nov '20 pada 3:47
+
+KetZoomer
+1,880 2 2 lencana emas7 7 lencana perak2626 lencana perunggu
+tanya 3 Jan '13 jam 3:50
+pengguna1881400
+6
+Bagaimana Anda mencoba menggunakan file yang Anda tampilkan? Apa kode yang Anda jalankan? -  BrenBarn 3 Jan '13 jam 3:51
+6
+Lihat jawaban saya. Anda masih belum sepenuhnya mengklarifikasi apa yang Anda lakukan, tetapi jika Anda mencoba melakukannya from .something import somethingdi interpreter interaktif, itu tidak akan berhasil. Impor relatif hanya dapat digunakan dalam modul, tidak secara interaktif. -  BrenBarn 3 Jan '13 jam 4:47
+285
+Fakta bahwa "miliaran" orang -- ok 83.136 pada komentar ini -- mengalami cukup kesulitan dengan impor untuk mencari tahu pertanyaan ini; kami hanya dapat menyimpulkan bahwa impor python kontra-intuitif bagi banyak, jika tidak sebagian besar programmer. Guido, mungkin Anda harus menerima ini dan meminta komite untuk mendesain ulang mekanisme impor. Minimal, sintaks ini harus berfungsi jika x.py dan z.py berada di direktori yang sama. Yaitu jika x.py memiliki pernyataan, "from .z import MyZebraClass" x harus mengimpor z BAHKAN jika dijalankan sebagai main ! Mengapa begitu sulit? -  Steve L Sep 11 '18 pukul 16:53 
+9
+Setelah membaca sebagian besar utas ini, meskipun bukan jawaban untuk pertanyaan, "gunakan saja impor absolut" tampaknya menjadi solusinya... –  KodeJoki 20 Nov '18 pukul 15:03
+8
+Judul itu sendiri layak mendapat +1. -  nae 27 Januari pukul 11:07 
+Tampilkan 8 komentar lainnya
+12 Jawaban
+
+1367
+
+Skrip vs. Modul
+
+Berikut penjelasannya. Versi singkatnya adalah ada perbedaan besar antara menjalankan file Python secara langsung, dan mengimpor file itu dari tempat lain. Mengetahui direktori mana file berada tidak menentukan paket apa yang menurut Python ada di dalamnya. Selain itu, tergantung pada cara Anda memuat file ke Python (dengan menjalankan atau mengimpor).
+
+Ada dua cara untuk memuat file Python: sebagai skrip tingkat atas, atau sebagai modul. File dimuat sebagai skrip tingkat atas jika Anda menjalankannya secara langsung, misalnya dengan mengetik python myfile.pydi baris perintah. Itu dimuat sebagai modul jika Anda melakukannya python -m myfile, atau jika dimuat ketika sebuah importpernyataan ditemukan di dalam beberapa file lain. Hanya boleh ada satu skrip tingkat atas dalam satu waktu; skrip tingkat atas adalah file Python yang Anda jalankan untuk memulai.
+
+Penamaan
+
+Ketika sebuah file dimuat, itu diberi nama (yang disimpan dalam __name__atributnya). Jika dimuat sebagai skrip tingkat atas, namanya adalah __main__. Jika dimuat sebagai modul, namanya adalah nama file, didahului dengan nama paket/subpaket apa pun yang merupakan bagiannya, dipisahkan oleh titik.
+
+Jadi misalnya dalam contoh Anda:
+
+package/
+    __init__.py
+    subpackage1/
+        __init__.py
+        moduleX.py
+    moduleA.py
+jika Anda mengimpor moduleX(catatan: import , tidak langsung dieksekusi), namanya akan menjadi package.subpackage1.moduleX. Jika Anda mengimpor moduleA, namanya adalah package.moduleA. Namun, jika Anda langsung menjalankan moduleX dari baris perintah, namanya akan menjadi __main__, dan jika Anda langsung menjalankan moduleAdari baris perintah, namanya akan menjadi __main__. Ketika sebuah modul dijalankan sebagai skrip tingkat atas, ia kehilangan nama normalnya dan namanya menjadi __main__.
+
+Mengakses modul BUKAN melalui paket yang berisi
+
+Ada kerutan tambahan: nama modul bergantung pada apakah modul itu diimpor "langsung" dari direktori tempatnya, atau diimpor melalui sebuah paket. Ini hanya membuat perbedaan jika Anda menjalankan Python di direktori, dan mencoba mengimpor file di direktori yang sama (atau subdirektori itu). Misalnya, jika Anda memulai juru bahasa Python di direktori package/subpackage1dan kemudian melakukan import moduleX, nama moduleXhanya akan menjadi moduleX, dan bukan package.subpackage1.moduleX. Ini karena Python menambahkan direktori saat ini ke jalur pencariannya saat startup; jika menemukan modul yang akan diimpor di direktori saat ini, ia tidak akan tahu bahwa direktori itu adalah bagian dari sebuah paket, dan informasi paket tidak akan menjadi bagian dari nama modul.
+
+Kasus khusus adalah jika Anda menjalankan penerjemah secara interaktif (misalnya, cukup ketik pythondan mulai masukkan kode Python dengan cepat). Dalam hal ini nama sesi interaktif tersebut adalah __main__.
+
+Sekarang inilah hal penting untuk pesan kesalahan Anda: jika nama modul tidak memiliki titik, itu tidak dianggap sebagai bagian dari package . Tidak masalah di mana file sebenarnya ada di disk. Yang penting adalah apa namanya, dan namanya tergantung pada bagaimana Anda memuatnya.
+
+Sekarang lihat kutipan yang Anda sertakan dalam pertanyaan Anda:
+
+Impor relatif menggunakan atribut nama modul untuk menentukan posisi modul tersebut dalam hierarki paket. Jika nama modul tidak berisi informasi paket apa pun (misalnya diatur ke 'utama') maka impor relatif diselesaikan seolah-olah modul tersebut adalah modul tingkat atas, di mana pun modul tersebut sebenarnya berada di sistem file.
+
+Impor relatif...
+
+Impor relatif menggunakan modul nama untuk menentukan di mana itu adalah dalam sebuah paket. Saat Anda menggunakan impor relatif seperti from .. import foo, titik-titik menunjukkan untuk meningkatkan beberapa level dalam hierarki paket. Misalnya, jika nama modul Anda saat ini adalah package.subpackage1.moduleX, maka ..moduleAberarti package.moduleA. Agar a from .. importberfungsi, nama modul harus memiliki setidaknya titik sebanyak yang ada dalam importpernyataan.
+
+... hanya relatif dalam satu paket
+
+Namun, jika nama modul Anda adalah __main__, itu tidak dianggap dalam sebuah paket. Namanya tidak memiliki titik, dan karena itu Anda tidak dapat menggunakan from .. importpernyataan di dalamnya. Jika Anda mencoba melakukannya, Anda akan mendapatkan kesalahan "impor relatif dalam non-paket".
+
+Skrip tidak dapat mengimpor relatif
+
+Apa yang mungkin Anda lakukan adalah Anda mencoba menjalankan moduleXatau sejenisnya dari baris perintah. Ketika Anda melakukan ini, namanya disetel ke __main__, yang berarti impor relatif di dalamnya akan gagal, karena namanya tidak menunjukkan bahwa itu ada dalam sebuah paket. Perhatikan bahwa ini juga akan terjadi jika Anda menjalankan Python dari direktori yang sama di mana sebuah modul berada, dan kemudian mencoba mengimpor modul itu, karena, seperti yang dijelaskan di atas, Python akan menemukan modul di direktori saat ini "terlalu dini" tanpa menyadarinya. bagian dari sebuah paket.
+
+Juga ingat bahwa ketika Anda menjalankan interpreter interaktif, "nama" sesi interaktif itu selalu __main__. Dengan demikian Anda tidak dapat melakukan impor relatif langsung dari sesi interaktif . Impor relatif hanya untuk digunakan dalam file modul.
+
+Dua solusi:
+
+Jika Anda benar-benar ingin menjalankannya moduleXsecara langsung, tetapi Anda masih ingin menganggapnya sebagai bagian dari sebuah paket, Anda dapat melakukannya python -m package.subpackage1.moduleX. The -mmemberitahu Python untuk memuatnya sebagai modul, tidak seperti naskah tingkat atas.
+
+Atau mungkin Anda sebenarnya tidak ingin menjalankan moduleX , Anda hanya ingin menjalankan beberapa skrip lain, misalnya myfile.py, yang menggunakan fungsi di dalam moduleX. Jika demikian, letakkan di myfile.py tempat lain – bukan di dalam packagedirektori – dan jalankan. Jika di dalam myfile.pyAnda melakukan hal-hal seperti from package.moduleA import spam, itu akan berfungsi dengan baik.
+
+Catatan
+
+Untuk salah satu dari solusi ini, direktori paket ( packagedalam contoh Anda) harus dapat diakses dari jalur pencarian modul Python ( sys.path). Jika tidak, Anda tidak akan dapat menggunakan apa pun dalam paket dengan andal sama sekali.
+
+Sejak Python 2.6, "nama" modul untuk tujuan resolusi paket ditentukan tidak hanya oleh __name__atributnya tetapi juga oleh __package__atributnya. Itu sebabnya saya menghindari penggunaan simbol eksplisit __name__untuk merujuk ke "nama" modul. Sejak Python 2.6 "nama" modul secara efektif __package__ + '.' + __name__, atau hanya __name__jika __package__adalah None.)
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 28 Jan '19 pada 16:07
+
+Baum mit Augen ♦
+46.2k 22 22 lencana emas136 136 lencana perak173173 lencana perunggu
+dijawab 3 Jan '13 jam 4:06
+
+BrenBarn
+211k 30 30 lencana emas365 365 lencana perak352352 lencana perunggu
+7
+@Stopforgettingmyaccounts...: PEP 366 menunjukkan cara kerjanya. Di dalam file, Anda dapat melakukan __package__ = 'package.subpackage1'atau sejenisnya. Maka file tersebut hanya akan selalu dianggap sebagai bagian dari paket tersebut meskipun dijalankan secara langsung. Jika Anda memiliki pertanyaan lain tentang __package__Anda, Anda mungkin ingin mengajukan pertanyaan terpisah karena kami akan menyelesaikan masalah pertanyaan awal Anda di sini. -  BrenBarn 3 Januari '13 pukul 6:29
+169
+Ini harus menjadi jawaban untuk semua pertanyaan impor relatif Python. Ini harus ada di dokumen, bahkan. -  edsioufi 13 Mei '14 pukul 19:19
+11
+Lihat python.org/dev/peps/pep-0366 -- "Perhatikan bahwa boilerplate ini cukup hanya jika paket tingkat atas sudah dapat diakses melalui sys.path . Kode tambahan yang memanipulasi sys.path akan diperlukan untuk eksekusi langsung untuk bekerja tanpa paket tingkat atas yang sudah dapat diimpor." -- ini adalah bagian yang paling mengganggu bagi saya karena "kode tambahan" ini sebenarnya cukup panjang dan tidak dapat disimpan di tempat lain dalam paket untuk dijalankan dengan mudah. -  Michael Scott Cuthbert 29 Agustus '15 jam 8:04
+9
+Saya terus kembali ke posting ini meskipun menjadi veteran Python. Pesan utama bagi saya adalah: Entah bermain-main dengan sys.pathdan __package__(yang agak jelek, lihat jawaban lain) atau cukup buat "skrip utama" main.pydi direktori root proyek Anda dan letakkan semua modul untuk diimpor ke subdirektori. main.pykemudian dapat mengakses semua modul secara langsung melalui nama paketnya (= nama folder masing-masing tempat mereka berada). -  balu 27 Mar '17 pukul 12:29
+24
+Jawaban ini saat ini tidak aktif pada beberapa detail penting tentang __name__dan sys.path. Secara khusus, dengan python -m pkg.mod, __name__diatur ke __main__, bukan pkg.mod; impor relatif diselesaikan menggunakan __package__daripada __name__dalam kasus ini. Selain itu, Python menambahkan direktori skrip daripada direktori saat ini sys.pathsaat menjalankan python path/to/script.py; itu menambahkan direktori saat ini sys.pathketika menjalankan sebagian besar cara lain, termasuk python -m pkg.mod. -  user2357112 mendukung Monica 5 Okt '18 pukul 19:22 
+Tampilkan 15 komentar lainnya
+
+59
+
+Ini benar-benar masalah dalam python. Asal usul kebingungan adalah bahwa orang secara keliru mengambil impor relatif sebagai jalur relatif yang tidak.
+
+Misalnya ketika Anda menulis di faa.py :
+
+from .. import foo
+Ini memiliki makna hanya jika faa.py itu diidentifikasi dan dimuat oleh python, selama eksekusi, sebagai bagian dari paket. Dalam hal ini, nama modul untuk faa.py adalah misalnya some_packagename.faa . Jika file dimuat hanya karena berada di direktori saat ini, ketika python dijalankan, maka namanya tidak akan merujuk ke paket apa pun dan akhirnya impor relatif akan gagal.
+
+Solusi sederhana untuk merujuk modul di direktori saat ini, adalah dengan menggunakan ini:
+
+if __package__ is None or __package__ == '':
+    # uses current directory visibility
+    import foo
+else:
+    # uses current package visibility
+    from . import foo
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 14 Des '18 pukul 21:26
+
+damon
+12.7k 14 14 lencana emas49 49 lencana perak7171 lencana perunggu
+dijawab 25 Mar '18 pukul 19:50
+
+Rami Ka.
+724 5 5 lencana perak44 lencana perunggu
+7
+Solusi yang benar adalah from __future__ import absolute_importdan memaksa pengguna untuk menggunakan kode Anda dengan benar... sehingga Anda selalu dapat melakukannyafrom . import foo –  Giacomo Alzetta 16 Juli '18 pukul 12:13
+Tambahkan komentar
+
+9
+
+Berikut adalah resep umum, dimodifikasi agar sesuai sebagai contoh, yang saya gunakan sekarang untuk menangani pustaka Python yang ditulis sebagai paket, yang berisi file yang saling bergantung, di mana saya ingin dapat menguji bagian-bagiannya sedikit demi sedikit. Sebut saja ini lib.foodan katakan bahwa ia membutuhkan akses ke lib.fileAuntuk fungsi f1dan f2, dan lib.fileBuntuk kelas Class3.
+
+Saya telah menyertakan beberapa printpanggilan untuk membantu mengilustrasikan cara kerjanya. Dalam praktiknya Anda ingin menghapusnya (dan mungkin juga from __future__ import print_functiongarisnya).
+
+Contoh khusus ini terlalu sederhana untuk ditampilkan ketika kita benar-benar perlu memasukkan entri ke sys.path. (Lihat jawaban Lars untuk kasus di mana kita benar- benar membutuhkannya, ketika kita memiliki dua atau lebih level direktori paket, dan kemudian kita menggunakan os.path.dirname(os.path.dirname(__file__))—tetapi tidak ada salahnya juga di sini.) Ini juga cukup aman untuk melakukan ini tanpa if _i in sys.pathuji. Namun, jika setiap file yang diimpor menyisipkan jalur yang sama—misalnya, jika keduanya fileAdan fileBingin mengimpor utilitas dari paket—ini mengacaukan sys.pathjalur yang sama berkali-kali, jadi bagus untuk memilikinya if _i not in sys.pathdi boilerplate.
+
+from __future__ import print_function # only when showing how this works
+
+if __package__:
+    print('Package named {!r}; __name__ is {!r}'.format(__package__, __name__))
+    from .fileA import f1, f2
+    from .fileB import Class3
+else:
+    print('Not a package; __name__ is {!r}'.format(__name__))
+    # these next steps should be used only with care and if needed
+    # (remove the sys.path manipulation for simple cases!)
+    import os, sys
+    _i = os.path.dirname(os.path.abspath(__file__))
+    if _i not in sys.path:
+        print('inserting {!r} into sys.path'.format(_i))
+        sys.path.insert(0, _i)
+    else:
+        print('{!r} is already in sys.path'.format(_i))
+    del _i # clean up global name space
+
+    from fileA import f1, f2
+    from fileB import Class3
+
+... all the code as usual ...
+
+if __name__ == '__main__':
+    import doctest, sys
+    ret = doctest.testmod()
+    sys.exit(0 if ret.failed == 0 else 1)
+Idenya di sini adalah ini (dan perhatikan bahwa ini semua berfungsi sama di python2.7 dan python 3.x):
+
+Jika dijalankan sebagai import libatau from lib import foosebagai paket biasa, impor dari kode biasa, __packageis libdan __name__is lib.foo. Kami mengambil jalur kode pertama, mengimpor dari .fileA, dll.
+
+Jika dijalankan sebagai python lib/foo.py, __package__akan menjadi Tidak Ada dan __name__akan menjadi __main__.
+
+Kami mengambil jalur kode kedua. The libdirektori yang sudah akan berada di sys.pathsehingga tidak perlu untuk menambahkannya. Kami mengimpor dari fileA, dll.
+
+Jika dijalankan dalam libdirektori sebagai python foo.py, perilakunya sama dengan kasus 2.
+
+Jika dijalankan dalam libdirektori sebagai python -m foo, perilakunya mirip dengan kasus 2 dan 3. Namun, jalur ke libdirektori tidak ada di sys.path, jadi kami menambahkannya sebelum mengimpor. Hal yang sama berlaku jika kita menjalankan Python dan kemudian import foo.
+
+(Karena . ada di sys.path, kita tidak perlu menambahkan versi absolut dari jalur di sini. Di sinilah struktur bersarang paket yang lebih dalam, di mana kita ingin melakukannya from ..otherlib.fileC import ..., membuat perbedaan. Jika Anda tidak melakukan ini, Anda bisa hilangkan semua sys.pathmanipulasi sepenuhnya.)
+
+Catatan
+Masih ada keanehan. Jika Anda menjalankan semua ini dari luar:
+
+$ python2 lib.foo
+atau:
+
+$ python3 lib.foo
+perilaku tergantung pada isi lib/__init__.py. Jika itu ada dan kosong , semuanya baik-baik saja:
+
+Package named 'lib'; __name__ is '__main__'
+Tetapi jika lib/__init__.py itu sendiri mengimpor routinesehingga dapat mengekspor routine.namesecara langsung sebagai lib.name, Anda mendapatkan:
+
+$ python2 lib.foo
+Package named 'lib'; __name__ is 'lib.foo'
+Package named 'lib'; __name__ is '__main__'
+Artinya, modul diimpor dua kali, sekali melalui paket dan sekali lagi __main__sehingga menjalankan mainkode Anda . Python 3.6 dan yang lebih baru memperingatkan tentang ini:
+
+$ python3 lib.routine
+Package named 'lib'; __name__ is 'lib.foo'
+[...]/runpy.py:125: RuntimeWarning: 'lib.foo' found in sys.modules
+after import of package 'lib', but prior to execution of 'lib.foo';
+this may result in unpredictable behaviour
+  warn(RuntimeWarning(msg))
+Package named 'lib'; __name__ is '__main__'
+The peringatan baru, tapi perilaku memperingatkan-tentang tidak. Ini adalah bagian dari apa yang disebut beberapa orang sebagai perangkap impor ganda . (Untuk detail tambahan lihat edisi 27487 .) Nick Coghlan berkata:
+
+Jebakan berikutnya ada di semua versi Python saat ini, termasuk 3.3, dan dapat diringkas dalam pedoman umum berikut: "Jangan pernah menambahkan direktori paket, atau direktori apa pun di dalam sebuah paket, langsung ke jalur Python".
+
+Perhatikan bahwa meskipun kami melanggar aturan itu di sini, kami melakukannya hanya ketika file yang sedang dimuat tidak dimuat sebagai bagian dari sebuah paket, dan modifikasi kami dirancang khusus untuk memungkinkan kami mengakses file lain dalam paket itu. (Dan, seperti yang saya catat, kita mungkin tidak boleh melakukan ini sama sekali untuk paket level tunggal.) Jika kita ingin menjadi ekstra-bersih, kita mungkin menulis ulang ini sebagai, misalnya:
+
+    import os, sys
+    _i = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    if _i not in sys.path:
+        sys.path.insert(0, _i)
+    else:
+        _i = None
+
+    from sub.fileA import f1, f2
+    from sub.fileB import Class3
+
+    if _i:
+        sys.path.remove(_i)
+    del _i
+Artinya, kami memodifikasi sys.pathcukup lama untuk mencapai impor kami, lalu mengembalikannya seperti semula (menghapus satu salinan _iif dan hanya jika kami menambahkan satu salinan _i).
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 20 Juni '20 pada 9:12
+
+komunitas ♦
+1 11 lencana perak
+dijawab 06 Mei '17 jam 2:08
+
+torek
+331k 43 43 lencana emas437 437 lencana perak553553 lencana perunggu
+Tambahkan komentar

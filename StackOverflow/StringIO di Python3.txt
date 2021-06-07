@@ -1,0 +1,112 @@
+StringIO di Python3
+Ditanyakan 8 tahun, 9 bulan yang lalu
+Aktif 5 bulan yang lalu
+Dilihat 699k kali
+
+542
+
+
+89
+Saya menggunakan Python 3.2.1 dan saya tidak dapat mengimpor StringIOmodul. Saya menggunakan io.StringIOdan berfungsi, tetapi saya tidak dapat menggunakannya dengan numpy's genfromtxtseperti ini:
+
+x="1 3\n 4.5 8"        
+numpy.genfromtxt(io.StringIO(x))
+Saya mendapatkan kesalahan berikut:
+
+TypeError: Can't convert 'bytes' object to str implicitly  
+dan ketika saya menulis import StringIOitu mengatakan
+
+ImportError: No module named 'StringIO'
+ular piton
+python-3.x
+io
+Bagikan
+Perbaiki pertanyaan ini
+Mengikuti
+diedit 26 Okt '19 pukul 18:05
+
+pppery
+3,434 13 13 lencana emas24 24 lencana perak3737 lencana perunggu
+ditanyakan 11 Agustus '12 pukul 11:53
+
+pengguna1591744
+5,509 2 2 lencana emas12 12 lencana perak44 lencana perunggu
+Tambahkan komentar
+9 Jawaban
+
+904
+
+ketika saya menulis import StringIO dikatakan tidak ada modul seperti itu.
+
+Dari Apa yang Baru Di Python 3.0 :
+
+The StringIOdan cStringIOmodul pergi. Sebagai gantinya, impor iomodul dan gunakan io.StringIOatau io.BytesIOuntuk teks dan data masing-masing.
+
+.
+
+Metode yang mungkin berguna untuk memperbaiki beberapa kode Python 2 agar juga berfungsi di Python 3 (caveat emptor):
+
+try:
+    from StringIO import StringIO ## for Python 2
+except ImportError:
+    from io import StringIO ## for Python 3
+Catatan: Contoh ini mungkin bersinggungan dengan masalah utama pertanyaan dan disertakan hanya sebagai sesuatu yang perlu dipertimbangkan saat menangani StringIOmodul yang hilang secara umum . Untuk solusi pesan yang lebih langsung TypeError: Can't convert 'bytes' object to str implicitly, lihat jawaban ini .
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 27 Agustus '20 pada 22:28
+
+TahanLapar
+11k 6 6 lencana emas53 53 lencana perak100100 lencana perunggu
+dijawab 17 Agustus '13 jam 3:43
+
+Brent Bradburn
+40.8k 12 12 lencana emas126 126 lencana perak136136 lencana perunggu
+14
+Layak disebutkan ini tidak sama, sehingga Anda dapat berakhir dengan TypeErrors ( argumen string diharapkan, mendapat 'byte') jika Anda membuat perubahan ini secara terpisah. Anda perlu hati-hati membedakan btyes dan str (unicode) di python 3. –  Andy Hayden 22 April '15 pukul 3:13
+7
+Untuk pemula seperti saya: from io import StringIO berarti Anda menyebutnya sebagai StringIO(), bukan io.StringIO(). -  kata benda 7 Juli '15 pukul 23:43
+12
+Bagaimana agar benar-benar kompatibel dengan Python 2 dan 3: hanyafrom io import StringIO –  Oleh Prypin 11 Agustus '15 pukul 19:35 
+8
+INI SANGAT SALAH untuk numpy.genfromtxt() di python 3. Silakan lihat jawaban dari Roman Shapovalov. -  Bill Huang 05 Maret '16 pukul 10:01
+2
+@nobar: Yang terakhir. Pertanyaan awal menggunakan python 3.x, dari mana modul StringIOhilang dan from io import BytesIOharus diterapkan sebagai gantinya. Menguji diri saya sendiri di python 3.5 @ Eclipse pyDev + win7 x64. Tolong beri tahu saya jika saya salah terima kasih. -  Bill Huang 05 Maret '16 pukul 17:16 
+Tampilkan 10 komentar lainnya
+
+153
+
+Dalam kasus saya, saya telah menggunakan:
+
+from io import StringIO
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 30 Nov '17 pada 15:16
+
+Brad Salomo
+29.2k 20 20 lencana emas104 104 lencana perak176176 lencana perunggu
+dijawab 17 Mar '16 jam 10:15
+
+Kamesh Jungi
+5,684 5 5 lencana emas35 35 lencana perak4848 lencana perunggu
+Tambahkan komentar
+
+76
+
+Pada Python 3 numpy.genfromtxtmengharapkan aliran byte. Gunakan yang berikut ini:
+
+numpy.genfromtxt(io.BytesIO(x.encode()))
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 21 Apr '16 pada 13:23
+
+guettli
+26.6k 53 53 lencana emas227 227 lencana perak478478 lencana perunggu
+dijawab 15 Agustus '12 pukul 13:44
+
+Roman Shapovalov
+2,725 25 25 lencana perak3030 lencana perunggu
+Tambahkan komentar

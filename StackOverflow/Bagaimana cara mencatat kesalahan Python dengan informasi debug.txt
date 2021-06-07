@@ -1,0 +1,138 @@
+Bagaimana cara mencatat kesalahan Python dengan informasi debug?
+Ditanyakan 10 tahun, 3 bulan yang lalu
+Aktif 6 bulan yang lalu
+Dilihat 400rb kali
+
+543
+
+
+98
+Saya mencetak pesan pengecualian Python ke file log dengan logging.error:
+
+import logging
+try:
+    1/0
+except ZeroDivisionError as e:
+    logging.error(e)  # ERROR:root:division by zero
+Apakah mungkin untuk mencetak informasi yang lebih rinci tentang pengecualian dan kode yang menghasilkannya daripada hanya string pengecualian? Hal-hal seperti nomor baris atau jejak tumpukan akan sangat bagus.
+
+ular piton
+pengecualian
+penebangan
+penanganan pengecualian
+Bagikan
+Perbaiki pertanyaan ini
+Mengikuti
+diedit 23 Mei 18 jam 15:16
+
+Stevoisiak
+16.5k 19 19 lencana emas94 94 lencana perak173173 lencana perunggu
+tanya 4 Mar '11 jam 9:21
+
+mungkin di pantai
+12.3k 12 12 lencana emas64 64 lencana perak115115 lencana perunggu
+Tambahkan komentar
+13 Jawaban
+
+852
+
+logger.exception akan menampilkan jejak tumpukan di samping pesan kesalahan.
+
+Sebagai contoh:
+
+import logging
+try:
+    1/0
+except ZeroDivisionError:
+    logging.exception("message")
+Keluaran:
+
+ERROR:root:message
+Traceback (most recent call last):
+  File "<stdin>", line 2, in <module>
+ZeroDivisionError: integer division or modulo by zero
+@Paulo Periksa catatan, "perhatikan bahwa di Python 3 Anda harus memanggil logging.exceptionmetode tepat di dalam exceptbagian. Jika Anda memanggil metode ini di tempat yang sewenang-wenang, Anda mungkin mendapatkan pengecualian yang aneh. Dokumen memperingatkan tentang itu."
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 20 Agustus '20 pukul 18:21
+
+gg.
+17.7k 11 11 lencana emas69 69 lencana perak117117 lencana perunggu
+dijawab 4 Mar '11 jam 9:25
+
+SiggyF
+18.5k 8 8 lencana emas36 36 lencana perak5555 lencana perunggu
+159
+The exceptionMetode hanya panggilan error(message, exc_info=1). Segera setelah Anda meneruskan exc_infoke salah satu metode logging dari konteks pengecualian, Anda akan mendapatkan traceback. -  Helmut Grohne 25 Juni '13 pukul 18:46
+17
+Anda juga dapat mengatur sys.excepthook(lihat di sini ) untuk menghindari keharusan membungkus semua kode Anda di try/except. -  juli 3 Sep '15 pada 9:02 
+24
+Anda bisa saja menulis except Exception:karena Anda tidak menggunakannya edengan cara apa pun;) –  Marco Ferrari 12 Februari '16 pukul 14:19
+22
+Anda mungkin sangat ingin memeriksa eketika mencoba men-debug kode Anda secara interaktif. :) Inilah sebabnya saya selalu memasukkannya. -  Vicki Laidler 16 Februari '16 pada 2:22
+8
+Perbaiki saya jika saya salah, dalam hal ini, tidak ada penanganan pengecualian yang nyata dan oleh karena itu masuk akal untuk menambahkan raisedi akhir exceptruang lingkup. Jika tidak, berlari akan berlanjut seolah-olah semuanya baik-baik saja. -  Dror 9 Nov '18 pukul 14:36
+Tampilkan 8 komentar lainnya
+
+199
+
+Satu hal logging.exceptionyang menyenangkan tentang jawaban SiggyF yang tidak ditampilkan adalah Anda dapat mengirimkan pesan arbitrer, dan logging masih akan menampilkan traceback penuh dengan semua detail pengecualian:
+
+import logging
+try:
+    1/0
+except ZeroDivisionError:
+    logging.exception("Deliberate divide by zero traceback")
+Dengan perilaku logging default (dalam versi terbaru) hanya mencetak kesalahan ke sys.stderr, terlihat seperti ini:
+
+>>> import logging
+>>> try:
+...     1/0
+... except ZeroDivisionError:
+...     logging.exception("Deliberate divide by zero traceback")
+... 
+ERROR:root:Deliberate divide by zero traceback
+Traceback (most recent call last):
+  File "<stdin>", line 2, in <module>
+ZeroDivisionError: integer division or modulo by zero
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 23 Mei '18 pukul 15:14
+
+Stevoisiak
+16.5k 19 19 lencana emas94 94 lencana perak173173 lencana perunggu
+dijawab 1 Jul '13 jam 4:34
+
+ncoghlan
+35.5k 8 8 lencana emas67 67 lencana perak7878 lencana perunggu
+Bisakah pengecualian dicatat tanpa memberikan pesan? -  Stevoisiak 23 Mei '18 pukul 15:13
+@StevenVascellaro - Saya sarankan Anda lulus ''jika Anda benar-benar tidak ingin mengetik pesan... fungsi tidak dapat dipanggil tanpa setidaknya satu argumen, jadi Anda harus memberikan sesuatu. -  SeniPerang 10 Juni '18 pukul 3:00
+Tambahkan komentar
+
+184
+
+Menggunakan exc_infoopsi mungkin lebih baik, untuk memungkinkan Anda memilih tingkat kesalahan (jika Anda menggunakan exception, itu akan selalu berada di errorlevel):
+
+try:
+    # do something here
+except Exception as e:
+    logging.critical(e, exc_info=True)  # log exception info at CRITICAL log level
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 8 Jan '20 pada 19:01
+
+ti7
+7.320 3 3 lencana emas25 25 lencana perak4949 lencana perunggu
+dijawab 10 Apr '15 jam 8:01
+
+flycee
+8.269 3 3 lencana emas16 16 lencana perak1414 lencana perunggu
+@CivFan: Saya sebenarnya tidak melihat suntingan lain atau intro posting; intro itu juga ditambahkan oleh editor pihak ke-3. Saya tidak melihat di mana pun di komentar yang dihapus bahwa itu adalah niatnya, tetapi saya mungkin juga membatalkan pengeditan saya dan menghapus komentar, sudah terlalu lama untuk pemungutan suara di sini untuk apa pun selain versi yang diedit . -  Martijn Pieters ♦ 24 Jan '19 pukul 18:16
+Apakah logging.fatalmetode ada di perpustakaan logging? Saya hanya melihat critical. -  Ian 12 Februari '19 pukul 14:54
+2
+@Ian Ini adalah alias untuk critical, sama seperti warnuntuk warning. -  0xc0de Mar 12 '19 pada 9:25
+Tambahkan komentar

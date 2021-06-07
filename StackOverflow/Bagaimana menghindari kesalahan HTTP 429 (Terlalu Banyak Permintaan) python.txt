@@ -1,0 +1,162 @@
+Bagaimana menghindari kesalahan HTTP 429 (Terlalu Banyak Permintaan) python
+Ditanyakan 7 tahun, 2 bulan yang lalu
+Aktif 26 hari yang lalu
+Dilihat 291k kali
+
+113
+
+
+41
+Saya mencoba menggunakan Python untuk masuk ke situs web dan mengumpulkan informasi dari beberapa halaman web dan saya mendapatkan kesalahan berikut:
+
+Traceback (most recent call last):
+  File "extract_test.py", line 43, in <module>
+    response=br.open(v)
+  File "/usr/local/lib/python2.7/dist-packages/mechanize/_mechanize.py", line 203, in open
+    return self._mech_open(url, data, timeout=timeout)
+  File "/usr/local/lib/python2.7/dist-packages/mechanize/_mechanize.py", line 255, in _mech_open
+    raise response
+mechanize._response.httperror_seek_wrapper: HTTP Error 429: Unknown Response Code
+Saya menggunakan time.sleep()dan berfungsi, tetapi tampaknya tidak cerdas dan tidak dapat diandalkan, apakah ada cara lain untuk menghindari kesalahan ini?
+
+Berikut kode saya:
+
+import mechanize
+import cookielib
+import re
+first=("example.com/page1")
+second=("example.com/page2")
+third=("example.com/page3")
+fourth=("example.com/page4")
+## I have seven URL's I want to open
+
+urls_list=[first,second,third,fourth]
+
+br = mechanize.Browser()
+# Cookie Jar
+cj = cookielib.LWPCookieJar()
+br.set_cookiejar(cj)
+
+# Browser options 
+br.set_handle_equiv(True)
+br.set_handle_redirect(True)
+br.set_handle_referer(True)
+br.set_handle_robots(False)
+
+# Log in credentials
+br.open("example.com")
+br.select_form(nr=0)
+br["username"] = "username"
+br["password"] = "password"
+br.submit()
+
+for url in urls_list:
+        br.open(url)
+        print re.findall("Some String")
+ular piton
+http
+mekanisasi
+http-status-code-429
+Bagikan
+Perbaiki pertanyaan ini
+Mengikuti
+diedit 28 Sep '18 jam 8:40
+
+sideshowbarker
+62.5k 21 21 lencana emas144 144 lencana perak153153 lencana perunggu
+tanya 1 Apr '14 jam 12:35
+
+Aous1000
+1,544 3 3 lencana emas13 13 lencana perak1616 lencana perunggu
+9
+Tidak ada jalan lain, ini adalah penegakan di sisi server yang melacak berapa banyak permintaan/unit waktu yang Anda buat. Jika Anda melebihi unit ini, Anda akan diblokir sementara. Beberapa server mengirimkan informasi ini di header, tetapi kesempatan itu jarang terjadi. Periksa header yang diterima dari server, gunakan informasi yang tersedia.. Jika tidak, periksa seberapa cepat Anda dapat melakukan hammer tanpa ketahuan dan gunakan sleep. -  tersengat 1 April '14 pukul 12:45
+1
+stackoverflow.com/questions/15648272/… –  tersengat 1 April '14 pukul 20:27
+Tambahkan komentar
+7 Jawaban
+
+177
+
+Menerima status 429 bukanlah kesalahan , itu adalah server lain "dengan hormat" meminta Anda untuk menghentikan permintaan spam. Jelas, tingkat permintaan Anda terlalu tinggi dan server tidak mau menerimanya.
+
+Anda tidak boleh berusaha untuk "menghindari" ini, atau bahkan mencoba untuk menghindari pengaturan keamanan server dengan mencoba menipu IP Anda, Anda hanya harus menghormati jawaban server dengan tidak mengirim terlalu banyak permintaan.
+
+Jika semuanya diatur dengan benar, Anda juga akan menerima tajuk "Coba lagi-setelah" bersama dengan respons 429. Header ini menentukan jumlah detik Anda harus menunggu sebelum melakukan panggilan lain. Cara yang tepat untuk mengatasi "masalah" ini adalah dengan membaca tajuk ini dan menidurkan proses Anda selama beberapa detik.
+
+Anda dapat menemukan informasi lebih lanjut tentang status 429 di sini: http://tools.ietf.org/html/rfc6585#page-3
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+dijawab 29 Apr '14 jam 14:14
+
+MRA
+2.430 1 1 lencana emas13 13 lencana perak1717 lencana perunggu
+24
+Yah, tidak ada yang pernah mengatakan bahwa semua server web dikonfigurasi dengan benar. Selain itu, karena sebagian besar pembatas kecepatan mengidentifikasi pengunjung berdasarkan IP, hal ini dapat menyebabkan masalah dalam skenario di mana IP dibagikan secara dinamis. Jika Anda tetap menerima status 429 meskipun Anda yakin bahwa Anda tidak mengirim terlalu banyak permintaan sama sekali, Anda dapat mempertimbangkan untuk menghubungi administrator situs. -  MRA 23 Mei '16 pukul 10:27
+2
+Terima kasih telah menyebutkan tajuk "Coba lagi-setelah". Saya ingin contoh kode untuk melihat cara mendapatkan nilai itu (saya menggunakan urllib, untuk OP mekanisasi, dalam kedua kasus saya tidak berpikir header termasuk dalam pengecualian yang dimunculkan) -  MacFreek Apr 11 '18 jam 14:14
+@MacFreek Saya tidak punya contoh kode Python tertentu siap, tapi aku menganggap beberapa contoh tentang bagaimana untuk mengambil header respon secara umum dapat diambil dari jawaban atas pertanyaan ini: stackoverflow.com/q/843392 -  MRA Apr 12 '18 jam 10:33 
+Terima kasih @MRA. Saya menemukan bahwa header juga tersedia dalam pengecualian: setelah catching HTTPError as my_exception, tersedia di my_exception.headers, setidaknya untuk urllib2. -  MacFreek 13 April '18 pukul 11:09 
+Tambahkan komentar
+
+44
+
+Menulis potongan kode ini memperbaiki masalah saya:
+
+requests.get(link, headers = {'User-agent': 'your bot 0.1'})
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 12 Mei pukul 6:44
+
+Sergey Brunov
+11.8k 7 7 lencana emas39 39 lencana perak7171 lencana perunggu
+dijawab 3 Nov '16 jam 4:14
+
+tadm123
+6.533 4 4 lencana emas20 20 lencana perak3535 lencana perunggu
+28
+Jawaban ini diturunkan, tetapi beberapa situs secara otomatis mengembalikan kode kesalahan 429 jika agen pengguna dilarang karena penyalahgunaan dari orang lain. Jika Anda mendapatkan kode kesalahan 429 meskipun Anda hanya mengirim beberapa permintaan, coba atur agen pengguna ke yang lain. -  Ferry Boender 1 Mar '17 pada 9:23
+8
+Juga ingin menambahkan, beberapa situs dengan jelas menolak permintaan kecuali agen pengguna dikirim, dan Anda mungkin mendapatkan segudang tanggapan lain: 503 / 403 / beberapa halaman indeks generik. -  pengguna3791372 29 Mar '17 pukul 22:05
+2
+Dapat mengkonfirmasi ini. Hanya mencoba antarmuka python dengan reddit dan tanpa mengatur agen pengguna saya selalu mendapatkan kode kesalahan 429. –  Karrq 20 Juli '18 pukul 9:39
+3
+bisa tolong ditambahin penjelasannya? -  Tokci 26 Des '19 jam 7:11
+1
+Di mana Anda "menulis potongan kode ini"? Solusi ini membutuhkan lebih banyak detail. -  Joe McLean 22 Sep '20 pukul 19:58
+Tambahkan komentar
+
+34
+
+Seperti yang dikatakan MRA, Anda seharusnya tidak mencoba untuk menghindari 429 Too Many Requeststetapi menanganinya dengan tepat. Anda memiliki beberapa opsi tergantung pada kasus penggunaan Anda:
+
+1) Tidur proses Anda . Server biasanya menyertakan Retry-afterheader dalam respons dengan jumlah detik yang harus Anda tunggu sebelum mencoba lagi. Ingatlah bahwa menidurkan suatu proses dapat menyebabkan masalah, misalnya dalam antrian tugas, di mana Anda harus mencoba lagi tugas tersebut di lain waktu untuk membebaskan pekerja untuk hal-hal lain.
+
+2) Backoff eksponensial . Jika server tidak memberi tahu Anda berapa lama menunggu, Anda dapat mencoba kembali permintaan Anda menggunakan jeda yang meningkat di antaranya. Tugas populer antrian Seledri memiliki fitur ini dibangun tepat-in .
+
+3) Token ember . Teknik ini berguna jika Anda mengetahui sebelumnya berapa banyak permintaan yang dapat Anda buat dalam waktu tertentu. Setiap kali Anda mengakses API, Anda pertama kali mengambil token dari bucket. Ember diisi ulang dengan kecepatan konstan. Jika ember kosong, Anda tahu bahwa Anda harus menunggu sebelum menekan API lagi. Bucket token biasanya diimplementasikan di ujung yang lain (API) tetapi Anda juga dapat menggunakannya sebagai proxy untuk menghindari mendapatkan file 429 Too Many Requests. Fitur rate_limit Celery menggunakan algoritma token bucket.
+
+Berikut adalah contoh aplikasi Python/Seledri yang menggunakan backoff eksponensial dan ember pembatas laju/token:
+
+class TooManyRequests(Exception):
+"""Too many requests"""
+
+@task(
+   rate_limit='10/s',
+   autoretry_for=(ConnectTimeout, TooManyRequests,),
+   retry_backoff=True)
+def api(*args, **kwargs):
+  r = requests.get('placeholder-external-api')
+
+  if r.status_code == 429:
+    raise TooManyRequests()
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+dijawab 11 Mei '18 jam 14:26
+
+psaniko
+944 16 16 lencana perak1515 lencana perunggu
+Tambahkan komentar

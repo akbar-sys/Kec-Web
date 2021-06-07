@@ -1,0 +1,128 @@
+Bagaimana cara menggunakan versi python yang berbeda selama instalasi NPM?
+Ditanyakan 7 tahun, 5 bulan yang lalu
+Aktif 1 tahun yang lalu
+Dilihat 137k kali
+
+237
+
+
+85
+Saya memiliki akses terminal ke VPS yang menjalankan centos 5.9 dan python 2.4.3 default diinstal. Saya juga menginstal python 2.7.3 melalui perintah ini: (Saya menggunakan make altinstallalih-alih make install)
+
+wget http://www.python.org/ftp/python/2.7.3/Python-2.7.3.tgz
+tar -xf Python-2.7.3.tgz
+cd Python-2.7.3
+./configure
+make
+make altinstall
+kemudian saya menginstal node.js dari sumber melalui perintah ini:
+
+python2.7 ./configure
+make
+make install
+Masalahnya adalah, ketika saya menggunakan npm installdan mencoba menginstal paket node.js yang membutuhkan python > 2.4.3 saya mendapatkan kesalahan ini:
+
+gyp ERR! configure error
+gyp ERR! stack Error: Python executable "python" is v2.4.3, which is not supported by gyp.
+gyp ERR! stack You can pass the --python switch to point to Python >= v2.5.0 & < 3.0.0.
+gyp ERR! stack     at failPythonVersion (/usr/local/lib/node_modules/npm/node_modules/node-gyp/lib/configure.js:125:14)
+gyp ERR! stack     at /usr/local/lib/node_modules/npm/node_modules/node-gyp/lib/configure.js:114:9
+bagaimana saya harus "melewati --python switch untuk menunjuk ke Python >= v2.5.0" ?
+
+ular piton
+node.js
+centos
+npm
+Bagikan
+Mengikuti
+diedit 26 Mar '17 pada 4:06
+
+Cur
+32.5k 21 21 lencana emas173 173 lencana perak232232 lencana perunggu
+ditanyakan 8 Des 13 jam 13:54
+
+Nasser Torabzade
+5.904 7 7 lencana emas25 25 lencana perak3636 lencana perunggu
+Saya akan mengusulkan peretasan. Bagaimana dengan aliasing versi python ini di dalam shell Anda & kemudian setelah Anda menutup shell, sistem akan kembali ke keadaan sebelumnya –  rafee 8 Des '13 pukul 13:58
+@rafee bagus, bisakah Anda menjelaskan bagaimana saya bisa melakukannya? Saya sedikit baru mengenal centos! -  Nasser Torabzade 8 Des '13 pukul 14:02
+Saya hampir tidak pernah menggunakan CentOS. Seharusnya sama seperti distribusi linux lainnya. Saya menceritakan tentang prosedur sementara, karena membuat alias permanen dapat merusak sistem Anda. Jadi itu tidak boleh dilakukan. -  rafee 8 Des '13 pukul 14:04
+@rafee terima kasih, saya akan memeriksa solusi Anda. -  Nasser Torabzade 8 Des '13 pukul 14:09
+2
+alias python=/path/to/python harus cukup baik. Tapi hati-hati membuat perubahan sementara, perubahan permanen dapat membahayakan sistem Anda –  rafee 8 Des '13 pukul 14:09 
+Tambahkan komentar
+6 Jawaban
+
+532
+
+Anda dapat menggunakan --pythonopsi untuk npm seperti:
+
+npm install --python=python2.7
+atau atur agar selalu digunakan:
+
+npm config set python python2.7
+Npm pada gilirannya akan meneruskan opsi ini ke node-gyp bila diperlukan.
+
+(catatan: Sayalah yang membuka masalah di Github untuk memasukkan ini ke dalam dokumen, karena ada begitu banyak pertanyaan tentang itu ;-))
+
+Bagikan
+Mengikuti
+dijawab 16 Mar '14 jam 6:40
+
+ack
+6.498 2 2 lencana emas22 22 lencana perak1919 lencana perunggu
+36
+Ini harus menjadi jawaban yang diterima. npm config set python python2.7adalah definitif solusi -  Alessandro Pezzato 28 Juli '14 pukul 22:30
+2
+Tentu, jika python2ada di $PATH Anda, gunakan itu, tentu saja :-) –  ack 4 Okt '14 pukul 23:54
+5
+Untuk pyenvdengan Python 3, saya telah menggunakannpm install --python=/usr/bin/python –  Andrei 24 Juni '15 pukul 11:08
+11
+karena saya memiliki python3 sebagai global, saya perlu mengatur juga python27 menggunakan: > set konfigurasi npm ini python C:\Python27\python.exe -  francois 23 Jan '16 pukul 23:22 
+2
+Baik --python=python3bendera maupun tidak npm config set python python3berfungsi untuk saya. NPM saya bersikeras menggunakan Python 2 untuk instalasi. Mungkin berbeda untuk paket NPM global? Adakah yang beruntung dengan pendekatan lain? -  mercer721 12 Okt '20 pukul 19:35
+Tampilkan 11 komentar lainnya
+
+58
+
+atur python ke python2.7 sebelum menjalankan npm install
+
+Linux:
+
+export PYTHON=python2.7
+Jendela:
+
+set PYTHON=python2.7
+Bagikan
+Mengikuti
+diedit 23 Mar '15 pada 21:31
+
+kayu bakar
+46k 15 15 lencana emas100 100 lencana perak132132 lencana perunggu
+dijawab 8 Des 13 jam 14:04
+
+Air Mata Pasir Kirisama
+900 7 7 lencana perak77 lencana perunggu
+4
+exportdigunakan untuk mengatur variabel lingkungan, dan variabel tersebut berfungsi pada shell Anda dan proses turunannya .. –  Air Mata Pasir Kirisama 8 Des '13 pukul 14:19
+saya atau yang ini? karena jika jawaban saya berhasil, maka saya akan mempostingnya sebagai jawaban & itu harus ditandai sebagai jawaban –  rafee 8 Des '13 pukul 16:40 
+@rafee yang ini berhasil, saya menyimpan saran Anda untuk kebutuhan di masa mendatang, terima kasih. -  Nasser Torabzade 9 Desember '13 pukul 13:48
+7
+menggunakan set PYTHON=python2.7pada Windows -  zacharyliu 28 Februari '14 pukul 11:10
+1
+Ini adalah ide yang buruk ketika perlu ada lingkungan python3 tertentu yang dimuat. python2.7 hanya digunakan untuk npm dalam kasus ini, jadi atur hanya untuk npm dan bukan untuk seluruh lingkungan shell Anda tanpa mengetahui apa yang Anda lakukan. -  ohcibi 3 Agustus '15 pada 9:09
+Tambahkan komentar
+
+37
+
+Untuk pengguna Windows, sesuatu seperti ini seharusnya berfungsi:
+
+PS C:\angular> npm install --python=C:\Python27\python.exe
+Bagikan
+Mengikuti
+dijawab 15 Agustus '15 pukul 18:32
+
+Dave L
+8.727 7 7 lencana emas39 39 lencana perak6464 lencana perunggu
+9
+Ini dapat dikombinasikan dengan jawaban yang diterima menggunakan: npm config set python C:\Python27\python.exe- Saya baru saja melakukan ini dan itu berfungsi dengan baik, yang berarti tidak harus melakukannya setiap kali Anda ingin menginstal sesuatu. -  Nathan Ridley 30 Nov '15 pukul 23:58
+Tambahkan komentar

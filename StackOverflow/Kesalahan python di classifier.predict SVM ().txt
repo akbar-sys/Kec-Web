@@ -1,0 +1,88 @@
+Kesalahan python di classifier.predict SVM ()
+Ditanyakan 6 tahun, 1 bulan yang lalu
+Aktif 7 bulan yang lalu
+Dilihat 12rb kali
+
+6
+
+
+1
+Saya mendapatkan kesalahan berikut ketika saya melakukan klasifikasi data baru dengan perintah berikut dengan Python:
+
+classifier.predict(new_data)
+AttributeError: objek python 'SVC' tidak memiliki atribut _dual_coef_
+
+Di laptop saya, perintahnya berfungsi dengan baik! Apa yang salah?
+
+ular piton
+scikit-belajar
+klasifikasi
+svm
+Bagikan
+Perbaiki pertanyaan ini
+Mengikuti
+diedit 21 Apr '15 pada 13:52
+
+Eric O Lebigot
+81.5k 40 40 lencana emas199 199 lencana perak249249 lencana perunggu
+tanya 21 Apr '15 jam 13:27
+
+azali
+1.053 2 2 lencana emas17 17 lencana perak3535 lencana perunggu
+1
+Apakah Anda menggunakan versi yang sama di kedua komputer? -  Alex 21 Apr '15 pukul 13:29
+Iya. Ini benar-benar aneh karena ini adalah fungsi dasar dari scikit learn toolkit –  azali 21 Apr '15 pukul 13:31
+Bisakah Anda memberikan masukan yang menyebabkan kesalahan? -  sedavidw 21 Apr '15 pukul 13:40
+Tambahkan komentar
+4 Jawaban
+
+8
+
+Saya mengalami kesalahan persis ini AttributeError: python 'SVC' object has no attribute _dual_coef_dengan model yang dilatih menggunakan scikit-learn versi 0.15.2, ketika saya mencoba menjalankannya di scikit-learn versi 0.16.1. Saya memang menyelesaikannya dengan melatih kembali model di scikit-learn 0.16.1 terbaru.
+
+Pastikan Anda memuat versi paket yang benar.
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+dijawab 21 Mei '15 jam 11:16
+
+Jakub
+91 33 lencana perunggu
+1
+Sayang sekali model lama yang disimpan tidak akan berjalan pada versi yang lebih baru... berharap ada format data yang lebih aman di masa mendatang. -  Tidak Ada Bug Sep 11 '19 jam 3:46
+Tambahkan komentar
+
+1
+
+Sudahkah Anda memuat model berdasarkan yang Anda coba prediksi? Dalam hal ini dapat terjadi konflik versi, coba pelajari kembali model menggunakan versi sklearn yang sama. Anda dapat melihat masalah serupa di sini: Kesalahan sklearn: objek 'SVR' tidak memiliki atribut '_impl'
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+diedit 23 Mei '17 jam 10:29
+
+komunitas ♦
+1 11 lencana perak
+dijawab 21 Apr '15 jam 13:48
+
+farhawa
+8.436 16 16 lencana emas37 37 lencana perak8181 lencana perunggu
+ya, semuanya dimuat. Saya menggunakan saluran pemrograman yang sama di kedua komputer –  azali 21 Apr '15 pukul 14:48
+Apakah Anda mencoba (atau apakah Anda memiliki kemungkinan) untuk membalikkan peran komputer untuk konstruksi dan prediksi model? -  farhawa 21 Apr '15 pada 15:49
+sayangnya ini tidak dapat dilakukan dalam konfigurasi komputer saat ini dan kumpulan data saat ini –  azali 21 Apr '15 pukul 17:45
+Tambahkan komentar
+
+1
+
+Saya memiliki masalah yang sama, saya menggunakan Sklearn versi 0.23.02 tetapi saya mencoba menjalankan arsip yang dilatih dengan versi 0.18... dan kesalahan saya mengatakan: "objek 'SVC' tidak memiliki atribut 'break_ties'", saya baru saja melatih ulang model dengan versi saya dan memperbaiki masalah saya menghasilkan svc.pickle lain untuk dijalankan dengan versi 0.23.02 dan mengganti yang lama.
+
+Bagikan
+Perbaiki jawaban ini
+Mengikuti
+dijawab 26 Okt '20 jam 23:40
+
+apa saja
+61 44 lencana perunggu
+Saya menghadapi masalah yang sama -  Abhik Sarkar 20 Nov '20 pada 14:08 
+Tambahkan komentar

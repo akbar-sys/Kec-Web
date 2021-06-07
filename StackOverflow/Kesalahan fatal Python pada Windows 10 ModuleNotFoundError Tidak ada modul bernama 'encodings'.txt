@@ -1,0 +1,88 @@
+Kesalahan fatal Python pada Windows 10 ModuleNotFoundError: Tidak ada modul bernama 'encodings'
+Ditanyakan 4 tahun, 3 bulan yang lalu
+Aktif 17 hari yang lalu
+Dilihat 89rb kali
+
+26
+
+
+3
+Saya menginstal Python di laptop Windows 10 saya, dan ketika saya mencoba menjalankannya saya mendapatkan ini:
+
+Kesalahan fatal Python: Py_Initialize: tidak dapat memuat codec sistem file ModuleNotFoundError: Tidak ada modul bernama 'encodings' Utas saat ini 0x0000037c (panggilan terbaru terlebih dahulu):
+
+ular piton
+jendela
+kesalahan fatal
+Bagikan
+Mengikuti
+diedit 6 Desember '20 pada 2:08
+
+Peter Mortensen
+28.3k 21 21 lencana emas95 95 lencana perak123123 lencana perunggu
+ditanyakan 28 Februari '17 pukul 15:32
+
+Milos Milunovic
+322 1 1 lencana emas4 4 lencana perak1010 lencana perunggu
+Tambahkan komentar
+9 Jawaban
+
+28
+
+Saya mengalami masalah yang sama pada Windows 10. Inilah cara saya memperbaikinya:
+
+Buka ' Variabel Lingkungan ' Anda (Di bawah ' Properti Sistem ').
+Di jendela yang terbuka, pilih baris ' Path ', lalu klik tombol ' Edit... '.
+Seharusnya ada dua variabel lingkungan C:\Python37-32\Scripts\dan C:\Python37-32\Kemudian klik ' OK ' (Pastikan untuk memeriksa bahwa nilai jalur ini sesuai dengan lokasi dan versi pemasangan Python Anda.)
+Selanjutnya, di bagian atas jendela ' Variabel Lingkungan ', cari PYTHONHOMEvariabel dan pastikan itu juga diatur keC:\Python37-32
+Bagikan
+Mengikuti
+diedit 21 Agustus '18 pukul 2:38
+dijawab 18 Agustus '18 pukul 18:44
+
+JS Peterson
+1,579 12 12 lencana perak1616 lencana perunggu
+Jadi saat menginstal paket dengan pip, saya harus selalu berada di C:\Python37-32\Scripts\? Apakah ada cara untuk menginstal paket tanpa masuk C:\Python37-32\Scripts\ ? -  Shruti Kar 18 '19 Mei pukul 20:14
+3
+Apa yang Anda maksud dengan: "Harus ada dua variabel lingkungan C:\Python37-32\Scripts\ dan C:\Python37-32\"? Itu adalah nama path bukan variabel lingkungan. Harap edit komentar Anda untuk memberikan nama variabel lingkungan. -  Francis Litterio 19 Februari '20 pukul 14:55
+@FrancisLitterio: Saya juga agak kesulitan memahami. Dia mengatakan untuk menambahkan dua jalur itu ke variabel lingkungan Path (yang dia katakan untuk menemukan dan mengedit di langkah 2) –  Malivil 31 Maret '20 pukul 21:17
+Tambahkan komentar
+
+3
+
+Masalah ini telah dibahas di sini di utas ini. Rupanya, menjalankan pengaturan Python sebagai administrator dan/atau mengatur variabel lingkungan dengan benar memecahkan masalah ini.
+
+Bagikan
+Mengikuti
+diedit 6 Desember '20 pada 2:09
+
+Peter Mortensen
+28.3k 21 21 lencana emas95 95 lencana perak123123 lencana perunggu
+dijawab 28 Februari '17 pukul 15:44
+
+pandittya
+735 7 7 lencana perak1616 lencana perunggu
+2
+Ini adalah kesalahan umum dari pengaturan PYTHONHOMEsecara permanen. Distribusi Python apa pun yang membutuhkan ini dirancang dengan buruk. -  Eryk Sun 1 Mar '17 pukul 10:57
+@eryksun, bisakah Anda menjelaskan sedikit? -  Jamie Marshall 5 Okt '18 pukul 21:16
+@JamieMarshall, PYTHONHOMEtidak terbatas pada versi atau distribusi tertentu dari Python, dan menggantikan cara default perpustakaan standar berada. Jadi pengaturannya secara permanen akan merusak setiap instalasi Python lainnya. -  Eryk Sun 6 Okt '18 pukul 21:24
+@ErykSun, menariknya, Visual Studio, mengharuskan ini diatur secara eksplisit agar kompilasi berhasil ketika datang ke ekstensi python / pengembangan embedding. -  Rika 6 Juni '20 pada 9:59
+Tambahkan komentar
+
+1
+
+Pertama, jangan lupa untuk memilih "Add Python 3.x to PATH" sebelum Anda mengklik Install now dan reboot setelah instalasi agar jalur baru diperhitungkan oleh Windows.
+
+Kedua, saya memiliki masalah yang sama dengan Python 3 pada Windows 7 dan 64-bit dan saya menyingkirkannya dengan menghapus PYTHONPATH dan PYTHONHOME dari variabel lingkungan sistem Windows 7, karena saya memiliki instalasi Python 2 sebelumnya dan jalur tersebut menunjuk ke direktori Python 2 saya. Saya hanya harus menghapus variabel PYTHONPATH dan PYTHONHOME.
+
+Bagikan
+Mengikuti
+diedit 6 Desember '20 pukul 2:16
+
+Peter Mortensen
+28.3k 21 21 lencana emas95 95 lencana perak123123 lencana perunggu
+dijawab 6 Agustus '17 pukul 20:03
+
+Gorgorlu
+21 44 lencana perunggu
+Tambahkan komentar
